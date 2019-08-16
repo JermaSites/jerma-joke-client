@@ -22,7 +22,15 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'App'
+  name: 'App',
+  created () {
+    this.fetchStreams()
+  },
+  methods: {
+    ...mapActions(['fetchStreams'])
+  }
 }
 </script>
