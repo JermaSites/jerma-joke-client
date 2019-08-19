@@ -12,6 +12,11 @@ export default new Vuex.Store({
     streams: [],
     messages: []
   },
+  getters: {
+    getStream (state) {
+      return streamID => state.streams.find(stream => stream.id == streamID)
+    }
+  },
   mutations: {
     setStreams (state, payload) {
       state.streams = payload
@@ -36,7 +41,7 @@ export default new Vuex.Store({
     async fetchStreamMessages ({ commit }, streamID) {
       try {
         const messages = []
-        const snapshot = await db.collection('streams').doc(`${streamID}`).collection('messages').get()
+        const snapshot = await db.collection('streams').doc(`${streamID}`).collection('messages').orderBy('tmi-sent-ts').limit(50).get()
         snapshot.forEach(doc => {
           messages.push(doc.data())
         })

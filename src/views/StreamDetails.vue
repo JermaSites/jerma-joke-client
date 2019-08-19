@@ -1,18 +1,27 @@
 <template>
   <v-container>
-    <v-layout>
+    <v-layout align-center justify-center v-if="loading">
+      <v-progress-circular
+        :size="50"
+        color="primary"
+        indeterminate
+      ></v-progress-circular>
+    </v-layout>
+    <v-layout v-else>
       <v-card
         class="mx-auto"
-        max-width="400"
+        max-width="850"
         tile
       >
         <v-list>
           <v-list-item
+            two-line
             v-for="message in messages"
             :key="message.id"
           >
             <v-list-item-content>
-              <v-list-item-title>{{ message }}</v-list-item-title>
+              <v-list-item-title>{{ message['display-name'] }}</v-list-item-title>
+              <v-list-item-subtitle>{{ message.msg }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -22,7 +31,8 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import moment from 'moment'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'StreamDetails',
@@ -32,14 +42,51 @@ export default {
       required: true
     }
   },
-  computed: {
-    ...mapState(['messages'])
+  data () {
+    return {
+      loading: true
+    }
   },
-  created () {
-    this.fetchStreamMessages(this.streamID)
+  computed: {
+    ...mapState(['messages']),
+    ...mapGetters(['getStream'])
+  },
+  async created () {
+    try {
+      this.loading = true
+      await this.fetchStreamMessages(this.streamID)
+      this.sparkline()
+    } catch (error) {
+      console.error('Error fetching stream messages:', error)
+    } finally {
+      this.loading = false
+    }
   },
   methods: {
-    ...mapActions(['fetchStreamMessages'])
+    ...mapActions(['fetchStreamMessages']),
+    sparkline () {
+      const stream = this.getStream(this.streamID)
+      const streamStartTime = moment(stream.started_at)
+      let jokeTotal = 0
+
+      const dataAndLabels = this.messages.map(message => {
+        if (message.joke) {
+          jokeTotal += 2
+        } else {
+          jokeTotal -= 2
+        }
+
+        const messageTime = moment(+message['tmi-sent-ts'])
+        const time = messageTime.diff(streamStartTime, 'seconds')
+
+        return {
+          jokeTotal,
+          time
+        }
+      })
+
+      console.log(dataAndLabels)
+    }
   }
 }
 </script>
