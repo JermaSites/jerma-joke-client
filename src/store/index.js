@@ -41,7 +41,7 @@ export default new Vuex.Store({
     async fetchStreamMessages ({ commit }, streamID) {
       try {
         const messages = []
-        const snapshot = await db.collection('streams').doc(`${streamID}`).collection('messages').orderBy('tmi-sent-ts').limit(50).get()
+        const snapshot = await db.collection('streams').doc(`${streamID}`).collection('messages').orderBy('tmi-sent-ts').get()
         snapshot.forEach(doc => {
           messages.push(doc.data())
         })
