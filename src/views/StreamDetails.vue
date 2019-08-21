@@ -7,44 +7,28 @@
         indeterminate
       ></v-progress-circular>
     </v-layout>
+
     <v-layout v-else>
       <v-card
         class="mx-auto"
-        max-width="850"
+        min-width="850"
         tile
       >
         <v-sparkline
-          :value="value"
-          :gradient="gradient"
-          :smooth="radius || false"
-          :padding="padding"
-          :line-width="width"
-          :stroke-linecap="lineCap"
-          :gradient-direction="gradientDirection"
           :fill="fill"
-          :type="type"
-          :auto-line-width="autoLineWidth"
+          :gradient="gradient"
+          :line-width="width"
+          :padding="padding"
+          :smooth="radius || false"
+          :value="value"
           auto-draw
         ></v-sparkline>
-        <v-list>
-          <v-list-item
-            two-line
-            v-for="message in messages"
-            :key="message.id"
-          >
-            <v-list-item-content>
-              <v-list-item-title>{{ message['display-name'] }}</v-list-item-title>
-              <v-list-item-subtitle>{{ message.msg }}</v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
       </v-card>
     </v-layout>
   </v-container>
 </template>
 
 <script>
-import moment from 'moment'
 import { mapState, mapGetters, mapActions } from 'vuex'
 
 const gradients = [
@@ -82,14 +66,13 @@ export default {
     }
   },
   computed: {
-    ...mapState(['messages']),
+    ...mapState(['messages', 'streams']),
     ...mapGetters(['getStream'])
   },
   async created () {
     try {
       this.loading = true
-      await this.fetchStreamMessages(this.streamID)
-      this.sparkline()
+      await this.sparkline()
     } catch (error) {
       console.error('Error fetching stream messages:', error)
     } finally {
@@ -97,39 +80,18 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchStreamMessages']),
-    sparkline () {
-      const stream = this.getStream(this.streamID)
-      const streamStartTime = moment(stream.started_at)
-      let jokeTotal = 0
+    ...mapActions(['fetchStream']),
+    async sparkline () {
+      await this.fetchStream(`${this.streamID}`)
+      const stream = this.getStream(`${this.streamID}`)
 
-      const dataAndLabels = this.messages.map(message => {
-        if (message.joke) {
-          jokeTotal += 2
-        } else {
-          jokeTotal -= 2
-        }
-
-        const messageTime = moment(+message['tmi-sent-ts'])
-        const time = messageTime.diff(streamStartTime, 'minutes')
-
-        return {
-          jokeTotal,
-          time
-        }
+      this.value = stream.analyzedData.map(data => {
+        return data.currentJokeValue
       })
 
-      this.value = dataAndLabels.map(data => {
-        return data.jokeTotal
+      this.labels = stream.analyzedData.map(data => {
+        return data.interval
       })
-
-      this.labels = dataAndLabels.map(label => {
-        return label.time
-      })
-
-      console.log(this.value)
-
-      console.log(dataAndLabels)
     }
   }
 }

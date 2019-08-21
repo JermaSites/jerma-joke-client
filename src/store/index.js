@@ -18,6 +18,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    addStream (state, payload) {
+      state.streams.push(payload)
+    },
     setStreams (state, payload) {
       state.streams = payload
     },
@@ -26,6 +29,17 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    async fetchStream ({ commit, getters }, payload) {
+      try {
+        let stream = getters.getStream(payload)
+        if (!stream) {
+          stream = await db.collection('streams').doc(payload).get()
+          commit('addStream', stream)
+        }
+      } catch (error) {
+        console.error('Error getting stream:', error)
+      }
+    },
     async fetchStreams ({ commit }) {
       try {
         const streams = []
