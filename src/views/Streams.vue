@@ -1,10 +1,16 @@
 <template>
-  <h1>STREAMS</h1>
+  <v-container>
+    <v-layout>
+      <StreamList />
+    </v-layout>
+  </v-container>
 </template>
 
 <script>
 export default {
-
+  components: {
+    StreamList: () => import('@/components/StreamList')
+  }
 }
 </script>
 

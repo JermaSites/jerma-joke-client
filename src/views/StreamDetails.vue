@@ -9,23 +9,23 @@
     </v-layout>
 
     <v-layout v-else>
-      <v-card
-        class="mx-auto"
-        min-width="850"
-        tile
-      >
-        <v-sparkline
-          :fill="fill"
-          :gradient="gradient"
-          :line-width="width"
-          :padding="padding"
-          :smooth="radius || false"
-          :value="value"
-          :labels="value"
-          label-size="3"
-          auto-draw
-        ></v-sparkline>
-      </v-card>
+      <v-flex>
+        <v-card>
+          <v-sparkline
+            :fill="fill"
+            :gradient="gradient"
+            :line-width="width"
+            :padding="padding"
+            :smooth="radius || false"
+            :value="value"
+            auto-draw
+          ></v-sparkline>
+
+          <v-card-text>
+            <h1>Joke Tally: {{ currentJokeTally }}</h1>
+          </v-card-text>
+        </v-card>
+      </v-flex>
     </v-layout>
   </v-container>
 </template>
@@ -71,7 +71,10 @@ export default {
   },
   computed: {
     ...mapState(['messages', 'streams']),
-    ...mapGetters(['getStream'])
+    ...mapGetters(['getStream']),
+    currentJokeTally () {
+      return this.value.slice(-1)[0]
+    }
   },
   async created () {
     try {

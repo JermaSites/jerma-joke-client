@@ -2,17 +2,14 @@
   <v-app>
     <v-app-bar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>Jerma</span>
+        <span class="font-weight-light">Joke</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        text
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
+      <v-toolbar-items>
+        <v-btn :to="{ name: 'home' }" exact text>Home</v-btn>
+        <v-btn :to="{ name: 'streams' }" exact text>Streams</v-btn>
+      </v-toolbar-items>
     </v-app-bar>
 
     <v-content>
