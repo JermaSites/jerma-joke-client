@@ -32,9 +32,12 @@ export default new Vuex.Store({
     async fetchStream ({ commit, getters }, payload) {
       try {
         let stream = getters.getStream(payload)
+
         if (!stream) {
-          stream = await db.collection('streams').doc(payload).get()
-          commit('addStream', stream)
+          await db.collection('streams').doc(payload).onSnapshot(docSnapshot => {
+            console.log('Snapshot', docSnapshot.data())
+            commit('addStream', docSnapshot.data())
+          })
         }
       } catch (error) {
         console.error('Error getting stream:', error)

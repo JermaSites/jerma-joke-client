@@ -21,6 +21,8 @@
           :padding="padding"
           :smooth="radius || false"
           :value="value"
+          :labels="value"
+          label-size="3"
           auto-draw
         ></v-sparkline>
       </v-card>
@@ -29,7 +31,10 @@
 </template>
 
 <script>
+import firebase from '../plugins/firebase'
 import { mapState, mapGetters, mapActions } from 'vuex'
+
+const db = firebase.firestore()
 
 const gradients = [
   ['#222'],
@@ -56,8 +61,7 @@ export default {
       padding: 8,
       lineCap: 'round',
       gradient: gradients[5],
-      value: [],
-      labels: [],
+      value: [0, 0],
       gradientDirection: 'top',
       gradients,
       fill: false,
@@ -72,7 +76,10 @@ export default {
   async created () {
     try {
       this.loading = true
-      await this.sparkline()
+      db.collection('streams').doc(`${this.streamID}`).onSnapshot(docSnapshot => {
+        const streamData = docSnapshot.data()
+        this.value = streamData.analyzedData.map(data => data.currentJokeValue)
+      })
     } catch (error) {
       console.error('Error fetching stream messages:', error)
     } finally {
@@ -80,19 +87,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchStream']),
-    async sparkline () {
-      await this.fetchStream(`${this.streamID}`)
-      const stream = this.getStream(`${this.streamID}`)
-
-      this.value = stream.analyzedData.map(data => {
-        return data.currentJokeValue
-      })
-
-      this.labels = stream.analyzedData.map(data => {
-        return data.interval
-      })
-    }
+    ...mapActions(['fetchStream'])
   }
 }
 </script>
