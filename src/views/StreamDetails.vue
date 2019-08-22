@@ -32,7 +32,7 @@
 
 <script>
 import firebase from '../plugins/firebase'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 const db = firebase.firestore()
 
@@ -88,9 +88,6 @@ export default {
     } finally {
       this.loading = false
     }
-  },
-  methods: {
-    ...mapActions(['fetchStream'])
   }
 }
 </script>
