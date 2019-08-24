@@ -1,21 +1,11 @@
 <template>
   <v-container>
-    <v-layout align-center justify-center v-if="loading">
-      <v-progress-circular
-        :size="50"
-        color="primary"
-        indeterminate
-      ></v-progress-circular>
-    </v-layout>
-
-    <v-layout v-else>
-      <v-flex>
+    <v-row>
+      <v-col>
         <v-card>
           <v-sparkline
-            :fill="fill"
             :gradient="gradient"
-            :line-width="width"
-            :padding="padding"
+            :line-width="2"
             :smooth="radius || false"
             :value="value"
             auto-draw
@@ -25,8 +15,8 @@
             <h1>Joke Tally: {{ currentJokeTally }}</h1>
           </v-card-text>
         </v-card>
-      </v-flex>
-    </v-layout>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -35,15 +25,6 @@ import firebase from '../plugins/firebase'
 import { mapState, mapGetters } from 'vuex'
 
 const db = firebase.firestore()
-
-const gradients = [
-  ['#222'],
-  ['#42b3f4'],
-  ['red', 'orange', 'yellow'],
-  ['purple', 'violet'],
-  ['#00c6ff', '#F0F', '#FF0'],
-  ['#f72047', '#ffd200', '#1feaea']
-]
 
 export default {
   name: 'StreamDetails',
@@ -56,17 +37,9 @@ export default {
   data () {
     return {
       loading: true,
-      width: 2,
       radius: 10,
-      padding: 8,
-      lineCap: 'round',
-      gradient: gradients[5],
-      value: [0, 0],
-      gradientDirection: 'top',
-      gradients,
-      fill: false,
-      type: 'trend',
-      autoLineWidth: false
+      gradient: ['#f72047', '#ffd200', '#1feaea'],
+      value: [0, 0]
     }
   },
   computed: {
@@ -81,7 +54,37 @@ export default {
       this.loading = true
       db.collection('streams').doc(`${this.streamID}`).onSnapshot(docSnapshot => {
         const streamData = docSnapshot.data()
-        this.value = streamData.analyzedData.map(data => data.currentJokeValue)
+        let data = streamData.analyzedData
+        const test = []
+        let value = -1
+        data.reverse().forEach(item => {
+          if (item.interval !== value) {
+            test.unshift(item)
+            value = item.interval
+          }
+        })
+
+        const totalTime = test[test.length - 1].interval
+        let finalArr = []
+        let jokeTotal = 0
+
+        for (let i = 0; i < totalTime; i++) {
+          const val = test.find(e => e.interval === i)
+          if (val) {
+            jokeTotal = val.currentJokeValue
+            finalArr.push({
+              currentJokeValue: jokeTotal,
+              interval: i
+            })
+          } else {
+            finalArr.push({
+              currentJokeValue: jokeTotal,
+              interval: i
+            })
+          }
+        }
+
+        this.value = test.map(data => data.currentJokeValue)
       })
     } catch (error) {
       console.error('Error fetching stream messages:', error)

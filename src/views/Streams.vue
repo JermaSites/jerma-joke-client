@@ -1,8 +1,10 @@
 <template>
   <v-container>
-    <v-layout>
-      <StreamList />
-    </v-layout>
+    <v-row justify="center">
+      <v-card>
+        <StreamList />
+      </v-card>
+    </v-row>
   </v-container>
 </template>
 
