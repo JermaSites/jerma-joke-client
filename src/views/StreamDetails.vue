@@ -8,6 +8,8 @@
             :line-width="2"
             :smooth="radius || false"
             :value="value"
+            :labels="labels"
+            :label-size="2"
             auto-draw
           ></v-sparkline>
 
@@ -21,6 +23,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import firebase from '../plugins/firebase'
 import { mapState, mapGetters } from 'vuex'
 
@@ -39,7 +42,10 @@ export default {
       loading: true,
       radius: 10,
       gradient: ['#f72047', '#ffd200', '#1feaea'],
-      value: [0, 0]
+      value: [0, 0],
+      labels: [],
+      timeScale: 1,
+      ticksLabels: ['1', '3', '5', '10']
     }
   },
   computed: {
@@ -54,22 +60,33 @@ export default {
       this.loading = true
       db.collection('streams').doc(`${this.streamID}`).onSnapshot(docSnapshot => {
         const streamData = docSnapshot.data()
-        let data = streamData.analyzedData
-        const test = []
+        const analyzedData = streamData.analyzedData
+
+        const filteredData = []
         let value = -1
-        data.reverse().forEach(item => {
+
+        analyzedData.reverse().forEach(item => {
           if (item.interval !== value) {
-            test.unshift(item)
+            filteredData.unshift(item)
             value = item.interval
           }
         })
 
-        const totalTime = test[test.length - 1].interval
+        let totalTime = 0
+        if (streamData.streamTime) {
+          totalTime = streamData.streamTime
+        } else if (streamData.type === 'live') {
+          const streamStartedAt = moment(streamData.started_at)
+          totalTime = moment().diff(streamStartedAt, 'minutes')
+        } else {
+          totalTime = filteredData[filteredData.length - 1].interval
+        }
+
         let finalArr = []
         let jokeTotal = 0
 
         for (let i = 0; i < totalTime; i++) {
-          const val = test.find(e => e.interval === i)
+          const val = filteredData.find(e => e.interval === i)
           if (val) {
             jokeTotal = val.currentJokeValue
             finalArr.push({
@@ -84,7 +101,7 @@ export default {
           }
         }
 
-        this.value = test.map(data => data.currentJokeValue)
+        this.value = finalArr.map(data => data.currentJokeValue)
       })
     } catch (error) {
       console.error('Error fetching stream messages:', error)
