@@ -62,6 +62,8 @@ export default {
         const streamData = docSnapshot.data()
         const analyzedData = streamData.analyzedData
 
+        if (!analyzedData) return
+
         const filteredData = []
         let value = -1
 
@@ -73,9 +75,11 @@ export default {
         })
 
         let totalTime = 0
-        if (streamData.streamTime) {
-          totalTime = streamData.streamTime
-        } else if (streamData.type === 'live') {
+        // if (streamData.streamTime) {
+        //   console.log('Using saved stream time')
+        //   totalTime = streamData.streamTime
+        // } else
+        if (streamData.type === 'live') {
           const streamStartedAt = moment(streamData.started_at)
           totalTime = moment().diff(streamStartedAt, 'minutes')
         } else {
@@ -84,7 +88,6 @@ export default {
 
         let finalArr = []
         let jokeTotal = 0
-
         for (let i = 0; i < totalTime; i++) {
           const val = filteredData.find(e => e.interval === i)
           if (val) {
