@@ -19,7 +19,19 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
-  name: 'App'
+  name: 'App',
+  async created () {
+    try {
+      await this.fetchStreams()
+    } catch (error) {
+      console.error('Failed to fetch streams:', error)
+    }
+  },
+  methods: {
+    ...mapActions(['fetchStreams'])
+  }
 }
 </script>

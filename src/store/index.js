@@ -25,7 +25,7 @@ export default new Vuex.Store({
     async fetchStreams ({ commit }) {
       try {
         const streams = []
-        const snapshot = await db.collection('streams').get()
+        const snapshot = await db.collection('streams').orderBy('id', 'desc').get()
         snapshot.forEach(doc => {
           streams.push(doc.data())
         })

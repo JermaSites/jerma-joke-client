@@ -13,6 +13,7 @@
           :startedAt="stream.started_at"
           :imgURL="stream.thumbnail_url"
           :type="stream.type"
+          :jokeScore="stream.analyzedData[stream.analyzedData.length - 1].currentJokeValue"
         />
       </v-col>
     </v-row>
@@ -20,7 +21,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'Home',
   components: {
@@ -28,16 +29,6 @@ export default {
   },
   computed: {
     ...mapState(['streams'])
-  },
-  async created () {
-    try {
-      await this.fetchStreams()
-    } catch (error) {
-      console.error('Failed to fetch streams:', error)
-    }
-  },
-  methods: {
-    ...mapActions(['fetchStreams'])
   }
 }
 </script>

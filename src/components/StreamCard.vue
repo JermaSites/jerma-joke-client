@@ -29,7 +29,7 @@
           {{ title }}
         </div>
 
-        <div class="d-flex align-center align-self-start">
+        <div v-if="type === 'live'" class="d-flex align-center align-self-start">
           LIVE <PulseDot />
         </div>
       </v-card-title>
@@ -37,7 +37,7 @@
 
     <v-card-text class="d-flex justify-space-between">
       <div>{{ 'Game Name' }}</div>
-      <div>{{ 'Joke Score' }}</div>
+      <div>Score: {{ jokeScore }}</div>
     </v-card-text>
   </v-card>
 </template>
@@ -71,8 +71,8 @@ export default {
       required: true
     },
     jokeScore: {
-      type: String,
-      default: '0'
+      type: Number,
+      default: 0
     }
   },
   components: {

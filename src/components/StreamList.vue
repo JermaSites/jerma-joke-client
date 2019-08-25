@@ -13,17 +13,11 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapState } from 'vuex'
 export default {
   name: 'StreamList',
   computed: {
     ...mapState(['streams'])
-  },
-  created () {
-    this.fetchStreams()
-  },
-  methods: {
-    ...mapActions(['fetchStreams'])
   }
 }
 </script>
