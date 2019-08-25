@@ -75,10 +75,9 @@ export default {
         })
 
         let totalTime = 0
-        // if (streamData.streamTime) {
-        //   console.log('Using saved stream time')
-        //   totalTime = streamData.streamTime
-        // } else
+        if (streamData.streamTime) {
+          totalTime = streamData.streamTime
+        } else
         if (streamData.type === 'live') {
           const streamStartedAt = moment(streamData.started_at)
           totalTime = moment().diff(streamStartedAt, 'minutes')
