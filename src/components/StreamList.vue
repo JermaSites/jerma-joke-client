@@ -1,21 +1,27 @@
 <template>
-  <v-list>
-    <v-list-item
+  <v-row>
+    <v-col
       v-for="stream in streams"
       :key="stream.id"
-      :to="{ name: 'stream', params: { streamID: stream.id }}"
     >
-      <v-list-item-content>
-        <v-list-item-title>{{ stream.title }}</v-list-item-title>
-      </v-list-item-content>
-    </v-list-item>
-  </v-list>
+      <StreamListItem
+        :streamID="stream.id"
+        :imgURL="stream.thumbnail_url"
+        :title="stream.title"
+        :jokeScore="stream.analyzedData[stream.analyzedData.length - 1].currentJokeValue"
+      />
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+
 export default {
   name: 'StreamList',
+  components: {
+    StreamListItem: () => import('@/components/StreamListItem')
+  },
   computed: {
     ...mapState(['streams'])
   }
