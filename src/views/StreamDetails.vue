@@ -59,38 +59,29 @@ export default {
     try {
       this.loading = true
       db.collection('streams').doc(`${this.streamID}`).onSnapshot(docSnapshot => {
+        console.log('Data updated')
         const streamData = docSnapshot.data()
-        const analyzedData = streamData.analyzedData
+        const { condensedData } = streamData
 
-        if (!analyzedData) return
-
-        const filteredData = []
-        let value = -1
-
-        analyzedData.reverse().forEach(item => {
-          if (item.interval !== value) {
-            filteredData.unshift(item)
-            value = item.interval
-          }
-        })
+        if (!condensedData) return
 
         let totalTime = 0
-        if (streamData.streamTime) {
-          totalTime = streamData.streamTime
+        if (streamData.streamUpTime) {
+          totalTime = streamData.streamUpTime
         } else
         if (streamData.type === 'live') {
           const streamStartedAt = moment(streamData.started_at)
           totalTime = moment().diff(streamStartedAt, 'minutes')
         } else {
-          totalTime = filteredData[filteredData.length - 1].interval
+          totalTime = condensedData[condensedData.length - 1].messagePostTime
         }
 
         let finalArr = []
         let jokeTotal = 0
         for (let i = 0; i < totalTime; i++) {
-          const val = filteredData.find(e => e.interval === i)
+          const val = condensedData.find(e => e.messagePostTime === i)
           if (val) {
-            jokeTotal = val.currentJokeValue
+            jokeTotal = val.jokeScore
             finalArr.push({
               currentJokeValue: jokeTotal,
               interval: i

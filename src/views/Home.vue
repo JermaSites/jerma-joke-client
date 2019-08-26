@@ -14,7 +14,7 @@
           :startedAt="stream.started_at"
           :imgURL="stream.thumbnail_url"
           :type="stream.type"
-          :jokeScore="stream.analyzedData[stream.analyzedData.length - 1].currentJokeValue"
+          :jokeScore="stream.jokeScoreTotal"
         />
       </v-col>
     </v-row>
