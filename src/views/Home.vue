@@ -4,7 +4,8 @@
       <v-col
         v-for="stream in streams"
         :key="stream.id"
-        cols="4"
+        :cols="stream.type === 'live' ? 6 : 4"
+        :offset="stream.type === 'live' ? 3 : 0"
       >
         <StreamCard
           :streamID="stream.id"
