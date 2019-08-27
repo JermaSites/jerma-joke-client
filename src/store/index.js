@@ -9,7 +9,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    streams: []
+    streams: [],
+    stream: {}
   },
   getters: {
     getStream (state) {
@@ -19,6 +20,12 @@ export default new Vuex.Store({
   mutations: {
     setStreams (state, payload) {
       state.streams = payload
+    },
+    setStream (state, payload) {
+      state.stream = payload
+    },
+    setCondensedData (state, payload) {
+      state.stream.condensedData = state.stream.condensedData.concat(payload)
     }
   },
   actions: {
@@ -32,6 +39,15 @@ export default new Vuex.Store({
         commit('setStreams', streams)
       } catch (error) {
         console.error('Error fetching streams:', error)
+      }
+    },
+    async fetchStream ({ commit }, payload) {
+      try {
+        const snapshot = await db.collection('streams').doc(`${payload}`).get()
+        const data = snapshot.data()
+        commit('setStream', data)
+      } catch (error) {
+        console.error('Failed to fetch stream:', error)
       }
     }
   }
