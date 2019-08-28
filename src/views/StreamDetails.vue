@@ -9,8 +9,6 @@
             :line-width="2"
             :smooth="radius || false"
             :value="graphValues"
-            :labels="labels"
-            :label-size="2"
             auto-draw
           ></v-sparkline>
 
