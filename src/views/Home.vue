@@ -9,10 +9,10 @@
       >
         <StreamCard
           :streamID="stream.id"
-          :gameID="stream.game_id"
+          :gameID="stream.gameID"
           :title="stream.title"
-          :startedAt="stream.started_at"
-          :imgURL="stream.thumbnail_url"
+          :startedAt="stream.startedAt"
+          :imgURL="stream.thumbnailURL"
           :type="stream.type"
           :jokeScore="stream.jokeScoreTotal"
         />

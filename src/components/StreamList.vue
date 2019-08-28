@@ -6,9 +6,9 @@
     >
       <StreamListItem
         :streamID="stream.id"
-        :imgURL="stream.thumbnail_url"
+        :imgURL="stream.thumbnailURL"
         :title="stream.title"
-        :jokeScore="stream.analyzedData[stream.analyzedData.length - 1].currentJokeValue"
+        :jokeScore="stream.jokeScoreTotal"
       />
     </v-col>
   </v-row>
