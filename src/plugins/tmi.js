@@ -1,7 +1,13 @@
 import tmi from 'tmi.js'
 
 // eslint-disable-next-line new-cap
-const client = new tmi.client({ channels: ['#moduspwnens'] })
+const client = new tmi.client({
+  connection: {
+    reconnect: true,
+    secure: true
+  },
+  channels: ['#jerma985']
+})
 
 client.connect()
 
