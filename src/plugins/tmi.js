@@ -6,7 +6,7 @@ const client = new tmi.client({
     reconnect: true,
     secure: true
   },
-  channels: ['#jerma985']
+  channels: ['#jerma985', '#moduspwnens']
 })
 
 client.connect()

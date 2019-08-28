@@ -1,11 +1,33 @@
 <template>
   <v-container>
+    <v-row v-if="currentStream">
+      <v-col
+        cols="12"
+        sm="10"
+        md="8"
+        lg="6"
+        offset-sm="1"
+        offset-md="2"
+        offset-lg="3"
+      >
+        <StreamCard
+          :streamID="currentStream.id"
+          :gameID="currentStream.gameID"
+          :title="currentStream.title"
+          :startedAt="currentStream.startedAt"
+          :imgURL="currentStream.thumbnailURL"
+          :type="currentStream.type"
+          :jokeScore="currentStream.jokeScoreTotal"
+        />
+      </v-col>
+    </v-row>
     <v-row>
       <v-col
-        v-for="stream in streams"
+        v-for="stream in recentStreams"
         :key="stream.id"
-        :cols="stream.type === 'live' ? 6 : 4"
-        :offset="stream.type === 'live' ? 3 : 0"
+        cols="12"
+        sm="6"
+        md="4"
       >
         <StreamCard
           :streamID="stream.id"
@@ -28,8 +50,12 @@ export default {
   components: {
     StreamCard: () => import('@/components/StreamCard')
   },
+  data () {
+    return {
+    }
+  },
   computed: {
-    ...mapState(['streams'])
+    ...mapState(['recentStreams', 'currentStream'])
   }
 }
 </script>

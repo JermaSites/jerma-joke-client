@@ -3,6 +3,17 @@
     hover
     :to="{ name: 'stream', params: { streamID } }"
   >
+    <v-toolbar
+      dense
+      flat
+      v-if="type === 'live'"
+    >
+      <v-spacer></v-spacer>
+      <div class="d-flex align-center live-pulse">
+        <span class="mr-1">LIVE</span> <PulseDot />
+      </div>
+    </v-toolbar>
+
     <v-img
       :src="sizedImgURL"
       :srcset="srcsetURLs"
@@ -25,12 +36,8 @@
       <v-card-title
         class="justify-space-between fill-height white--text"
       >
-        <div class="align-self-end">
+        <div class="align-self-end stream-title text-no-wrap">
           {{ title }}
-        </div>
-
-        <div v-if="type === 'live'" class="d-flex align-center align-self-start">
-          LIVE <PulseDot />
         </div>
       </v-card-title>
     </v-img>
@@ -64,7 +71,7 @@ export default {
     },
     imgURL: {
       type: String,
-      required: true
+      default: ''
     },
     type: {
       type: String,
@@ -80,9 +87,11 @@ export default {
   },
   computed: {
     sizedImgURL () {
+      if (!this.imgURL) return require('@/assets/fireman.png')
       return this.imgURL.replace(/{width}x{height}/, '1920x1080')
     },
     srcsetURLs () {
+      if (!this.imgURL) return ''
       const srcsetURLs =
       `
         ${this.imgURL.replace(/{width}x{height}/, '1920x1080')} 1920w,
@@ -97,4 +106,11 @@ export default {
 </script>
 
 <style scoped>
+.stream-title {
+  text-shadow: 2px 2px 10px black;
+}
+
+.live-pulse {
+  text-shadow: 2px 2px 10px black;
+}
 </style>

@@ -17,25 +17,25 @@
           </div>
 
           <v-card-text>
-            <h1>Joke Score: {{ jokeScoreTotal }}</h1>
+            <h1>Joke Score: {{ total }}</h1>
           </v-card-text>
 
           <v-card-text>
-            <h1>Min: {{ jokeScoreMin }}</h1>
-
-          </v-card-text>
-
-          <v-card-text>
-            <h1>Max: {{ jokeScoreMax }}</h1>
-          </v-card-text>
-
-          <v-card-text>
-            <h1>Low: {{ jokeScoreLow }}</h1>
+            <h1>Min: {{ min }}</h1>
 
           </v-card-text>
 
           <v-card-text>
-            <h1>High: {{ jokeScoreHigh }}</h1>
+            <h1>Max: {{ max }}</h1>
+          </v-card-text>
+
+          <v-card-text>
+            <h1>Low: {{ low }}</h1>
+
+          </v-card-text>
+
+          <v-card-text>
+            <h1>High: {{ high }}</h1>
           </v-card-text>
         </v-card>
       </v-col>
@@ -70,7 +70,8 @@ export default {
       low: 0,
       total: 0,
       dataPoints: [],
-      updateInterval: null
+      updateInterval: null,
+      now: moment()
     }
   },
   computed: {
@@ -79,35 +80,28 @@ export default {
       return this.dataPoints.map(data => data.jokeScore)
     },
     streamUpTime () {
+      if (this.stream.type === 'live') return this.now.diff(moment(this.stream.startedAt), 'minutes')
+
       if (this.stream.streamUpTime) return this.stream.streamUpTime
 
-      if (this.stream.type === 'live') return moment().diff(moment(this.stream.startedAt), 'minutes')
-
       return this.stream.data[this.stream.data.length - 1].interval
-    },
-    jokeScoreTotal () {
-      return this.total + this.stream.jokeScoreTotal
-    },
-    jokeScoreMin () {
-      return this.min + this.stream.jokeScoreMin
-    },
-    jokeScoreMax () {
-      return this.max + this.stream.jokeScoreMax
-    },
-    jokeScoreHigh () {
-      return this.high + this.stream.jokeScoreHigh
-    },
-    jokeScoreLow () {
-      return this.low + this.stream.jokeScoreLow
     }
   },
   async created () {
     try {
-      client.on('message', this.onMessageHandler)
       this.loading = true
       await this.fetchStream(this.streamID)
+      this.total = this.stream.jokeScoreTotal
+      this.min = this.stream.jokeScoreMin
+      this.max = this.stream.jokeScoreMax
+      this.high = this.stream.jokeScoreHigh
+      this.low = this.stream.jokeScoreLow
       this.dataPoints = this.calcDataPoints()
-      if (this.stream.type === 'live') setInterval(this.updateGraph, 1 * 60 * 1000)
+      if (this.stream.type === 'live') {
+        console.log('Stream is live')
+        setInterval(this.updateGraph, 5000)
+        client.on('message', this.onMessageHandler)
+      }
     } catch (error) {
       console.error('Failed to fetch stream:', error)
     } finally {
@@ -150,35 +144,42 @@ export default {
       // Calculate the total joke score so far
       this.total = this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum - 2
-      }, 0)
+      }, this.stream.jokeScoreTotal)
 
       this.min = this.messages.reduce((sum, message) => {
         return message.joke ? sum : sum - 2
-      }, 0)
+      }, this.stream.jokeScoreMin)
 
       this.max = this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum
-      }, 0)
+      }, this.stream.jokeScoreMax)
 
-      this.high = 0
       this.messages.reduce((sum, message) => {
         message.joke ? sum += 2 : sum -= 2
         if (sum > this.high) this.high = sum
         return sum
-      }, 0)
+      }, this.stream.jokeScoreTotal)
 
-      this.low = 0
       this.messages.reduce((sum, message) => {
         message.joke ? sum += 2 : sum -= 2
         if (sum < this.low) this.low = sum
         return sum
-      }, 0)
+      }, this.stream.jokeScoreTotal)
     },
     updateGraph () {
+      this.now = moment()
       this.analyseMessages()
-      this.dataPoints.push({
-        jokeScore: this.jokeScoreTotal
-      })
+
+      const dataPointIndex = this.dataPoints.findIndex(data => data.interval === this.streamUpTime)
+
+      if (dataPointIndex !== -1) {
+        this.dataPoints[dataPointIndex].jokeScore = this.total
+      } else {
+        this.dataPoints.push({
+          jokeScore: this.total,
+          interval: this.streamUpTime
+        })
+      }
     }
   }
 }

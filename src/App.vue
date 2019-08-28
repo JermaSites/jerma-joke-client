@@ -20,18 +20,19 @@
 
 <script>
 import { mapActions } from 'vuex'
-
 export default {
   name: 'App',
   async created () {
     try {
       await this.fetchStreams()
+      await this.fetchCurrentStream()
+      await this.fetchRecentStreams()
     } catch (error) {
-      console.error('Failed to fetch streams:', error)
+      console.error('Failed to fetch current and recent streams:', error)
     }
   },
   methods: {
-    ...mapActions(['fetchStreams'])
+    ...mapActions(['fetchCurrentStream', 'fetchRecentStreams', 'fetchStreams'])
   }
 }
 </script>
