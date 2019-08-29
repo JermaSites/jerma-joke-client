@@ -7,7 +7,7 @@
     </v-row>
 
     <v-row>
-      <v-col cols="6">
+      <v-col>
         <GameDetails :gameID="stream.gameID" v-if="!loading" />
       </v-col>
     </v-row>

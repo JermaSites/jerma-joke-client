@@ -1,5 +1,5 @@
 <template>
-  <v-card :loading="loading" max-width="300">
+  <v-card :loading="loading" max-width="400">
     <v-toolbar>
       <v-toolbar-title v-if="!loading">
         {{ game.name }}
