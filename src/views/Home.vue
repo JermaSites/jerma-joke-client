@@ -23,7 +23,7 @@
     </v-row>
     <v-row>
       <v-col
-        v-for="stream in recentStreams"
+        v-for="stream in streams"
         :key="stream.id"
         cols="12"
         sm="6"
@@ -55,7 +55,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['recentStreams', 'currentStream'])
+    ...mapState('streams', ['streams'])
   }
 }
 </script>

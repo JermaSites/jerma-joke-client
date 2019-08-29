@@ -2,32 +2,33 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <StreamGraph  v-if="!loading" />
+        <StreamGraph
+          v-if="!loading"
+          :stream="stream"
+        />
       </v-col>
     </v-row>
 
     <v-row>
       <v-col>
-        <GameDetails :gameID="stream.gameID" v-if="!loading" />
+        <GameDetails
+          v-if="!loading"
+          :gameID="stream.gameID"
+        />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'StreamDetails',
   props: {
     streamID: {
-      type: Number,
+      type: String,
       required: true
-    }
-  },
-  data () {
-    return {
-      loading: true
     }
   },
   components: {
@@ -35,19 +36,10 @@ export default {
     GameDetails: () => import('@/components/GameDetails')
   },
   computed: {
-    ...mapState(['stream'])
-  },
-  async created () {
-    try {
-      this.loading = true
-      await this.fetchStream(this.streamID)
-      this.loading = false
-    } catch (error) {
-      console.error('Failed to fetch stream:', error)
+    ...mapGetters('streams', ['loading', 'streamByID']),
+    stream () {
+      return this.streamByID(this.streamID)
     }
-  },
-  methods: {
-    ...mapActions(['fetchStream'])
   }
 }
 </script>

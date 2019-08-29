@@ -24,14 +24,12 @@ export default {
   async created () {
     try {
       await this.fetchStreams()
-      await this.fetchCurrentStream()
-      await this.fetchRecentStreams()
     } catch (error) {
       console.error('Failed to fetch current and recent streams:', error)
     }
   },
   methods: {
-    ...mapActions(['fetchCurrentStream', 'fetchRecentStreams', 'fetchStreams'])
+    ...mapActions('streams', ['fetchStreams'])
   }
 }
 </script>

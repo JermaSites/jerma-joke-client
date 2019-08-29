@@ -64,10 +64,15 @@
 <script>
 import moment from 'moment'
 import client from '@/plugins/tmi'
-import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'StreamGraph',
+  props: {
+    stream: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       messages: [],
@@ -83,7 +88,6 @@ export default {
     }
   },
   computed: {
-    ...mapState(['stream']),
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
     },
@@ -111,7 +115,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchStream']),
     onMessageHandler (channel, userstate, message, self) {
       if (message.includes('+2')) {
         userstate.joke = true
