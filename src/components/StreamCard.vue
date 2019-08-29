@@ -6,10 +6,14 @@
     <v-toolbar
       dense
       flat
-      v-if="type === 'live'"
     >
+      <v-toolbar-title>
+        {{ title }}
+      </v-toolbar-title>
+
       <v-spacer></v-spacer>
-      <div class="d-flex align-center live-pulse">
+
+      <div class="d-flex align-center" v-if="type === 'live'">
         <span class="mr-1">LIVE</span> <PulseDot />
       </div>
     </v-toolbar>
@@ -37,7 +41,7 @@
         class="justify-space-between fill-height white--text"
       >
         <div class="align-self-end stream-title text-no-wrap">
-          {{ title }}
+
         </div>
       </v-card-title>
     </v-img>
@@ -88,17 +92,33 @@ export default {
   computed: {
     sizedImgURL () {
       if (!this.imgURL) return require('@/assets/fireman.png')
-      return this.imgURL.replace(/{width}x{height}/, '1920x1080')
+
+      if (this.type === 'live') return this.imgURL.replace(/{width}x{height}/, '1920x1080')
+
+      return this.imgURL.replace(/%{width}x%{height}/, '1920x1080')
     },
     srcsetURLs () {
       if (!this.imgURL) return ''
-      const srcsetURLs =
-      `
-        ${this.imgURL.replace(/{width}x{height}/, '1920x1080')} 1920w,
-        ${this.imgURL.replace(/{width}x{height}/, '1280x720')} 1280w,
-        ${this.imgURL.replace(/{width}x{height}/, '640x360')} 640w,
-        ${this.imgURL.replace(/{width}x{height}/, '256x144')} 256w
-      `
+      let srcsetURLs = ''
+
+      if (this.type === 'live') {
+        srcsetURLs =
+          `
+            ${this.imgURL.replace(/{width}x{height}/, '1920x1080')} 1920w,
+            ${this.imgURL.replace(/{width}x{height}/, '1280x720')} 1280w,
+            ${this.imgURL.replace(/{width}x{height}/, '640x360')} 640w,
+            ${this.imgURL.replace(/{width}x{height}/, '256x144')} 256w
+          `
+      } else {
+        srcsetURLs =
+          `
+            ${this.imgURL.replace(/%{width}x%{height}/, '1920x1080')} 1920w,
+            ${this.imgURL.replace(/%{width}x%{height}/, '1280x720')} 1280w,
+            ${this.imgURL.replace(/%{width}x%{height}/, '640x360')} 640w,
+            ${this.imgURL.replace(/%{width}x%{height}/, '256x144')} 256w
+          `
+      }
+
       return srcsetURLs
     }
   }
@@ -106,11 +126,4 @@ export default {
 </script>
 
 <style scoped>
-.stream-title {
-  text-shadow: 2px 2px 10px black;
-}
-
-.live-pulse {
-  text-shadow: 2px 2px 10px black;
-}
 </style>
