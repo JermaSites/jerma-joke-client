@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <v-row>
-      <v-col v-if="stream">
-        <StreamGraph />
+      <v-col cols="12">
+        <StreamGraph  v-if="!loading" />
       </v-col>
     </v-row>
 
     <v-row>
-      <v-col>
-
+      <v-col cols="6">
+        <GameDetails :gameID="stream.gameID" v-if="!loading" />
       </v-col>
     </v-row>
   </v-container>
@@ -25,19 +25,23 @@ export default {
       required: true
     }
   },
-  components: {
-    StreamGraph: () => import('@/components/StreamGraph')
-  },
   data () {
     return {
+      loading: true
     }
+  },
+  components: {
+    StreamGraph: () => import('@/components/StreamGraph'),
+    GameDetails: () => import('@/components/GameDetails')
   },
   computed: {
     ...mapState(['stream'])
   },
   async created () {
     try {
+      this.loading = true
       await this.fetchStream(this.streamID)
+      this.loading = false
     } catch (error) {
       console.error('Failed to fetch stream:', error)
     }

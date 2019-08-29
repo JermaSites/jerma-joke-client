@@ -36,14 +36,6 @@
           />
         </v-row>
       </template>
-
-      <v-card-title
-        class="justify-space-between fill-height white--text"
-      >
-        <div class="align-self-end stream-title text-no-wrap">
-
-        </div>
-      </v-card-title>
     </v-img>
 
     <v-card-text class="d-flex justify-space-between">
