@@ -51,7 +51,7 @@
       </v-list-item>
 
       <v-list-item>
-        <v-list-item-title>high</v-list-item-title>
+        <v-list-item-title>High</v-list-item-title>
 
         <v-list-item-subtitle class="text-right">
           {{ high }}
