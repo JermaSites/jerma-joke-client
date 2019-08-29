@@ -3,6 +3,15 @@
     <v-row>
       <v-col>
         <v-card :loading="loading">
+          <v-toolbar
+            flat
+            dense
+          >
+            <v-toolbar-title>
+              {{ stream.title }}
+            </v-toolbar-title>
+          </v-toolbar>
+
           <v-sparkline
             v-if="!loading"
             :gradient="gradient"
@@ -12,31 +21,47 @@
             auto-draw
           ></v-sparkline>
 
-          <div v-else style="height: 300px">
+          <v-list>
+            <v-list-item>
+              <v-list-item-title>Joke Score</v-list-item-title>
 
-          </div>
+              <v-list-item-subtitle class="text-right">
+                {{ total }}
+              </v-list-item-subtitle>
+            </v-list-item>
 
-          <v-card-text>
-            <h1>Joke Score: {{ total }}</h1>
-          </v-card-text>
+            <v-list-item>
+              <v-list-item-title>Min</v-list-item-title>
 
-          <v-card-text>
-            <h1>Min: {{ min }}</h1>
+              <v-list-item-subtitle class="text-right">
+                {{ min }}
+              </v-list-item-subtitle>
+            </v-list-item>
 
-          </v-card-text>
+            <v-list-item>
+              <v-list-item-title>Max</v-list-item-title>
 
-          <v-card-text>
-            <h1>Max: {{ max }}</h1>
-          </v-card-text>
+              <v-list-item-subtitle class="text-right">
+                {{ max }}
+              </v-list-item-subtitle>
+            </v-list-item>
 
-          <v-card-text>
-            <h1>Low: {{ low }}</h1>
+            <v-list-item>
+              <v-list-item-title>Low</v-list-item-title>
 
-          </v-card-text>
+              <v-list-item-subtitle class="text-right">
+                {{ low }}
+              </v-list-item-subtitle>
+            </v-list-item>
 
-          <v-card-text>
-            <h1>High: {{ high }}</h1>
-          </v-card-text>
+            <v-list-item>
+              <v-list-item-title>high</v-list-item-title>
+
+              <v-list-item-subtitle class="text-right">
+                {{ high }}
+              </v-list-item-subtitle>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
