@@ -3,65 +3,66 @@
     <v-row>
       <v-col>
         <v-card :loading="loading">
-          <v-toolbar
-            flat
-            dense
-          >
-            <v-toolbar-title>
-              {{ stream.title }}
-            </v-toolbar-title>
-          </v-toolbar>
+          <template v-if="!loading">
+            <v-toolbar
+              flat
+              dense
+            >
+              <v-toolbar-title>
+                {{ stream.title }}
+              </v-toolbar-title>
+            </v-toolbar>
 
-          <v-sparkline
-            v-if="!loading"
-            :gradient="gradient"
-            :line-width="2"
-            :smooth="radius || false"
-            :value="graphValues"
-            auto-draw
-          ></v-sparkline>
+            <v-sparkline
+              :gradient="gradient"
+              :line-width="2"
+              :smooth="radius || false"
+              :value="graphValues"
+              auto-draw
+            ></v-sparkline>
 
-          <v-list>
-            <v-list-item>
-              <v-list-item-title>Joke Score</v-list-item-title>
+            <v-list>
+              <v-list-item>
+                <v-list-item-title>Joke Score</v-list-item-title>
 
-              <v-list-item-subtitle class="text-right">
-                {{ total }}
-              </v-list-item-subtitle>
-            </v-list-item>
+                <v-list-item-subtitle class="text-right">
+                  {{ total }}
+                </v-list-item-subtitle>
+              </v-list-item>
 
-            <v-list-item>
-              <v-list-item-title>Min</v-list-item-title>
+              <v-list-item>
+                <v-list-item-title>Min</v-list-item-title>
 
-              <v-list-item-subtitle class="text-right">
-                {{ min }}
-              </v-list-item-subtitle>
-            </v-list-item>
+                <v-list-item-subtitle class="text-right">
+                  {{ min }}
+                </v-list-item-subtitle>
+              </v-list-item>
 
-            <v-list-item>
-              <v-list-item-title>Max</v-list-item-title>
+              <v-list-item>
+                <v-list-item-title>Max</v-list-item-title>
 
-              <v-list-item-subtitle class="text-right">
-                {{ max }}
-              </v-list-item-subtitle>
-            </v-list-item>
+                <v-list-item-subtitle class="text-right">
+                  {{ max }}
+                </v-list-item-subtitle>
+              </v-list-item>
 
-            <v-list-item>
-              <v-list-item-title>Low</v-list-item-title>
+              <v-list-item>
+                <v-list-item-title>Low</v-list-item-title>
 
-              <v-list-item-subtitle class="text-right">
-                {{ low }}
-              </v-list-item-subtitle>
-            </v-list-item>
+                <v-list-item-subtitle class="text-right">
+                  {{ low }}
+                </v-list-item-subtitle>
+              </v-list-item>
 
-            <v-list-item>
-              <v-list-item-title>high</v-list-item-title>
+              <v-list-item>
+                <v-list-item-title>high</v-list-item-title>
 
-              <v-list-item-subtitle class="text-right">
-                {{ high }}
-              </v-list-item-subtitle>
-            </v-list-item>
-          </v-list>
+                <v-list-item-subtitle class="text-right">
+                  {{ high }}
+                </v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
+          </template>
         </v-card>
       </v-col>
     </v-row>
@@ -96,7 +97,8 @@ export default {
       total: 0,
       dataPoints: [],
       updateInterval: null,
-      now: moment()
+      now: moment(),
+      title: ''
     }
   },
   computed: {
