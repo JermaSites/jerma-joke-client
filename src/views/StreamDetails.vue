@@ -102,7 +102,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['stream']),
+    ...mapState(['stream', 'game']),
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
     },
@@ -118,6 +118,7 @@ export default {
     try {
       this.loading = true
       await this.fetchStream(this.streamID)
+      await this.fetchGame(this.stream.gameID)
       this.total = this.stream.jokeScoreTotal
       this.min = this.stream.jokeScoreMin
       this.max = this.stream.jokeScoreMax
@@ -136,7 +137,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchStream']),
+    ...mapActions(['fetchStream', 'fetchGame']),
     onMessageHandler (channel, userstate, message, self) {
       if (message.includes('+2')) {
         userstate.joke = true

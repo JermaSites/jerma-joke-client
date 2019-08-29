@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import firebase from '../plugins/firebase'
+import api from '../api'
 
 const db = firebase.firestore()
 
