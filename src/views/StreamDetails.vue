@@ -37,8 +37,9 @@ export default {
   },
   computed: {
     ...mapGetters('streams', ['loading', 'streamByID']),
+    ...mapGetters('liveStream', ['liveStream']),
     stream () {
-      return this.streamByID(this.streamID)
+      return this.streamByID(this.streamID) ? this.streamByID(this.streamID) : this.liveStream
     }
   }
 }

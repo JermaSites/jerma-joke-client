@@ -67,7 +67,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('streams', ['liveStream', 'streams', 'cursor'])
+    ...mapState('streams', ['streams', 'cursor']),
+    ...mapState('liveStream', ['liveStream'])
   },
   methods: {
     ...mapActions('streams', ['fetchMoreStreams']),

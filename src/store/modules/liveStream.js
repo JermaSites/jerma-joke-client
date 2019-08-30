@@ -10,6 +10,9 @@ export default {
   getters: {
     loading (state) {
       return state.loading
+    },
+    liveStream (state) {
+      return state.liveStream
     }
   },
   mutations: {
