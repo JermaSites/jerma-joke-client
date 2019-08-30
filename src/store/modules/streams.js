@@ -6,7 +6,6 @@ export default {
   state: {
     loading: false,
     streams: [],
-    liveStream: null,
     cursor: null
   },
   getters: {
@@ -23,9 +22,6 @@ export default {
     },
     setStreams (state, payload) {
       state.streams = payload
-    },
-    setLiveStream (state, payload) {
-      state.liveStream = payload
     },
     setCursor (state, payload) {
       state.cursor = payload
@@ -46,20 +42,6 @@ export default {
         const last = snapshot.docs[snapshot.docs.length - 1]
         commit('setStreams', streams)
         commit('setCursor', last)
-        commit('setLoading', false)
-      } catch (error) {
-        console.error('Error fetching streams:', error)
-      }
-    },
-    async fetchLiveStream ({ commit }) {
-      try {
-        commit('setLoading', true)
-        let liveStream
-        const snapshot = await db.collection('streams').where('type', '==', 'live').get()
-        snapshot.forEach(doc => {
-          liveStream = doc.data()
-        })
-        commit('setLiveStream', liveStream)
         commit('setLoading', false)
       } catch (error) {
         console.error('Error fetching streams:', error)
