@@ -53,19 +53,19 @@ export default {
   props: {
     streamID: {
       type: String,
-      required: true
+      default: '985'
     },
     gameID: {
       type: String,
-      required: true
+      default: '985'
     },
     title: {
       type: String,
-      required: true
+      default: 'Stream Title'
     },
     startedAt: {
       type: String,
-      required: true
+      default: '2019-08-27T22:18:24Z'
     },
     imgURL: {
       type: String,
@@ -73,7 +73,7 @@ export default {
     },
     type: {
       type: String,
-      required: true
+      required: 'offline'
     },
     jokeScore: {
       type: Number,

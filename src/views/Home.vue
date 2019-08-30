@@ -1,7 +1,8 @@
 <template>
   <v-container>
-    <v-row v-if="currentStream">
+    <v-row>
       <v-col
+        v-if="liveStream"
         cols="12"
         sm="10"
         md="8"
@@ -11,17 +12,16 @@
         offset-lg="3"
       >
         <StreamCard
-          :streamID="currentStream.id"
-          :gameID="currentStream.gameID"
-          :title="currentStream.title"
-          :startedAt="currentStream.startedAt"
-          :imgURL="currentStream.thumbnailURL"
-          :type="currentStream.type"
-          :jokeScore="currentStream.jokeScoreTotal"
+          :streamID="liveStream.id"
+          :gameID="liveStream.gameID"
+          :title="liveStream.title"
+          :startedAt="liveStream.startedAt"
+          :imgURL="liveStream.thumbnailURL"
+          :type="liveStream.type"
+          :jokeScore="liveStream.jokeScoreTotal"
         />
       </v-col>
-    </v-row>
-    <v-row>
+
       <v-col
         v-for="stream in streams"
         :key="stream.id"
@@ -40,11 +40,22 @@
         />
       </v-col>
     </v-row>
+    <v-row justify="center">
+      <v-btn
+        color="primary"
+        v-if="cursor"
+        @click="loadMoreStreams"
+        :loading="loading"
+        fab
+      >
+        <v-icon dark>mdi-chevron-down</v-icon>
+      </v-btn>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 export default {
   name: 'Home',
   components: {
@@ -52,10 +63,24 @@ export default {
   },
   data () {
     return {
+      loading: false
     }
   },
   computed: {
-    ...mapState('streams', ['streams'])
+    ...mapState('streams', ['liveStream', 'streams', 'cursor'])
+  },
+  methods: {
+    ...mapActions('streams', ['fetchMoreStreams']),
+    async loadMoreStreams () {
+      if (this.loading) return
+      try {
+        this.loading = true
+        await this.fetchMoreStreams()
+        this.loading = false
+      } catch (error) {
+        console.log('Failed to load more streams:', error)
+      }
+    }
   }
 }
 </script>

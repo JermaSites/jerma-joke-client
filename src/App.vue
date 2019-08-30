@@ -23,13 +23,14 @@ export default {
   name: 'App',
   async created () {
     try {
+      await this.fetchLiveStream()
       await this.fetchStreams()
     } catch (error) {
       console.error('Failed to fetch current and recent streams:', error)
     }
   },
   methods: {
-    ...mapActions('streams', ['fetchStreams'])
+    ...mapActions('streams', ['fetchLiveStream', 'fetchStreams'])
   }
 }
 </script>
