@@ -11,11 +11,13 @@
 
     <v-sparkline
       :gradient="gradient"
-      :line-width="2"
+      :line-width="0.5"
       :smooth="radius || false"
       :value="graphValues"
       auto-draw
     ></v-sparkline>
+
+    <LineChart :height="200" :data="dataPoints" />
 
     <v-list>
       <v-list-item>
@@ -67,6 +69,9 @@ import client from '@/plugins/tmi'
 
 export default {
   name: 'StreamGraph',
+  components: {
+    LineChart: () => import('@/components/Chart')
+  },
   props: {
     stream: {
       type: Object,
@@ -83,13 +88,16 @@ export default {
       total: 0,
       dataPoints: [],
       now: moment(),
-      radius: 10,
+      radius: 0,
       gradient: ['#f72047', '#ffd200', '#1feaea']
     }
   },
   computed: {
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
+    },
+    graphLabels () {
+      return this.dataPoints.map(data => `${data.interval}`).filter((data, i) => i % 1 === 0)
     },
     streamUpTime () {
       if (this.stream.type === 'live') return this.now.diff(moment(this.stream.startedAt), 'minutes')
