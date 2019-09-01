@@ -6,7 +6,7 @@ const client = new tmi.client({
     reconnect: true,
     secure: true
   },
-  channels: ['#jerma985', '#moduspwnens']
+  channels: [process.env.VUE_APP_CHANNEL_NAME]
 })
 
 client.connect()

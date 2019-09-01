@@ -37,7 +37,6 @@ export default {
   actions: {
     async fetchStreams ({ state, commit }) {
       if (state.streams.length) return
-      console.log('Fetching streams')
       try {
         commit('setLoading', true)
         const streams = []
