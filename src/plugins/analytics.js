@@ -7,6 +7,6 @@ Vue.use(VueAnalytics, {
   id: 'UA-145734021-1',
   router,
   debug: {
-    enabled: process.env.VUE_APP_GOOGLE_ANALYTICS_DEBUG || false
+    enabled: false || process.env.VUE_APP_GOOGLE_ANALYTICS_DEBUG === 'true'
   }
 })

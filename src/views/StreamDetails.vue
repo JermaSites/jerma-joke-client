@@ -1,19 +1,23 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12">
+      <v-col cols="12" v-if="!loading">
         <StreamGraph
-          v-if="!loading"
           :stream="stream"
         />
       </v-col>
     </v-row>
 
-    <v-row>
-      <v-col>
+    <v-row v-if="!loading">
+      <v-col
+        cols="3"
+        v-for="game in stream.games"
+        :key="game.id"
+      >
         <GameDetails
-          v-if="!loading"
-          :gameID="stream.gameID"
+          :gameID="game.id"
+          :name="game.name"
+          :boxArtURL="game.boxArtURL"
         />
       </v-col>
     </v-row>
