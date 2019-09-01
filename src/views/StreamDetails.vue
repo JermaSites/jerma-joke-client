@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   name: 'StreamDetails',
@@ -35,12 +35,25 @@ export default {
     StreamGraph: () => import('@/components/StreamGraph'),
     GameDetails: () => import('@/components/GameDetails')
   },
-  computed: {
-    ...mapGetters('streams', ['loading', 'streamByID']),
-    ...mapGetters('liveStream', ['liveStream']),
-    stream () {
-      return this.streamByID(this.streamID) ? this.streamByID(this.streamID) : this.liveStream
+  data () {
+    return {
+      loading: true
     }
+  },
+  computed: {
+    ...mapState('streams', ['stream'])
+  },
+  async created () {
+    try {
+      this.loading = true
+      await this.fetchStream(this.streamID)
+      this.loading = false
+    } catch (error) {
+      console.error('Failed to fetch stream:', error)
+    }
+  },
+  methods: {
+    ...mapActions('streams', ['fetchStream'])
   }
 }
 </script>
