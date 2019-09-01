@@ -11,8 +11,8 @@
 
     <v-sparkline
       :gradient="gradient"
-      :line-width="2"
-      :smooth="radius || false"
+      :line-width="1"
+      :smooth="false"
       :value="graphValues"
       auto-draw
     ></v-sparkline>
