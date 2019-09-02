@@ -3,73 +3,74 @@ import { Line, mixins } from 'vue-chartjs'
 
 export default {
   extends: Line,
-  mixins: [mixins.reactiveData],
-  props: ['data'],
+  mixins: [mixins.reactiveProp],
   data () {
     return {
-      localData: this.data
+      options: {
+        scales: {
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Score',
+              fontColor: 'white'
+            },
+            ticks: {
+              fontColor: 'white',
+              beginAtZero: false
+            },
+            gridLines: {
+              display: true
+            }
+          }],
+          xAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Time in Minutes',
+              fontColor: 'white'
+            },
+            ticks: {
+              fontColor: 'white',
+              beginAtZero: true
+            },
+            gridLines: {
+              display: false
+            }
+          }]
+        },
+        legend: {
+          display: false
+        },
+        responsive: true,
+        maintainAspectRatio: false,
+        tooltips: {
+          mode: 'index',
+          intersect: false
+        }
+      }
     }
   },
   computed: {
-    labels () {
-      return this.filteredData.map(d => d.interval)
-    },
-    dataset () {
-      return this.filteredData.map(d => d.jokeScore)
-    },
-    filteredData () {
-      return this.localData.filter((d, i) => i % 1 === 0)
+    gradient () {
+      const canvasGradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450)
+
+      canvasGradient.addColorStop(0, '#f72047')
+      canvasGradient.addColorStop(0.5, '#ffd200')
+      canvasGradient.addColorStop(1, '#1feaea')
+
+      return canvasGradient
+    }
+  },
+  watch: {
+    chartData: {
+      handler () {
+        this.$data._chart.config.data.datasets[0].borderColor = this.gradient
+        this.$data._chart.update()
+      }
     }
   },
   mounted () {
-    this.renderChart({
-      labels: this.labels,
-      datasets: [
-        {
-          borderColor: this.$vuetify.theme.themes.dark.primary,
-          borderWidth: 1,
-          label: 'Joke Score',
-          data: this.dataset,
-          fill: false,
-          pointBackgroundColor: this.$vuetify.theme.themes.dark.accent,
-          pointBorderColor: this.$vuetify.theme.themes.dark.secondary,
-          pointBorderWidth: 0,
-          pointRadius: 0,
-          pointHoverBorderWidth: 3,
-          pointHoverRadius: 5
-        }
-      ]
-    }, {
-      responsive: true,
-      title: {
-        display: true,
-        text: 'Joke Score Over Time'
-      },
-      tooltips: {
-        mode: 'index',
-        intersect: false
-      },
-      hover: {
-        mode: 'nearest',
-        intersect: true
-      },
-      scales: {
-        xAxes: [{
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'Time in minutes'
-          }
-        }],
-        yAxes: [{
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: 'Score'
-          }
-        }]
-      }
-    })
+    this.chartData.datasets[0].borderColor = this.gradient
+    this.renderChart(this.chartData, this.options)
   }
 }
 </script>

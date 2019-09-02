@@ -9,24 +9,7 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <v-sparkline
-      color="white"
-      :gradient="gradient"
-      :line-width="1"
-      :smooth="false"
-      :value="graphValues"
-      :labels="graphLabels"
-      :label-size="4"
-      show-labels
-      auto-draw
-    >
-    </v-sparkline>
-
-    <v-card-text class="text-center">
-      Minutes
-    </v-card-text>
-
-    <LineChart :height="200" :data="dataPoints" />
+    <LineChart :chart-data="dataCollection" />
 
     <v-list>
       <v-list-item>
@@ -96,21 +79,26 @@ export default {
       low: 0,
       total: 0,
       dataPoints: [],
-      now: moment(),
-      radius: 0,
-      gradient: ['#f72047', '#ffd200', '#1feaea']
+      now: moment()
     }
   },
   computed: {
+    dataCollection () {
+      return {
+        labels: this.graphLabels,
+        datasets: [{
+          data: this.graphValues,
+          fill: false,
+          borderWidth: 3,
+          pointRadius: 0
+        }]
+      }
+    },
     graphLabels () {
-      const steps = Math.ceil(this.dataPoints.length / 100) + 1
-      return this.dataPoints.map(data => data.interval % (steps * 5) === 0 ? `${data.interval}` : ' ')
+      return this.dataPoints.map(data => data.interval)
     },
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
-    },
-    graphLabels () {
-      return this.dataPoints.map(data => `${data.interval}`).filter((data, i) => i % 1 === 0)
     },
     streamUpTime () {
       if (this.stream.type === 'live') return this.now.diff(moment(this.stream.startedAt), 'minutes')
