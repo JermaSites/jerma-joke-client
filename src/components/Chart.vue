@@ -33,7 +33,8 @@ export default {
             ticks: {
               fontColor: 'white',
               beginAtZero: true,
-              autoSkip: false
+              autoSkip: true,
+              maxTicksLimit: 15
             },
             gridLines: {
               display: false
