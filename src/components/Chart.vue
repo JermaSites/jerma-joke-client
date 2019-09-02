@@ -62,9 +62,9 @@ export default {
     gradient () {
       const canvasGradient = this.$refs.canvas.getContext('2d').createLinearGradient(0, 0, 0, 450)
 
-      canvasGradient.addColorStop(0, '#f72047')
+      canvasGradient.addColorStop(0, '#1feaea')
       canvasGradient.addColorStop(0.5, '#ffd200')
-      canvasGradient.addColorStop(1, '#1feaea')
+      canvasGradient.addColorStop(1, '#f72047')
 
       return canvasGradient
     }
