@@ -19,7 +19,9 @@ export default {
               beginAtZero: false
             },
             gridLines: {
-              display: true
+              display: true,
+              zeroLineColor: 'white',
+              color: 'rgba(255, 255, 255, 0.3)'
             }
           }],
           xAxes: [{
@@ -30,7 +32,8 @@ export default {
             },
             ticks: {
               fontColor: 'white',
-              beginAtZero: true
+              beginAtZero: true,
+              autoSkip: false
             },
             gridLines: {
               display: false

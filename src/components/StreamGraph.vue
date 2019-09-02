@@ -96,7 +96,7 @@ export default {
       }
     },
     graphLabels () {
-      return this.dataPoints.map(data => data.interval)
+      return this.dataPoints.map(data => data.interval % 15 === 0 ? data.interval : ' ')
     },
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
