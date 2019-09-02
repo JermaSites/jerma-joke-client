@@ -6,7 +6,8 @@ export default {
   state: {
     loading: false,
     streams: [],
-    cursor: null
+    cursor: null,
+    stream: null
   },
   getters: {
     streamByID (state) {
@@ -23,6 +24,9 @@ export default {
     setStreams (state, payload) {
       state.streams = payload
     },
+    setStream (state, payload) {
+      state.stream = payload
+    },
     setCursor (state, payload) {
       state.cursor = payload
     },
@@ -31,7 +35,8 @@ export default {
     }
   },
   actions: {
-    async fetchStreams ({ commit }) {
+    async fetchStreams ({ state, commit }) {
+      if (state.streams.length) return
       try {
         commit('setLoading', true)
         const streams = []
@@ -59,6 +64,21 @@ export default {
         commit('addStreams', streams)
       } catch (error) {
         console.error('Error fetching more streams:', error)
+      }
+    },
+    async fetchStream ({ getters, commit }, streamID) {
+      const stream = getters.streamByID(streamID)
+      if (stream && stream.type === 'offline') {
+        commit('setStream', stream)
+        return
+      }
+
+      try {
+        const snapshot = await db.collection('streams').doc(`${streamID}`).get()
+        const stream = snapshot.data()
+        commit('setStream', stream)
+      } catch (error) {
+        console.error('Error fetching stream:', error)
       }
     }
   }

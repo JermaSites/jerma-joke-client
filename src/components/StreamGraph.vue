@@ -10,12 +10,21 @@
     </v-toolbar>
 
     <v-sparkline
+      color="white"
       :gradient="gradient"
-      :line-width="0.5"
-      :smooth="radius || false"
+      :line-width="1"
+      :smooth="false"
       :value="graphValues"
+      :labels="graphLabels"
+      :label-size="4"
+      show-labels
       auto-draw
-    ></v-sparkline>
+    >
+    </v-sparkline>
+
+    <v-card-text class="text-center">
+      Minutes
+    </v-card-text>
 
     <LineChart :height="200" :data="dataPoints" />
 
@@ -93,6 +102,10 @@ export default {
     }
   },
   computed: {
+    graphLabels () {
+      const steps = Math.ceil(this.dataPoints.length / 100) + 1
+      return this.dataPoints.map(data => data.interval % (steps * 5) === 0 ? `${data.interval}` : ' ')
+    },
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
     },

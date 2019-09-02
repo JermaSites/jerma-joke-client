@@ -39,14 +39,14 @@
     </v-img>
 
     <v-card-text class="d-flex justify-space-between">
-      <div v-if="game">{{ game.name }}</div>
       <div>Score: {{ jokeScore }}</div>
+      <div>{{ timeAgo }}</div>
     </v-card-text>
   </v-card>
 </template>
 
 <script>
-import api from '@/api'
+import moment from 'moment'
 
 export default {
   name: 'StreamCard',
@@ -83,12 +83,10 @@ export default {
   components: {
     PulseDot: () => import('@/components/PulseDot')
   },
-  data () {
-    return {
-      game: null
-    }
-  },
   computed: {
+    timeAgo () {
+      return moment(this.startedAt).fromNow()
+    },
     sizedImgURL () {
       if (!this.imgURL) return require('@/assets/fireman.png')
 
@@ -119,19 +117,6 @@ export default {
       }
 
       return srcsetURLs
-    }
-  },
-  created () {
-    this.getGameData()
-  },
-  methods: {
-    async getGameData () {
-      try {
-        const response = await api.get(`games?id=${this.gameID}`)
-        this.game = response.data.data[0]
-      } catch (error) {
-        console.error('Failed to fetch game:', error)
-      }
     }
   }
 }

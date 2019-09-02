@@ -1,13 +1,12 @@
 <template>
-  <v-card :loading="loading" max-width="400">
+  <v-card>
     <v-toolbar>
-      <v-toolbar-title v-if="!loading">
-        {{ game.name }}
+      <v-toolbar-title >
+        {{ name }}
       </v-toolbar-title>
     </v-toolbar>
 
     <v-img
-      v-if="!loading"
       :src="sizedImgURL"
       :lazy-src="require('@/assets/fireman.png')"
     >
@@ -28,39 +27,25 @@
 </template>
 
 <script>
-import api from '@/api'
 export default {
   name: 'GameDetails',
   props: {
     gameID: {
       type: String,
       default: '16676'
-    }
-  },
-  data () {
-    return {
-      loading: true,
-      game: null
+    },
+    name: {
+      type: String,
+      default: '16676'
+    },
+    boxArtURL: {
+      type: String,
+      default: '16676'
     }
   },
   computed: {
     sizedImgURL () {
-      return this.game.box_art_url.replace(/{width}x{height}/, '600x800')
-    }
-  },
-  created () {
-    this.getGameData()
-  },
-  methods: {
-    async getGameData () {
-      try {
-        this.loading = true
-        const response = await api.get(`games?id=${this.gameID}`)
-        this.game = response.data.data[0]
-        this.loading = false
-      } catch (error) {
-        console.error('Failed to get game:', error)
-      }
+      return this.boxArtURL.replace(/{width}x{height}/, '600x800')
     }
   }
 }
