@@ -87,6 +87,7 @@ export default {
       return {
         labels: this.graphLabels,
         datasets: [{
+          label: 'score',
           data: this.graphValues,
           fill: false,
           borderWidth: 3,

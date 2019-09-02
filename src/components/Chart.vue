@@ -44,7 +44,12 @@ export default {
         maintainAspectRatio: false,
         tooltips: {
           mode: 'index',
-          intersect: false
+          intersect: false,
+          callbacks: {
+            title (tooltipItems, data) {
+              return `Minute: ${data.labels[tooltipItems[0].index]}`
+            }
+          }
         }
       }
     }
@@ -64,11 +69,13 @@ export default {
     chartData: {
       handler () {
         this.$data._chart.config.data.datasets[0].borderColor = this.gradient
+        this.$data._chart.config.data.datasets[0].backgroundColor = this.gradient
         this.$data._chart.update()
       }
     }
   },
   mounted () {
+    this.chartData.datasets[0].backgroundColor = this.gradient
     this.chartData.datasets[0].borderColor = this.gradient
     this.renderChart(this.chartData, this.options)
   }
