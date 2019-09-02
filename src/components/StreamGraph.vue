@@ -10,12 +10,21 @@
     </v-toolbar>
 
     <v-sparkline
+      color="white"
       :gradient="gradient"
       :line-width="1"
       :smooth="false"
       :value="graphValues"
+      :labels="graphLabels"
+      :label-size="4"
+      show-labels
       auto-draw
-    ></v-sparkline>
+    >
+    </v-sparkline>
+
+    <v-card-text class="text-center">
+      Minutes
+    </v-card-text>
 
     <v-list>
       <v-list-item>
@@ -88,6 +97,9 @@ export default {
     }
   },
   computed: {
+    graphLabels () {
+      return this.dataPoints.map(data => data.interval % 10 === 0 ? `${data.interval}` : ' ')
+    },
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
     },
