@@ -98,7 +98,8 @@ export default {
   },
   computed: {
     graphLabels () {
-      return this.dataPoints.map(data => data.interval % 10 === 0 ? `${data.interval}` : ' ')
+      const steps = Math.ceil(this.dataPoints.length / 100) + 1
+      return this.dataPoints.map(data => data.interval % (steps * 5) === 0 ? `${data.interval}` : ' ')
     },
     graphValues () {
       return this.dataPoints.map(data => data.jokeScore)
