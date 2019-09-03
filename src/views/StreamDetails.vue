@@ -45,7 +45,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('streams', ['stream'])
+    ...mapState('streams', ['stream']),
+    metaTitle () {
+      return this.loading ? 'Jerma Joke' : this.stream.title
+    },
+    metaDescription () {
+      return this.loading ? 'Stream details' : `Jerma plays ${this.stream.games[0]}`
+    }
   },
   async created () {
     try {
@@ -61,7 +67,10 @@ export default {
   },
   metaInfo () {
     return {
-      title: this.stream.title
+      title: this.metaTitle,
+      meta: [
+        { name: 'Description', content: this.metaDescription }
+      ]
     }
   }
 }

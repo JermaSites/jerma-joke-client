@@ -85,7 +85,10 @@ export default {
   },
   metaInfo () {
     return {
-      title: 'Home'
+      title: 'Jerma Joke',
+      meta: [
+        { name: 'Description', content: 'Jerma +2 / -2 joke tracker' }
+      ]
     }
   }
 }
