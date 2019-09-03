@@ -50,7 +50,7 @@ export default {
       return this.loading ? 'Jerma Joke' : this.stream.title
     },
     metaDescription () {
-      return this.loading ? 'Stream details' : `Jerma plays ${this.stream.games[0]}`
+      return this.loading ? 'Stream details' : `Jerma plays ${this.stream.games[0].name}`
     }
   },
   async created () {
