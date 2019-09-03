@@ -58,6 +58,11 @@ export default {
   },
   methods: {
     ...mapActions('streams', ['fetchStream'])
+  },
+  metaInfo () {
+    return {
+      title: this.stream.title
+    }
   }
 }
 </script>

@@ -82,6 +82,11 @@ export default {
         console.log('Failed to load more streams:', error)
       }
     }
+  },
+  metaInfo () {
+    return {
+      title: 'Home'
+    }
   }
 }
 </script>
