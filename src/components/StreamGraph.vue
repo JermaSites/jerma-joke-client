@@ -11,47 +11,39 @@
 
     <LineChart :data="graphValues" />
 
-    <v-list>
-      <v-list-item>
-        <v-list-item-title>Joke Score</v-list-item-title>
-
-        <v-list-item-subtitle class="text-right">
-          {{ total }}
-        </v-list-item-subtitle>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>Min</v-list-item-title>
-
-        <v-list-item-subtitle class="text-right">
-          {{ min }}
-        </v-list-item-subtitle>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>Max</v-list-item-title>
-
-        <v-list-item-subtitle class="text-right">
-          {{ max }}
-        </v-list-item-subtitle>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>Low</v-list-item-title>
-
-        <v-list-item-subtitle class="text-right">
-          {{ low }}
-        </v-list-item-subtitle>
-      </v-list-item>
-
-      <v-list-item>
-        <v-list-item-title>High</v-list-item-title>
-
-        <v-list-item-subtitle class="text-right">
-          {{ high }}
-        </v-list-item-subtitle>
-      </v-list-item>
-    </v-list>
+    <v-row>
+      <v-col>
+        <MinMaxPieChart :min="min" :max="max" />
+      </v-col>
+      <v-col>
+        <v-simple-table>
+          <thead>
+            <tr>
+              <th class="text-left">Score</th>
+              <th class="text-left">Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Highest Score</td>
+              <td>{{ high }}</td>
+            </tr>
+            <tr>
+              <td>Lowest Score</td>
+              <td>{{ low }}</td>
+            </tr>
+            <tr>
+              <td>Maximum Score</td>
+              <td>{{ max }}</td>
+            </tr>
+            <tr>
+              <td>Minimum Score</td>
+              <td>{{ min }}</td>
+            </tr>
+          </tbody>
+        </v-simple-table>
+      </v-col>
+    </v-row>
   </v-card>
 </template>
 
@@ -62,7 +54,8 @@ import client from '@/plugins/tmi'
 export default {
   name: 'StreamGraph',
   components: {
-    LineChart: () => import('@/components/LineChart')
+    LineChart: () => import('@/components/LineChart'),
+    MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
   props: {
     stream: {
