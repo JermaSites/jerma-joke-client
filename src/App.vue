@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary">
+    <v-app-bar app color="primary" style="z-index: 15">
       <v-toolbar-title class="headline text-uppercase">
         <span>Jerma</span>
         <span class="font-weight-light">Joke</span>
