@@ -9,16 +9,8 @@
     </v-row>
 
     <v-row v-if="!loading">
-      <v-col
-        cols="3"
-        v-for="game in stream.games"
-        :key="game.id"
-      >
-        <GameDetails
-          :gameID="game.id"
-          :name="game.name"
-          :boxArtURL="game.boxArtURL"
-        />
+      <v-col>
+        <GamesSlide :games="stream.games" />
       </v-col>
     </v-row>
   </v-container>
@@ -37,7 +29,7 @@ export default {
   },
   components: {
     StreamGraph: () => import('@/components/StreamGraph'),
-    GameDetails: () => import('@/components/GameDetails')
+    GamesSlide: () => import('@/components/GamesSlide')
   },
   data () {
     return {
