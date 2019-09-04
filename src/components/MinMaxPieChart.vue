@@ -21,6 +21,9 @@ export default {
   data () {
     return {
       options: {
+        legend: {
+          show: false
+        },
         plotOptions: {
           pie: {
             expandOnClick: false,

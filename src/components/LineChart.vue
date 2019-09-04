@@ -65,7 +65,10 @@ export default {
         },
         xaxis: {
           type: 'numeric',
-          tickAmount: 15,
+          labels: {
+            hideOverlappingLabels: false
+          },
+          tickAmount: 10,
           title: {
             text: 'Time in Minutes'
           }

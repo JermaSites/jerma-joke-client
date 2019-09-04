@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-col cols="12" v-if="!loading">
+      <v-col v-if="!loading">
         <StreamGraph
           :stream="stream"
         />
@@ -10,7 +10,7 @@
 
     <v-row v-if="!loading">
       <v-col>
-        <GamesSlide :games="stream.games" />
+        <GamesList :games="stream.games" />
       </v-col>
     </v-row>
   </v-container>
@@ -29,7 +29,7 @@ export default {
   },
   components: {
     StreamGraph: () => import('@/components/StreamGraph'),
-    GamesSlide: () => import('@/components/GamesSlide')
+    GamesList: () => import('@/components/GamesList')
   },
   data () {
     return {

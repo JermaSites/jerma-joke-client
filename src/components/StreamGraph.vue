@@ -1,9 +1,6 @@
 <template>
   <v-card>
-    <v-toolbar
-      flat
-      dense
-    >
+    <v-toolbar flat>
       <v-toolbar-title>
         {{ stream.title }}
       </v-toolbar-title>
@@ -12,10 +9,11 @@
     <LineChart :data="graphValues" />
 
     <v-row>
-      <v-col>
+      <v-col cols="12" sm="6">
         <MinMaxPieChart :min="min" :max="max" />
       </v-col>
-      <v-col>
+
+      <v-col cols="12" sm="6">
         <v-simple-table>
           <thead>
             <tr>
@@ -24,6 +22,10 @@
             </tr>
           </thead>
           <tbody>
+            <tr>
+              <td>Total Score</td>
+              <td>{{ total }}</td>
+            </tr>
             <tr>
               <td>Highest Score</td>
               <td>{{ high }}</td>
