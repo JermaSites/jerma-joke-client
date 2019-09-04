@@ -9,9 +9,7 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <!-- <LineChart :chart-data="dataCollection" /> -->
-
-    <ApexChart type="line" height="500" :options="apexOptions" :series="apexSeries" />
+    <LineChart :data="graphValues" />
 
     <v-list>
       <v-list-item>
@@ -64,8 +62,7 @@ import client from '@/plugins/tmi'
 export default {
   name: 'StreamGraph',
   components: {
-    // LineChart: () => import('@/components/Chart')
-    ApexChart: () => import('vue-apexcharts')
+    LineChart: () => import('@/components/LineChart')
   },
   props: {
     stream: {
@@ -82,83 +79,10 @@ export default {
       low: 0,
       total: 0,
       dataPoints: [],
-      now: moment(),
-      apexOptions: {
-        chart: {
-          background: '#424242',
-          fontFamily: 'Roboto, sans-serif',
-          zoom: {
-            type: 'xy',
-            autoScaleYaxis: true
-          }
-        },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            type: 'vertical',
-            colorStops: [
-              {
-                offset: 0,
-                color: '#1feaea',
-                opacity: 1
-              },
-              {
-                offset: 90,
-                color: '#ffd200',
-                opacity: 1
-              },
-              {
-                offset: 100,
-                color: '#f72047',
-                opacity: 1
-              }
-            ]
-          }
-        },
-        stroke: {
-          curve: 'smooth',
-          width: 3
-        },
-        theme: {
-          mode: 'dark'
-        },
-        xaxis: {
-          type: 'numeric',
-          labels: {
-            show: true
-          },
-          tickAmount: 15,
-          title: {
-            text: 'Time in Minutes'
-          }
-        },
-        yaxis: {
-          title: {
-            text: 'Score'
-          }
-        }
-      }
+      now: moment()
     }
   },
   computed: {
-    dataCollection () {
-      return {
-        labels: this.graphLabels,
-        datasets: [{
-          label: 'score',
-          data: this.graphValues,
-          fill: false,
-          borderWidth: 3,
-          pointRadius: 0
-        }]
-      }
-    },
-    apexSeries () {
-      return [{
-        name: 'Joke Score',
-        data: this.graphValues
-      }]
-    },
     graphLabels () {
       return this.dataPoints.map(data => data.interval)
     },
@@ -191,7 +115,7 @@ export default {
   methods: {
     addData () {
       this.dataPoints.push({
-        jokeScore: this.dataPoints[this.dataPoints.length - 1].jokeScore,
+        jokeScore: this.dataPoints[this.dataPoints.length - 1].jokeScore - 200,
         interval: this.dataPoints[this.dataPoints.length - 1].interval + 1
       })
     },
