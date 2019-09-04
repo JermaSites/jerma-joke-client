@@ -9,7 +9,9 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <LineChart :chart-data="dataCollection" />
+    <!-- <LineChart :chart-data="dataCollection" /> -->
+
+    <ApexChart type="line" :options="apexOptions" :series="apexSeries" />
 
     <v-list>
       <v-list-item>
@@ -62,7 +64,8 @@ import client from '@/plugins/tmi'
 export default {
   name: 'StreamGraph',
   components: {
-    LineChart: () => import('@/components/Chart')
+    // LineChart: () => import('@/components/Chart')
+    ApexChart: () => import('vue-apexcharts')
   },
   props: {
     stream: {
@@ -79,7 +82,66 @@ export default {
       low: 0,
       total: 0,
       dataPoints: [],
-      now: moment()
+      now: moment(),
+      apexOptions: {
+        chart: {
+          background: '#424242',
+          fontFamily: 'Roboto, sans-serif',
+          zoom: {
+            type: 'xy',
+            autoScaleYaxis: true
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            type: 'vertical',
+            colorStops: [
+              {
+                offset: 0,
+                color: '#1feaea',
+                opacity: 1
+              },
+              {
+                offset: 90,
+                color: '#ffd200',
+                opacity: 1
+              },
+              {
+                offset: 100,
+                color: '#f72047',
+                opacity: 1
+              }
+            ]
+          }
+        },
+        stroke: {
+          curve: 'smooth',
+          width: 3
+        },
+        theme: {
+          mode: 'dark'
+        },
+        tooltip: {
+          followCursor: true,
+          theme: 'dark'
+        },
+        xaxis: {
+          type: 'numeric',
+          labels: {
+            show: true
+          },
+          tickAmount: 15,
+          title: {
+            text: 'Time in Minutes'
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Score'
+          }
+        }
+      }
     }
   },
   computed: {
@@ -95,9 +157,13 @@ export default {
         }]
       }
     },
+    apexSeries () {
+      return [{
+        name: 'Joke Score',
+        data: this.graphValues
+      }]
+    },
     graphLabels () {
-      // const steps = Math.ceil(this.dataPoints.length / 100) + 1
-      // return this.dataPoints.map(data => data.interval % (steps * 5) === 0 ? data.interval : '')
       return this.dataPoints.map(data => data.interval)
     },
     graphValues () {
@@ -127,6 +193,12 @@ export default {
     }
   },
   methods: {
+    addData () {
+      this.dataPoints.push({
+        jokeScore: this.dataPoints[this.dataPoints.length - 1].jokeScore,
+        interval: this.dataPoints[this.dataPoints.length - 1].interval + 1
+      })
+    },
     onMessageHandler (channel, userstate, message, self) {
       if (message.includes('+2')) {
         userstate.joke = true
