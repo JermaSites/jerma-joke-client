@@ -11,7 +11,7 @@
 
     <!-- <LineChart :chart-data="dataCollection" /> -->
 
-    <ApexChart type="line" :options="apexOptions" :series="apexSeries" />
+    <ApexChart type="line" height="500" :options="apexOptions" :series="apexSeries" />
 
     <v-list>
       <v-list-item>
@@ -121,10 +121,6 @@ export default {
         },
         theme: {
           mode: 'dark'
-        },
-        tooltip: {
-          followCursor: true,
-          theme: 'dark'
         },
         xaxis: {
           type: 'numeric',
