@@ -11,7 +11,7 @@
         <v-col
           cols="6"
           sm="4"
-          v-for="game in games"
+          v-for="game in stream.games"
           :key="game.gameID"
         >
           <GameCard
@@ -26,21 +26,20 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'GamesList',
   components: {
     GameCard: () => import('@/components/GameCard')
   },
-  props: {
-    games: {
-      type: Array,
-      required: true
-    }
-  },
   data () {
     return {
       model: null
     }
+  },
+  computed: {
+    ...mapState('streams', ['stream'])
   }
 }
 </script>

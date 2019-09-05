@@ -2,15 +2,13 @@
   <v-container>
     <v-row>
       <v-col v-if="!loading">
-        <StreamGraph
-          :stream="stream"
-        />
+        <StreamGraph />
       </v-col>
     </v-row>
 
     <v-row v-if="!loading">
       <v-col>
-        <GamesList :games="stream.games" />
+        <GamesList />
       </v-col>
     </v-row>
   </v-container>

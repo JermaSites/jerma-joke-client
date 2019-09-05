@@ -6,7 +6,7 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <LineChart :data="graphValues" />
+    <LineChart :data="dataPoints" />
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -23,23 +23,23 @@
           </thead>
           <tbody>
             <tr>
-              <td>Total Score</td>
+              <td>Total</td>
               <td>{{ total }}</td>
             </tr>
             <tr>
-              <td>Highest Score</td>
+              <td>Highest</td>
               <td>{{ high }}</td>
             </tr>
             <tr>
-              <td>Lowest Score</td>
+              <td>Lowest</td>
               <td>{{ low }}</td>
             </tr>
             <tr>
-              <td>Maximum Score</td>
+              <td>Maximum</td>
               <td>{{ max }}</td>
             </tr>
             <tr>
-              <td>Minimum Score</td>
+              <td>Minimum</td>
               <td>{{ min }}</td>
             </tr>
           </tbody>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import moment from 'moment'
 import client from '@/plugins/tmi'
 
@@ -59,73 +61,16 @@ export default {
     LineChart: () => import('@/components/LineChart'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
-  props: {
-    stream: {
-      type: Object,
-      required: true
-    }
-  },
   data () {
     return {
       messages: [],
-      min: 0,
-      max: 0,
       high: 0,
-      low: 0,
-      total: 0,
-      dataPoints: [],
-      now: moment()
+      low: 0
     }
   },
   computed: {
-    graphLabels () {
-      return this.dataPoints.map(data => data.interval)
-    },
-    graphValues () {
-      return this.dataPoints.map(data => data.jokeScore)
-    },
-    streamUpTime () {
-      if (this.stream.type === 'live') return this.now.diff(moment(this.stream.startedAt), 'minutes')
-
-      if (this.stream.streamUpTime) return this.stream.streamUpTime
-
-      return this.stream.data[this.stream.data.length - 1].interval
-    }
-  },
-  created () {
-    this.total = this.stream.jokeScoreTotal
-    this.min = this.stream.jokeScoreMin
-    this.max = this.stream.jokeScoreMax
-    this.high = this.stream.jokeScoreHigh
-    this.low = this.stream.jokeScoreLow
-
-    this.dataPoints = this.calcDataPoints()
-
-    if (this.stream.type === 'live') {
-      console.log('Stream is live')
-      setInterval(this.updateGraph, 5000)
-      client.on('message', this.onMessageHandler)
-    }
-  },
-  methods: {
-    addData () {
-      this.dataPoints.push({
-        jokeScore: this.dataPoints[this.dataPoints.length - 1].jokeScore - 200,
-        interval: this.dataPoints[this.dataPoints.length - 1].interval + 1
-      })
-    },
-    onMessageHandler (channel, userstate, message, self) {
-      if (message.includes('+2')) {
-        userstate.joke = true
-        userstate.message = message
-        this.messages.push(userstate)
-      } else if (message.includes('-2')) {
-        userstate.joke = false
-        userstate.message = message
-        this.messages.push(userstate)
-      }
-    },
-    calcDataPoints () {
+    ...mapState('streams', ['stream']),
+    dataPoints () {
       const data = this.stream.data.slice().reverse()
       const dataPoints = []
       let jokeScore = 0
@@ -142,37 +87,61 @@ export default {
         }
       }
 
-      return dataPoints
+      return dataPoints.map(data => data.jokeScore)
     },
-    analyseMessages () {
-      this.total = this.messages.reduce((sum, message) => {
+    total () {
+      return this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum - 2
       }, this.stream.jokeScoreTotal)
-
-      this.min = this.messages.reduce((sum, message) => {
-        return message.joke ? sum : sum - 2
-      }, this.stream.jokeScoreMin)
-
-      this.max = this.messages.reduce((sum, message) => {
+    },
+    max () {
+      return this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum
       }, this.stream.jokeScoreMax)
+    },
+    min () {
+      return this.messages.reduce((sum, message) => {
+        return message.joke ? sum : sum - 2
+      }, this.stream.jokeScoreMin)
+    },
+    streamUpTime () {
+      if (this.stream.type === 'live') return moment().diff(moment(this.stream.startedAt), 'minutes')
 
-      this.messages.reduce((sum, message) => {
-        message.joke ? sum += 2 : sum -= 2
-        if (sum > this.high) this.high = sum
-        return sum
-      }, this.stream.jokeScoreTotal)
+      if (this.stream.streamUpTime) return this.stream.streamUpTime
 
-      this.messages.reduce((sum, message) => {
-        message.joke ? sum += 2 : sum -= 2
-        if (sum < this.low) this.low = sum
-        return sum
-      }, this.stream.jokeScoreTotal)
+      return this.stream.data[this.stream.data.length - 1].interval
+    }
+  },
+  watch: {
+    total (total) {
+      if (total > this.high) this.high = total
+
+      if (total < this.low) this.low = total
+    }
+  },
+  created () {
+    this.high = this.stream.jokeScoreHigh
+    this.low = this.stream.jokeScoreLow
+
+    if (this.stream.type === 'live') {
+      console.log('Stream is live')
+      // setInterval(this.updateGraph, 5000)
+      client.on('message', this.onMessageHandler)
+    }
+  },
+  methods: {
+    onMessageHandler (channel, userstate, message, self) {
+      if (message.includes('+2')) {
+        userstate.joke = true
+        userstate.message = message
+        this.messages.push(userstate)
+      } else if (message.includes('-2')) {
+        userstate.joke = false
+        userstate.message = message
+        this.messages.push(userstate)
+      }
     },
     updateGraph () {
-      this.now = moment()
-      this.analyseMessages()
-
       const dataPointIndex = this.dataPoints.findIndex(data => data.interval === this.streamUpTime)
 
       if (dataPointIndex !== -1) {
