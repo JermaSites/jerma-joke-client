@@ -54,6 +54,7 @@ import { mapState } from 'vuex'
 
 import moment from 'moment'
 import client from '@/plugins/tmi'
+import { setInterval } from 'timers'
 
 export default {
   name: 'StreamGraph',
@@ -63,19 +64,20 @@ export default {
   },
   data () {
     return {
-      messages: [],
       high: 0,
-      low: 0
+      low: 0,
+      messages: [],
+      data: [],
+      now: moment()
     }
   },
   computed: {
     ...mapState('streams', ['stream']),
     dataPoints () {
-      const data = this.stream.data.slice().reverse()
       const dataPoints = []
       let jokeScore = 0
       for (let i = 0; i <= this.streamUpTime; i++) {
-        const dataPoint = data.find(data => data.interval === i)
+        const dataPoint = this.data.find(data => data.interval === i)
         if (dataPoint) {
           jokeScore = dataPoint.jokeScore
           dataPoints.push(dataPoint)
@@ -105,7 +107,7 @@ export default {
       }, this.stream.jokeScoreMin)
     },
     streamUpTime () {
-      if (this.stream.type === 'live') return moment().diff(moment(this.stream.startedAt), 'minutes')
+      if (this.stream.type === 'live') return this.now.diff(moment(this.stream.startedAt), 'minutes')
 
       if (this.stream.streamUpTime) return this.stream.streamUpTime
 
@@ -120,12 +122,12 @@ export default {
     }
   },
   created () {
+    this.data = this.stream.data.slice().reverse()
     this.high = this.stream.jokeScoreHigh
     this.low = this.stream.jokeScoreLow
 
     if (this.stream.type === 'live') {
-      console.log('Stream is live')
-      // setInterval(this.updateGraph, 5000)
+      setInterval(this.updateGraph, 1000)
       client.on('message', this.onMessageHandler)
     }
   },
@@ -142,12 +144,13 @@ export default {
       }
     },
     updateGraph () {
-      const dataPointIndex = this.dataPoints.findIndex(data => data.interval === this.streamUpTime)
+      this.now = moment()
+      const dataPointIndex = this.data.findIndex(data => data.interval === this.streamUpTime)
 
       if (dataPointIndex !== -1) {
-        this.dataPoints[dataPointIndex].jokeScore = this.total
+        this.data[dataPointIndex].jokeScore = this.total
       } else {
-        this.dataPoints.push({
+        this.data.push({
           jokeScore: this.total,
           interval: this.streamUpTime
         })
