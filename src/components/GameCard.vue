@@ -2,7 +2,12 @@
   <v-card>
     <v-toolbar color="primary" flat>
       <v-toolbar-title>
-        {{ name }}
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on }">
+            <span v-on="on">{{ name }}</span>
+          </template>
+          <span>{{ name }}</span>
+        </v-tooltip>
       </v-toolbar-title>
     </v-toolbar>
     <v-img
