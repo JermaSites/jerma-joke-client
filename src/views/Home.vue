@@ -85,9 +85,9 @@ export default {
   },
   metaInfo () {
     return {
-      title: 'Jerma Joke',
+      title: 'Jerma Joke Tracker',
       meta: [
-        { name: 'Description', content: 'Jerma +2 / -2 joke tracker' }
+        { name: 'Description', content: 'Jerma Joke Tracker. Tracks the +2 / -2 in chat for each stream.' }
       ]
     }
   }

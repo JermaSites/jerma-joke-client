@@ -60,7 +60,7 @@ export default {
   },
   metaInfo () {
     return {
-      title: this.metaTitle,
+      title: `${this.metaTitle} | Jerma Joke Tracker`,
       meta: [
         { name: 'Description', content: this.metaDescription }
       ]
