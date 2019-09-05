@@ -7,10 +7,12 @@
     </v-toolbar>
 
     <v-container>
-      <v-row justify="space-around">
+      <v-row>
         <v-col
-          cols="6"
+          cols="12"
           sm="4"
+          md="3"
+          xl="2"
           v-for="game in stream.games"
           :key="game.gameID"
         >

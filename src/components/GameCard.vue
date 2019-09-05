@@ -1,5 +1,10 @@
 <template>
-  <v-card color="primary">
+  <v-card>
+    <v-toolbar color="primary" flat>
+      <v-toolbar-title>
+        {{ name }}
+      </v-toolbar-title>
+    </v-toolbar>
     <v-img
       :src="sizedImgURL"
       :lazy-src="require('@/assets/fireman.png')"
@@ -17,12 +22,6 @@
         </v-row>
       </template>
     </v-img>
-
-    <v-card-title>
-      <div class="text-truncate">
-        {{ name }}
-      </div>
-    </v-card-title>
   </v-card>
 </template>
 
