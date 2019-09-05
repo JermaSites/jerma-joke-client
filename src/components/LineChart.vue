@@ -66,7 +66,10 @@ export default {
         xaxis: {
           type: 'numeric',
           labels: {
-            hideOverlappingLabels: false
+            hideOverlappingLabels: false,
+            formatter (value) {
+              return Math.floor(value - 1)
+            }
           },
           tickAmount: 10,
           title: {
