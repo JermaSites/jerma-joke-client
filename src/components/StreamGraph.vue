@@ -74,22 +74,7 @@ export default {
   computed: {
     ...mapState('streams', ['stream']),
     dataPoints () {
-      const dataPoints = []
-      let jokeScore = 0
-      for (let i = 0; i <= this.streamUpTime; i++) {
-        const dataPoint = this.data.find(data => data.interval === i)
-        if (dataPoint) {
-          jokeScore = dataPoint.jokeScore
-          dataPoints.push(dataPoint)
-        } else {
-          dataPoints.push({
-            jokeScore: jokeScore,
-            interval: i
-          })
-        }
-      }
-
-      return dataPoints.map(data => data.jokeScore)
+      return this.data.map(d => d.jokeScore)
     },
     total () {
       return this.messages.reduce((sum, message) => {
@@ -122,7 +107,7 @@ export default {
     }
   },
   created () {
-    this.data = this.stream.data.slice().reverse()
+    this.data = this.createData()
     this.high = this.stream.jokeScoreHigh
     this.low = this.stream.jokeScoreLow
 
@@ -132,6 +117,24 @@ export default {
     }
   },
   methods: {
+    createData () {
+      const data = []
+      let jokeScore = 0
+      for (let i = 0; i <= this.streamUpTime; i++) {
+        const dataPoint = this.stream.data.find(data => data.interval === i)
+        if (dataPoint) {
+          jokeScore = dataPoint.jokeScore
+          data.push(dataPoint)
+        } else {
+          data.push({
+            jokeScore: jokeScore,
+            interval: i
+          })
+        }
+      }
+
+      return data
+    },
     onMessageHandler (channel, userstate, message, self) {
       if (message.includes('+2')) {
         userstate.joke = true
