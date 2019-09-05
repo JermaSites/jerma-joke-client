@@ -44,7 +44,6 @@ export default {
                 },
                 total: {
                   show: true,
-                  // color: this.$vuetify.theme.themes.dark.accent,
                   formatter (w) {
                     return w.config.series[1] - w.config.series[0]
                   }
@@ -64,12 +63,7 @@ export default {
         stroke: {
           colors: ['red', 'green']
         },
-        labels: ['Min', 'Max'],
-        dataLabels: {
-          // formatter (value, { seriesIndex, dataPointIndex, w }) {
-          //   return seriesIndex ? w.config.series[seriesIndex] : w.config.series[seriesIndex] * -1
-          // }
-        }
+        labels: ['Min', 'Max']
       }
     }
   },
