@@ -21,7 +21,7 @@ export default {
           background: '#424242',
           fontFamily: 'Roboto, sans-serif',
           zoom: {
-            type: 'xy',
+            type: 'x',
             autoScaleYaxis: true,
             zoomedArea: {
               fill: {
