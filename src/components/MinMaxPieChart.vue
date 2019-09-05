@@ -24,6 +24,9 @@ export default {
         legend: {
           show: false
         },
+        tooltip: {
+          enabled: false
+        },
         plotOptions: {
           pie: {
             expandOnClick: false,
@@ -31,7 +34,7 @@ export default {
               labels: {
                 show: true,
                 name: {
-                  show: true
+                  color: 'white'
                 },
                 value: {
                   show: true,
@@ -41,7 +44,7 @@ export default {
                 },
                 total: {
                   show: true,
-                  color: this.$vuetify.theme.themes.dark.accent,
+                  // color: this.$vuetify.theme.themes.dark.accent,
                   formatter (w) {
                     return w.config.series[1] - w.config.series[0]
                   }
@@ -63,9 +66,9 @@ export default {
         },
         labels: ['Min', 'Max'],
         dataLabels: {
-          formatter (value, { seriesIndex, dataPointIndex, w }) {
-            return seriesIndex ? w.config.series[seriesIndex] : w.config.series[seriesIndex] * -1
-          }
+          // formatter (value, { seriesIndex, dataPointIndex, w }) {
+          //   return seriesIndex ? w.config.series[seriesIndex] : w.config.series[seriesIndex] * -1
+          // }
         }
       }
     }

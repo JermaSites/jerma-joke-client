@@ -66,7 +66,6 @@ export default {
         xaxis: {
           type: 'numeric',
           labels: {
-            hideOverlappingLabels: false,
             formatter (value) {
               return Math.floor(value - 1)
             }
