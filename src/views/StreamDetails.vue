@@ -7,7 +7,10 @@
     </v-row>
 
     <v-row v-if="!loading">
-      <v-col>
+      <v-col
+        cols="12"
+        lg="6"
+      >
         <GamesList />
       </v-col>
     </v-row>

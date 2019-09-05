@@ -11,8 +11,6 @@
         <v-col
           cols="12"
           sm="4"
-          md="3"
-          xl="2"
           v-for="game in stream.games"
           :key="game.gameID"
         >
@@ -34,11 +32,6 @@ export default {
   name: 'GamesList',
   components: {
     GameCard: () => import('@/components/GameCard')
-  },
-  data () {
-    return {
-      model: null
-    }
   },
   computed: {
     ...mapState('streams', ['stream'])
