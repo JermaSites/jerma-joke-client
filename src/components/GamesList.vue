@@ -10,7 +10,8 @@
       <v-row>
         <v-col
           cols="12"
-          sm="4"
+          sm="6"
+          xl="4"
           v-for="game in stream.games"
           :key="game.gameID"
         >

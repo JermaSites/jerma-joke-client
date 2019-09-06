@@ -1,6 +1,10 @@
 <template>
   <v-card>
-    <v-toolbar color="primary" flat>
+    <v-toolbar
+      color="primary"
+      flat
+      dense
+    >
       <v-toolbar-title>
         <v-tooltip bottom>
           <template v-slot:activator="{ on }">
