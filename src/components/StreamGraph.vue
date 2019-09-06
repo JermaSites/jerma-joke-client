@@ -7,6 +7,7 @@
     </v-toolbar>
 
     <LineChart :data="dataPoints" />
+    <BrushChart :data="dataPoints" />
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -60,6 +61,7 @@ export default {
   name: 'StreamGraph',
   components: {
     LineChart: () => import('@/components/LineChart'),
+    BrushChart: () => import('@/components/BrushChart'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
   data () {

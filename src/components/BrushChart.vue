@@ -1,10 +1,10 @@
 <template>
-  <ApexChart type="line" height="500" :options="options" :series="series" />
+  <ApexChart type="area" height="300" :options="options" :series="series" />
 </template>
 
 <script>
 export default {
-  name: 'LineChart',
+  name: 'BrushChart',
   components: {
     ApexChart: () => import('vue-apexcharts')
   },
@@ -18,44 +18,18 @@ export default {
     return {
       options: {
         chart: {
-          id: 'jokeLineChart',
+          id: 'jokeBrushChart',
           background: '#424242',
           fontFamily: 'Roboto, sans-serif',
-          zoom: {
-            type: 'x',
-            autoScaleYaxis: true,
-            zoomedArea: {
-              fill: {
-                color: this.$vuetify.theme.themes.dark.primary
-              },
-              stroke: {
-                color: this.$vuetify.theme.themes.dark.secondary
-              }
-            }
+          brush: {
+            target: 'jokeLineChart',
+            enabled: true
+          },
+          selection: {
+            enabled: true
           }
         },
         fill: {
-          type: 'gradient',
-          gradient: {
-            type: 'vertical',
-            colorStops: [
-              {
-                offset: 0,
-                color: '#1feaea',
-                opacity: 1
-              },
-              {
-                offset: 50,
-                color: '#ffd200',
-                opacity: 1
-              },
-              {
-                offset: 100,
-                color: '#f72047',
-                opacity: 1
-              }
-            ]
-          }
         },
         stroke: {
           curve: 'smooth',

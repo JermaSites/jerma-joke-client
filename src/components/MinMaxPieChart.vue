@@ -53,6 +53,9 @@ export default {
           }
         },
         chart: {
+          animations: {
+            enabled: false
+          },
           background: '#424242',
           fontFamily: 'Roboto, sans-serif'
         },
