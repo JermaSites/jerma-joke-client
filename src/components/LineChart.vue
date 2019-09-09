@@ -79,7 +79,7 @@ export default {
               return Math.floor(value - 1)
             }
           },
-          tickAmount: 10,
+          tickAmount: 15,
           title: {
             text: 'Time in Minutes'
           }
