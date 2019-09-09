@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   name: 'LineChart',
   components: {
@@ -76,7 +78,8 @@ export default {
           type: 'numeric',
           labels: {
             formatter (value) {
-              return Math.floor(value - 1)
+              const duration = moment.duration(Math.floor(value - 1), 'minutes')
+              return moment.utc(duration.asMilliseconds()).format('HH:mm')
             }
           },
           tickAmount: 15,
