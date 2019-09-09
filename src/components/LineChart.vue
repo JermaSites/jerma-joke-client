@@ -57,6 +57,14 @@ export default {
             ]
           }
         },
+        responsive: [{
+          breakpoint: this.$vuetify.breakpoint.thresholds.xs,
+          options: {
+            xaxis: {
+              tickAmount: 5
+            }
+          }
+        }],
         stroke: {
           curve: 'smooth',
           width: 3
@@ -91,8 +99,6 @@ export default {
         data: this.data
       }]
     }
-  },
-  methods: {
   }
 }
 </script>
