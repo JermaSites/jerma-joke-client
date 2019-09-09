@@ -13,6 +13,18 @@
       >
         <GamesList />
       </v-col>
+
+      <v-col>
+        <iframe
+          class="twitch-embed"
+          :src="`https://player.twitch.tv/?video=${stream.video.id}&autoplay=false`"
+          width="100%"
+          height="100%"
+          frameborder="0"
+          scrolling="no"
+          allowfullscreen="true">
+        </iframe>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -70,5 +82,7 @@ export default {
 </script>
 
 <style>
-
+.twitch-embed {
+  min-height: 300px;
+}
 </style>
