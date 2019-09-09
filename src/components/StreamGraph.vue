@@ -2,7 +2,7 @@
   <v-card>
     <v-toolbar flat>
       <v-toolbar-title>
-        {{ stream.title }}
+        {{ stream.video.title }}
       </v-toolbar-title>
     </v-toolbar>
 
