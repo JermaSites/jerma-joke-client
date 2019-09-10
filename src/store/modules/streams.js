@@ -40,7 +40,7 @@ export default {
       try {
         commit('setLoading', true)
         const streams = []
-        const snapshot = await db.collection('streams').where('type', '==', 'offline').orderBy('id', 'desc').limit(6).get()
+        const snapshot = await db.collection('streams').where('type', '==', 'offline').orderBy('startedAt', 'desc').limit(6).get()
         snapshot.forEach(doc => {
           streams.push(doc.data())
         })
@@ -55,7 +55,7 @@ export default {
     async fetchMoreStreams ({ state, commit }) {
       try {
         const streams = []
-        const snapshot = await db.collection('streams').where('type', '==', 'offline').orderBy('id', 'desc').startAfter(state.cursor).limit(6).get()
+        const snapshot = await db.collection('streams').where('type', '==', 'offline').orderBy('startedAt', 'desc').startAfter(state.cursor).limit(6).get()
         snapshot.forEach(doc => {
           streams.push(doc.data())
         })
