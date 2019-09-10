@@ -63,7 +63,7 @@ export default {
           breakpoint: this.$vuetify.breakpoint.thresholds.xs,
           options: {
             xaxis: {
-              tickAmount: 5
+              tickAmount: this.data.length - 1 < 5 ? this.data.length - 1 : 5
             }
           }
         }],
@@ -82,7 +82,7 @@ export default {
               return moment.utc(duration.asMilliseconds()).format('HH:mm')
             }
           },
-          tickAmount: 15,
+          tickAmount: this.data.length - 1 < 15 ? this.data.length - 1 : 15,
           title: {
             text: 'Time in Minutes'
           }
