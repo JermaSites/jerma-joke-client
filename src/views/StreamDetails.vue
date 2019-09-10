@@ -52,7 +52,7 @@ export default {
   computed: {
     ...mapState('streams', ['stream']),
     metaTitle () {
-      return this.loading ? 'Jerma Joke' : this.stream.title
+      return this.loading ? 'Jerma Joke' : this.stream.video.title
     },
     metaDescription () {
       return this.loading ? 'Stream details' : `Jerma plays ${this.stream.games[0].name}`
