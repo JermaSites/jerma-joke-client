@@ -7,7 +7,8 @@ export default {
     loading: false,
     streams: [],
     cursor: null,
-    stream: null
+    stream: null,
+    streamStats: []
   },
   getters: {
     streamByID (state) {
@@ -32,6 +33,9 @@ export default {
     },
     addStreams (state, payload) {
       state.streams = state.streams.concat(payload)
+    },
+    setStreamStats (state, payload) {
+      state.streamStats = payload
     }
   },
   actions: {
@@ -79,6 +83,18 @@ export default {
         commit('setStream', stream)
       } catch (error) {
         console.error('Error fetching stream:', error)
+      }
+    },
+    async fetchStreamStats ({ state, commit }) {
+      try {
+        const streamData = []
+        const snapshot = await db.collection('streams').get()
+        snapshot.forEach(doc => {
+          streamData.push(doc.data())
+        })
+        commit('setStreamStats', streamData)
+      } catch (error) {
+        console.error('Error fetching stream by stats:', error)
       }
     }
   }

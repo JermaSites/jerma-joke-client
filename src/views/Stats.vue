@@ -7,38 +7,14 @@
             Joke Stats
           </v-card-title>
 
-          <v-card-body>
-            <v-simple-table>
-              <thead>
-                <tr>
-                  <th class="text-left">Score</th>
-                  <th class="text-left">Value</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Total</td>
-                  <td>{{ 123 }}</td>
-                </tr>
-                <tr>
-                  <td>Highest</td>
-                  <td>{{ 123 }}</td>
-                </tr>
-                <tr>
-                  <td>Lowest</td>
-                  <td>{{ 123 }}</td>
-                </tr>
-                <tr>
-                  <td>Maximum</td>
-                  <td>{{ 123 }}</td>
-                </tr>
-                <tr>
-                  <td>Minimum</td>
-                  <td>{{ 123 }}</td>
-                </tr>
-              </tbody>
-            </v-simple-table>
-          </v-card-body>
+          <v-card-text>
+            <v-data-table
+              :loading="loading"
+              :headers="headers"
+              :items="streamStats"
+              :items-per-page="10"
+            ></v-data-table>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -46,8 +22,42 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex'
+
 export default {
-  name: 'Stats'
+  name: 'Stats',
+  data () {
+    return {
+      loading: false,
+      headers: [
+        {
+          text: 'Title',
+          sortable: false,
+          value: 'video.title'
+        },
+        { text: 'Total', value: 'jokeScoreTotal' },
+        { text: 'Highest', value: 'jokeScoreHigh' },
+        { text: 'Lowest', value: 'jokeScoreLow' },
+        { text: 'Maximum', value: 'jokeScoreMax' },
+        { text: 'Minimum', value: 'jokeScoreMin' }
+      ]
+    }
+  },
+  computed: {
+    ...mapState('streams', ['streamStats'])
+  },
+  async created () {
+    try {
+      this.loading = true
+      await this.fetchStreamStats()
+      this.loading = false
+    } catch (error) {
+      console.error('Failed to fetch current and recent streams:', error)
+    }
+  },
+  methods: {
+    ...mapActions('streams', ['fetchStreamStats'])
+  }
 }
 </script>
 
