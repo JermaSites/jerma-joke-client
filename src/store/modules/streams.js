@@ -86,6 +86,7 @@ export default {
       }
     },
     async fetchStreamStats ({ state, commit }) {
+      if (state.streamStats.length) return
       try {
         const streamData = []
         const snapshot = await db.collection('streams').get()

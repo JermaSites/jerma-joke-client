@@ -9,6 +9,7 @@
 
           <v-card-text>
             <v-data-table
+              @click:row="rowClicked"
               :loading="loading"
               :headers="headers"
               :items="streamStats"
@@ -56,7 +57,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions('streams', ['fetchStreamStats'])
+    ...mapActions('streams', ['fetchStreamStats']),
+    rowClicked (payload) {
+      const streamID = payload.id
+      this.$router.push({ name: 'stream', params: { streamID } })
+    }
   }
 }
 </script>
