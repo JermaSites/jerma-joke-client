@@ -14,6 +14,11 @@ export default new Router({
       component: Home
     },
     {
+      path: '/stats',
+      name: 'stats',
+      component: () => import(/* webpackChunkName: "stats" */ '@/views/Stats')
+    },
+    {
       path: '/streams/:streamID',
       name: 'stream',
       component: () => import(/* webpackChunkName: "stream" */ '@/views/StreamDetails'),

@@ -8,6 +8,7 @@
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn :to="{ name: 'home' }" exact text>Home</v-btn>
+        <v-btn :to="{ name: 'stats' }" exact text>Stats</v-btn>
       </v-toolbar-items>
     </v-app-bar>
 
