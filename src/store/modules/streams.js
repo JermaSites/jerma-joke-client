@@ -89,7 +89,7 @@ export default {
       if (state.streamStats.length) return
       try {
         const streamData = []
-        const snapshot = await db.collection('streams').get()
+        const snapshot = await db.collection('streams').orderBy('startedAt', 'desc').get()
         snapshot.forEach(doc => {
           streamData.push(doc.data())
         })
