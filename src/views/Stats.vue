@@ -34,7 +34,8 @@ export default {
         {
           text: 'Title',
           sortable: false,
-          value: 'video.title'
+          value: 'video.title',
+          width: 300
         },
         { text: 'Total', value: 'jokeScoreTotal' },
         { text: 'Highest', value: 'jokeScoreHigh' },
