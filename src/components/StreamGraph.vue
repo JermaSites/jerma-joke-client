@@ -136,11 +136,13 @@ export default {
       return data
     },
     onMessageHandler (channel, userstate, message, self) {
-      if (message.includes('+2')) {
+      const score = message.match(/(^|\s)([+-]2)/)
+
+      if (score.includes('+2')) {
         userstate.joke = true
         userstate.message = message
         this.messages.push(userstate)
-      } else if (message.includes('-2')) {
+      } else if (score.includes('-2')) {
         userstate.joke = false
         userstate.message = message
         this.messages.push(userstate)
