@@ -138,6 +138,8 @@ export default {
     onMessageHandler (channel, userstate, message, self) {
       const score = message.match(/(^|\s)([+-]2)/)
 
+      if (!score) return
+
       if (score.includes('+2')) {
         userstate.joke = true
         userstate.message = message
