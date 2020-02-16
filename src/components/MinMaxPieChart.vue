@@ -57,7 +57,7 @@ export default {
           animations: {
             enabled: false
           },
-          background: '#424242',
+          background: '#1E1E1E',
           fontFamily: 'Roboto, sans-serif'
         },
         theme: {

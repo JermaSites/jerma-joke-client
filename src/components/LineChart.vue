@@ -21,7 +21,7 @@ export default {
       options: {
         chart: {
           id: 'jokeLineChart',
-          background: '#424242',
+          background: '#1E1E1E',
           fontFamily: 'Roboto, sans-serif',
           zoom: {
             type: 'x',
