@@ -84,7 +84,7 @@ export default {
           },
           tickAmount: this.data.length - 1 < 15 ? this.data.length - 1 : 15,
           title: {
-            text: 'Time in Minutes'
+            text: 'Time'
           }
         },
         yaxis: {

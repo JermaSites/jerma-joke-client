@@ -28,7 +28,10 @@ export default {
       try {
         commit('setLoading', true)
         let liveStream
-        const snapshot = await db.collection('streams').where('type', '==', 'live').get()
+        const snapshot = await db.collection('streams')
+          .where('type', '==', 'live')
+          .where('userID', '==', '23936415')
+          .get()
         snapshot.forEach(doc => {
           liveStream = doc.data()
         })
