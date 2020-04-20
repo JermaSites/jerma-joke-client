@@ -46,7 +46,7 @@ export default {
         const streams = []
         const snapshot = await db.collection('streams')
           .where('type', '==', 'offline')
-          .where('userID', '==', '23936415')
+          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID)
           .orderBy('startedAt', 'desc')
           .limit(6)
           .get()
@@ -66,7 +66,7 @@ export default {
         const streams = []
         const snapshot = await db.collection('streams')
           .where('type', '==', 'offline')
-          .where('userID', '==', '23936415')
+          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID)
           .orderBy('startedAt', 'desc')
           .startAfter(state.cursor)
           .limit(6)
