@@ -41,12 +41,13 @@ export default {
   actions: {
     async fetchStreams ({ state, commit }) {
       if (state.streams.length) return
+
       try {
         commit('setLoading', true)
         const streams = []
         const snapshot = await db.collection('streams')
           .where('type', '==', 'offline')
-          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID)
+          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0])
           .orderBy('startedAt', 'desc')
           .limit(6)
           .get()

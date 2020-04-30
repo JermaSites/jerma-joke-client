@@ -122,6 +122,7 @@ export default {
       let jokeScore = 0
       for (let i = 0; i <= this.streamUpTime; i++) {
         const dataPoint = this.stream.data.find(data => data.interval === i)
+
         if (dataPoint) {
           jokeScore = dataPoint.jokeScore
           data.push(dataPoint)

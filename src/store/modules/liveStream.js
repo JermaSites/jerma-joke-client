@@ -30,7 +30,7 @@ export default {
         let liveStream
         const snapshot = await db.collection('streams')
           .where('type', '==', 'live')
-          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID)
+          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0])
           .get()
         snapshot.forEach(doc => {
           liveStream = doc.data()
