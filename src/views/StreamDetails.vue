@@ -17,9 +17,9 @@
       <v-col>
         <iframe
           class="twitch-embed"
-          :src="`https://player.twitch.tv/?video=${stream.video.id}&autoplay=false`"
-          width="100%"
+          :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL}`"
           height="100%"
+          width="100%"
           frameborder="0"
           scrolling="no"
           allowfullscreen="true">
@@ -46,7 +46,8 @@ export default {
   },
   data () {
     return {
-      loading: true
+      loading: true,
+      baseURL: process.env.VUE_APP_BASE_URL
     }
   },
   computed: {
