@@ -17,7 +17,7 @@
       <v-col>
         <iframe
           class="twitch-embed"
-          :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL}`"
+          :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL}&autoplay=false`"
           height="100%"
           width="100%"
           frameborder="0"
