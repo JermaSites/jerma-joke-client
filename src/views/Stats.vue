@@ -9,7 +9,7 @@
             <v-text-field
               v-model="search"
               append-icon="mdi-magnify"
-              label="Search"
+              label="Search by stream title or game title"
               single-line
               hide-details
             ></v-text-field>
