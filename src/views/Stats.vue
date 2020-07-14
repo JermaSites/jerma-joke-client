@@ -5,6 +5,14 @@
         <v-card>
           <v-card-title>
             Joke Stats
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
           </v-card-title>
 
           <v-card-text>
@@ -14,6 +22,8 @@
               :headers="headers"
               :items="streamStats"
               :items-per-page="10"
+              :search="search"
+              :custom-filter="filterByGame"
             ></v-data-table>
           </v-card-text>
         </v-card>
@@ -30,6 +40,7 @@ export default {
   data () {
     return {
       loading: false,
+      search: '',
       headers: [
         {
           text: 'Title',
@@ -62,6 +73,13 @@ export default {
     rowClicked (payload) {
       const streamID = payload.id
       this.$router.push({ name: 'stream', params: { streamID } })
+    },
+    filterByGame (value, search, item) {
+      search = search.toString().toLowerCase()
+      const title = value != null && search != null && typeof value === 'string' && value.toString().toLowerCase().indexOf(search) !== -1
+      const game = item.games.some(game => game.name.toLowerCase().indexOf(search) !== -1)
+
+      return title || game
     }
   }
 }
