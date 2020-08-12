@@ -137,19 +137,13 @@ export default {
       return data
     },
     onMessageHandler (channel, userstate, message, self) {
-      const score = message.match(/(^|\s)([+-]2)/)
+      const score = message.match(/(?<=^|\s)[+-]2(?=$|\s)/g)
 
       if (!score) return
 
-      if (score.includes('+2')) {
-        userstate.joke = true
-        userstate.message = message
-        this.messages.push(userstate)
-      } else if (score.includes('-2')) {
-        userstate.joke = false
-        userstate.message = message
-        this.messages.push(userstate)
-      }
+      userstate.joke = score.includes('+2')
+      userstate.msg = message
+      this.messages.push(userstate)
     },
     updateGraph () {
       this.now = moment()
