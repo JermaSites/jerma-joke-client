@@ -23,23 +23,58 @@
           </thead>
           <tbody>
             <tr>
-              <td>Total</td>
+              <td>
+                <v-tooltip left nudge-left="10">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">Total</span>
+                  </template>
+                  <span>The total score of the stream</span>
+                </v-tooltip>
+              </td>
               <td>{{ total }}</td>
             </tr>
             <tr>
-              <td>Highest</td>
+              <td>
+                <v-tooltip left nudge-left="10">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">Highest</span>
+                  </template>
+                  <span>The highest score of the stream</span>
+                </v-tooltip>
+              </td>
               <td>{{ high }}</td>
             </tr>
             <tr>
-              <td>Lowest</td>
+              <td>
+                <v-tooltip left nudge-left="10">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">Lowest</span>
+                  </template>
+                  <span>The lowest score of the stream</span>
+                </v-tooltip>
+              </td>
               <td>{{ low }}</td>
             </tr>
             <tr>
-              <td>Maximum</td>
+              <td>
+                <v-tooltip left nudge-left="10">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">Maximum</span>
+                  </template>
+                  <span>Total number of +2's during the stream</span>
+                </v-tooltip>
+              </td>
               <td>{{ max }}</td>
             </tr>
             <tr>
-              <td>Minimum</td>
+              <td>
+                <v-tooltip left nudge-left="10">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">Minimum</span>
+                  </template>
+                  <span>Total number of -2's during the stream</span>
+                </v-tooltip>
+              </td>
               <td>{{ min }}</td>
             </tr>
           </tbody>
