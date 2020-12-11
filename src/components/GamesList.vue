@@ -14,7 +14,6 @@
         <v-slide-item
           v-for="game in stream.games"
           :key="game.gameID"
-          v-slot:default="{ active, toggle }"
         >
 
           <v-card
