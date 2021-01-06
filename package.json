@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "apexcharts": "^3.22.3",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^2.6.12",
     "firebase": "^6.6.2",
     "moment": "^2.29.1",
