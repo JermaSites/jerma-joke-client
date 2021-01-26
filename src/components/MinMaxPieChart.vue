@@ -39,7 +39,6 @@ export default {
                 value: {
                   show: true,
                   formatter (value, w) {
-                    console.log(value, w.config.series[0])
                     return +value === w.config.series[0] ? w.config.series[0] * -1 : w.config.series[1]
                   }
                 },

@@ -79,7 +79,7 @@ export default {
         await this.fetchMoreStreams()
         this.loading = false
       } catch (error) {
-        console.log('Failed to load more streams:', error)
+        console.error('Failed to load more streams:', error)
       }
     }
   },

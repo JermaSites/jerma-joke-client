@@ -1,20 +1,17 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col v-if="!loading">
+    <v-row v-if="!loading">
+      <v-col cols="12">
         <StreamGraph />
       </v-col>
     </v-row>
 
     <v-row v-if="!loading">
-      <v-col
-        cols="12"
-        lg="6"
-      >
+      <v-col lg="6" cols="12">
         <GamesList />
       </v-col>
 
-      <v-col>
+      <v-col lg="6" cols="12">
         <iframe
           class="twitch-embed"
           :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL}&autoplay=false`"
@@ -56,7 +53,7 @@ export default {
       return this.loading ? 'Jerma Joke' : this.stream.video.title
     },
     metaDescription () {
-      return this.loading ? 'Stream details' : `Jerma plays ${this.stream.games[0].name}`
+      return this.loading ? 'Stream details' : `Jerma plays ${this.stream.games[0]?.name}`
     }
   },
   async created () {

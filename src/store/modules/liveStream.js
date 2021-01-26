@@ -28,7 +28,6 @@ export default {
       try {
         commit('setLoading', true)
         let liveStream
-        console.log(process.env.VUE_APP_CHANNEL_ID.split(' ')[0])
         const snapshot = await db.collection('streams')
           .where('type', '==', 'live')
           .where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0])

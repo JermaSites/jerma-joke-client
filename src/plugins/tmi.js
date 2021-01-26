@@ -11,6 +11,6 @@ const client = new tmi.client({
 
 client.connect()
 
-client.on('connected', () => console.log('Connected'))
+client.on('connected', () => console.info('Connected'))
 
 export default client
