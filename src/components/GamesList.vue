@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-toolbar
+      tile
       flat
       dense
     >

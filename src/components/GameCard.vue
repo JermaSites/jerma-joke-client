@@ -2,6 +2,7 @@
   <v-card width="300" class="ma-4">
     <v-toolbar
       color="primary"
+      tile
       flat
       dense
     >

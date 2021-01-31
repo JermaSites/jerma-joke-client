@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-col>
-        <v-card>
+        <v-card tile>
           <v-card-title>
             Joke Stats
             <v-spacer></v-spacer>

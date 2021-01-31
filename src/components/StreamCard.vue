@@ -1,5 +1,6 @@
 <template>
   <v-card
+    tile
     hover
     :to="{ name: 'stream', params: { streamID } }"
   >

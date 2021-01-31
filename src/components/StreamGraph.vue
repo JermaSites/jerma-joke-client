@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card tile>
     <v-toolbar flat>
       <v-toolbar-title>
         {{ stream.video.title }}
