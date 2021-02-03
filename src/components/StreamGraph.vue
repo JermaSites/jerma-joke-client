@@ -59,7 +59,7 @@
               <td>
                 <v-tooltip left nudge-left="10">
                   <template v-slot:activator="{ on, attrs }">
-                    <span v-bind="attrs" v-on="on">Maximum</span>
+                    <span v-bind="attrs" v-on="on">Total +2</span>
                   </template>
                   <span>Total number of +2's during the stream</span>
                 </v-tooltip>
@@ -70,7 +70,7 @@
               <td>
                 <v-tooltip left nudge-left="10">
                   <template v-slot:activator="{ on, attrs }">
-                    <span v-bind="attrs" v-on="on">Minimum</span>
+                    <span v-bind="attrs" v-on="on">Total -2</span>
                   </template>
                   <span>Total number of -2's during the stream</span>
                 </v-tooltip>
