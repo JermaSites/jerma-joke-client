@@ -127,7 +127,9 @@ export default {
       }, this.stream.jokeScoreMin)
     },
     streamUpTime () {
-      if (this.stream.type === 'live') return this.now.diff(moment(this.stream.startedAt), 'minutes')
+      if (this.stream.type === 'live') {
+        return this.now.diff(moment(this.stream.startedAt), 'minutes')
+      }
 
       if (this.stream.streamUpTime) return this.stream.streamUpTime
 
@@ -172,17 +174,25 @@ export default {
       return data
     },
     onMessageHandler (channel, userstate, message, self) {
-      const score = message.match(/(?<=^|\s)[+-]2(?=$|\s)/g)
+      const plus2Emote = 'jermaPlus2'
+      const minus2Emote = 'jermaMinus2'
+
+      const score =
+        message.match(/(?<=^|\s)[+-]2(?=$|\s)/g) ||
+        message.includes(plus2Emote) ||
+        message.includes(minus2Emote)
 
       if (!score) return
 
-      userstate.joke = score.includes('+2')
+      userstate.joke = score.includes('+2') || score.includes(plus2Emote)
       userstate.msg = message
       this.messages.push(userstate)
     },
     updateGraph () {
       this.now = moment()
-      const dataPointIndex = this.data.findIndex(data => data.interval === this.streamUpTime)
+      const dataPointIndex = this.data.findIndex(
+        data => data.interval === this.streamUpTime
+      )
 
       if (dataPointIndex !== -1) {
         this.data[dataPointIndex].jokeScore = this.total
@@ -197,6 +207,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
