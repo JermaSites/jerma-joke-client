@@ -6,7 +6,8 @@
       </v-toolbar-title>
     </v-toolbar>
 
-    <LineChart :data="dataPoints" />
+    <LineChart :data="lineChartData" v-if="false" />
+    <Candlestick :data="candleStickData" v-else />
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -95,6 +96,7 @@ export default {
   name: 'StreamGraph',
   components: {
     LineChart: () => import('@/components/LineChart'),
+    Candlestick: () => import('@/components/Candlestick'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
   data () {
@@ -110,6 +112,12 @@ export default {
     ...mapState('streams', ['stream']),
     dataPoints () {
       return this.data.map(d => d.jokeScore)
+    },
+    lineChartData () {
+      return this.data.map(d => d.jokeScoreTotal)
+    },
+    candleStickData () {
+      return this.data.map(d => [d.interval, d.intervalJokeScoreStart, d.intervalJokeScoreHigh, d.intervalJokeScoreLow, d.intervalJokeScoreEnd])
     },
     total () {
       return this.messages.reduce((sum, message) => {
@@ -156,16 +164,28 @@ export default {
   methods: {
     createData () {
       const data = []
-      let jokeScore = 0
+      let jokeScoreTotal = 0
+      let intervalJokeScoreHigh = 0
+      let intervalJokeScoreLow = 0
+      let intervalJokeScoreStart = 0
+      let intervalJokeScoreEnd = 0
       for (let i = 0; i <= this.streamUpTime; i++) {
         const dataPoint = this.stream.data.find(data => data.interval === i)
 
         if (dataPoint) {
-          jokeScore = dataPoint.jokeScore
+          jokeScoreTotal = dataPoint.jokeScoreTotal
+          intervalJokeScoreHigh = dataPoint.intervalJokeScoreHigh
+          intervalJokeScoreLow = dataPoint.intervalJokeScoreLow
+          intervalJokeScoreStart = dataPoint.intervalJokeScoreStart
+          intervalJokeScoreEnd = dataPoint.intervalJokeScoreEnd
           data.push(dataPoint)
         } else {
           data.push({
-            jokeScore: jokeScore,
+            jokeScoreTotal,
+            intervalJokeScoreHigh,
+            intervalJokeScoreLow,
+            intervalJokeScoreStart,
+            intervalJokeScoreEnd,
             interval: i
           })
         }
