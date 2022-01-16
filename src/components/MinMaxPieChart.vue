@@ -39,7 +39,9 @@ export default {
                 value: {
                   show: true,
                   formatter (value, w) {
-                    return +value === w.config.series[0] ? w.config.series[0] * -1 : w.config.series[1]
+                    return +value === w.config.series[0]
+                      ? w.config.series[0] * -1
+                      : w.config.series[1]
                   }
                 },
                 total: {
@@ -62,11 +64,14 @@ export default {
         theme: {
           mode: 'dark'
         },
-        colors: [this.$vuetify.theme.themes.dark.primary, this.$vuetify.theme.themes.dark.secondary],
+        colors: [
+          this.$vuetify.theme.themes.dark.primary,
+          this.$vuetify.theme.themes.dark.secondary
+        ],
         stroke: {
           colors: ['red', 'green']
         },
-        labels: ['Min', 'Max']
+        labels: ['Total -2', 'Total +2']
       }
     }
   },
@@ -80,6 +85,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
