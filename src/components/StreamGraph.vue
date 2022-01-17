@@ -106,7 +106,7 @@ export default {
   },
   data () {
     return {
-      toggleChartType: false,
+      toggleChartType: true,
       high: 0,
       low: 0,
       messages: [],
