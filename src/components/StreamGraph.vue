@@ -4,9 +4,14 @@
       <v-toolbar-title>
         {{ stream.video.title }}
       </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn v-if="showChartToggle" icon color="pink" @click="toggleChartType = !toggleChartType">
+        <v-icon v-if="toggleChartType">mdi-chart-line</v-icon>
+        <v-icon v-else>mdi-chart-waterfall</v-icon>
+      </v-btn>
     </v-toolbar>
 
-    <LineChart :data="lineChartData" v-if="false" />
+    <LineChart :data="lineChartData" v-if="toggleChartType" />
     <Candlestick :data="candleStickData" v-else />
 
     <v-row>
@@ -101,6 +106,7 @@ export default {
   },
   data () {
     return {
+      toggleChartType: false,
       high: 0,
       low: 0,
       messages: [],
@@ -110,14 +116,14 @@ export default {
   },
   computed: {
     ...mapState('streams', ['stream']),
-    dataPoints () {
-      return this.data.map(d => d.jokeScore)
+    showChartToggle () {
+      return moment(this.stream.startedAt).isAfter('2022-01-16')
     },
     lineChartData () {
-      return this.data.map(d => d.jokeScoreTotal)
+      return this.data.map((d) => d.jokeScore)
     },
     candleStickData () {
-      return this.data.map(d => [d.interval, d.intervalJokeScoreStart, d.intervalJokeScoreHigh, d.intervalJokeScoreLow, d.intervalJokeScoreEnd])
+      return this.data.map((d) => [d.interval, d.open, d.high, d.low, d.close])
     },
     total () {
       return this.messages.reduce((sum, message) => {
@@ -164,28 +170,28 @@ export default {
   methods: {
     createData () {
       const data = []
-      let jokeScoreTotal = 0
-      let intervalJokeScoreHigh = 0
-      let intervalJokeScoreLow = 0
-      let intervalJokeScoreStart = 0
-      let intervalJokeScoreEnd = 0
+      let jokeScore = 0
+      let high = 0
+      let low = 0
+      let open = 0
+      let close = 0
       for (let i = 0; i <= this.streamUpTime; i++) {
-        const dataPoint = this.stream.data.find(data => data.interval === i)
+        const dataPoint = this.stream.data.find((data) => data.interval === i)
 
         if (dataPoint) {
-          jokeScoreTotal = dataPoint.jokeScoreTotal
-          intervalJokeScoreHigh = dataPoint.intervalJokeScoreHigh
-          intervalJokeScoreLow = dataPoint.intervalJokeScoreLow
-          intervalJokeScoreStart = dataPoint.intervalJokeScoreStart
-          intervalJokeScoreEnd = dataPoint.intervalJokeScoreEnd
+          jokeScore = dataPoint.jokeScore
+          high = dataPoint.high
+          low = dataPoint.low
+          open = dataPoint.open
+          close = dataPoint.close
           data.push(dataPoint)
         } else {
           data.push({
-            jokeScoreTotal,
-            intervalJokeScoreHigh,
-            intervalJokeScoreLow,
-            intervalJokeScoreStart,
-            intervalJokeScoreEnd,
+            jokeScore,
+            high,
+            low,
+            open,
+            close,
             interval: i
           })
         }
@@ -210,15 +216,30 @@ export default {
     },
     updateGraph () {
       this.now = moment()
-      const dataPointIndex = this.data.findIndex(
-        data => data.interval === this.streamUpTime
+      const dataPoint = this.data.find(
+        (data) => data.interval === this.streamUpTime
       )
 
-      if (dataPointIndex !== -1) {
-        this.data[dataPointIndex].jokeScore = this.total
+      if (dataPoint) {
+        dataPoint.jokeScore = this.total
+        dataPoint.high =
+          dataPoint.jokeScore > dataPoint.high
+            ? dataPoint.jokeScore
+            : dataPoint.high
+
+        dataPoint.low =
+          dataPoint.jokeScore < dataPoint.low
+            ? dataPoint.jokeScore
+            : dataPoint.low
+
+        dataPoint.close = dataPoint.jokeScore
       } else {
         this.data.push({
           jokeScore: this.total,
+          high: this.total,
+          low: this.total,
+          open: this.total,
+          close: this.total,
           interval: this.streamUpTime
         })
       }
