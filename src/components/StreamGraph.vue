@@ -15,10 +15,10 @@
         </template>
         <v-list >
           <v-list-item link @click="chartType = 'line'">
-            <v-list-item-title>Line Chart</v-list-item-title>
+            <v-list-item-title>Line</v-list-item-title>
           </v-list-item>
           <v-list-item link  @click="chartType = 'candlestick'">
-            <v-list-item-title>Candlestick Chart</v-list-item-title>
+            <v-list-item-title>Candlestick</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
