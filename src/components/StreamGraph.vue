@@ -5,14 +5,27 @@
         {{ stream.video.title }}
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn v-if="showChartToggle" icon color="pink" @click="toggleChartType = !toggleChartType">
-        <v-icon v-if="toggleChartType">mdi-chart-line</v-icon>
-        <v-icon v-else>mdi-chart-waterfall</v-icon>
-      </v-btn>
+
+      <v-menu offset-x left style="z-index: 20">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
+            <v-icon v-if="chartType === 'line'">mdi-chart-line</v-icon>
+            <v-icon v-if="chartType === 'candlestick'" >mdi-chart-waterfall</v-icon>
+          </v-btn>
+        </template>
+        <v-list >
+          <v-list-item link @click="chartType = 'line'">
+            <v-list-item-title>Line Chart</v-list-item-title>
+          </v-list-item>
+          <v-list-item link  @click="chartType = 'candlestick'">
+            <v-list-item-title>Candlestick Chart</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
     </v-toolbar>
 
-    <LineChart :data="lineChartData" v-if="toggleChartType" />
-    <Candlestick :data="candleStickData" v-else />
+    <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+    <Candlestick :data="candleStickData" v-if="chartType === 'candlestick'" />
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -106,7 +119,7 @@ export default {
   },
   data () {
     return {
-      toggleChartType: true,
+      chartType: 'line',
       high: 0,
       low: 0,
       messages: [],
@@ -116,9 +129,6 @@ export default {
   },
   computed: {
     ...mapState('streams', ['stream']),
-    showChartToggle () {
-      return moment(this.stream.startedAt).isAfter('2022-01-16')
-    },
     lineChartData () {
       return this.data.map((d) => d.jokeScore)
     },

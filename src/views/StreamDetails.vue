@@ -1,5 +1,8 @@
 <template>
   <v-container>
+
+    <Announcement />
+
     <v-row v-if="!loading">
       <v-col cols="12">
         <StreamGraph />
@@ -38,6 +41,7 @@ export default {
     }
   },
   components: {
+    Announcement: () => import('@/components/Announcement'),
     StreamGraph: () => import('@/components/StreamGraph'),
     GamesList: () => import('@/components/GamesList')
   },
