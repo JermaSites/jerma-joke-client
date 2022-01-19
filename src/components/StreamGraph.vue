@@ -25,7 +25,7 @@
     </v-toolbar>
 
     <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-    <Candlestick :data="candleStickData" v-if="chartType === 'candlestick'" />
+    <Candlestick :data="candlestickData" v-if="chartType === 'candlestick'" />
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -124,16 +124,34 @@ export default {
       low: 0,
       messages: [],
       data: [],
-      now: moment()
+      now: moment(),
+      xAxisInterval: 5
     }
   },
   computed: {
     ...mapState('streams', ['stream']),
     lineChartData () {
-      return this.data.map((d) => d.jokeScore)
+      // return this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
+      const allData = this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
+      const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
+
+      return chunkedArray.map((chunk) => chunk[chunk.length - 1])
     },
-    candleStickData () {
-      return this.data.map((d) => [d.interval, d.open, d.high, d.low, d.close])
+    candlestickData () {
+      const allData = this.data.map((d) => [d.interval, d.open, d.high, d.low, d.close])
+      const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
+      let open = 0
+      let high = 0
+      let close = 0
+      let low = 0
+
+      return chunkedArray.map((chunk, i) => {
+        open = chunk[0][1]
+        high = chunk.map(c => c[2]).reduce((a, b) => Math.max(a, b))
+        low = chunk.map(c => c[3]).reduce((a, b) => Math.min(a, b))
+        close = chunk[chunk.length - 1][4]
+        return [i * this.xAxisInterval, open, high, low, close]
+      })
     },
     total () {
       return this.messages.reduce((sum, message) => {
@@ -178,6 +196,14 @@ export default {
     }
   },
   methods: {
+    chunkArray (arr, chunkSize) {
+      const chunkedArray = []
+      for (let i = 0; i < arr.length; i += chunkSize) {
+        const chunk = arr.slice(i, i + chunkSize)
+        chunkedArray.push(chunk)
+      }
+      return chunkedArray
+    },
     createData () {
       const data = []
       let jokeScore = 0

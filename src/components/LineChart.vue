@@ -78,7 +78,7 @@ export default {
           type: 'numeric',
           labels: {
             formatter (value) {
-              const duration = moment.duration(Math.floor(value - 1), 'minutes')
+              const duration = moment.duration(Math.floor(value), 'minutes')
               return moment.utc(duration.asMilliseconds()).format('HH:mm')
             }
           },
