@@ -102,7 +102,7 @@ export default {
       if (state.streamStats.length) return
       try {
         const streamData = []
-        const snapshot = await db.collection('streams').orderBy('startedAt', 'desc').get()
+        const snapshot = await db.collection('streams').where('userID', '==', process.env.VUE_APP_CHANNEL_ID).orderBy('startedAt', 'desc').get()
         snapshot.forEach(doc => {
           streamData.push(doc.data())
         })
