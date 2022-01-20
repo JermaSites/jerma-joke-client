@@ -27,7 +27,11 @@ export default {
           id: 'jokeLineChart',
           background: '#1E1E1E',
           fontFamily: 'Roboto, sans-serif',
+          toolbar: {
+            show: false
+          },
           zoom: {
+            enabled: false,
             type: 'x',
             autoScaleYaxis: true,
             zoomedArea: {

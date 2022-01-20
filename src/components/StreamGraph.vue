@@ -6,22 +6,52 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-menu offset-x left style="z-index: 20">
+      <v-menu offset-y left style="z-index: 20">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
             <v-icon v-if="chartType === 'line'">mdi-chart-line</v-icon>
-            <v-icon v-if="chartType === 'candlestick'" >mdi-chart-waterfall</v-icon>
+            <v-icon v-if="chartType === 'candlestick'"
+              >mdi-chart-waterfall</v-icon
+            >
           </v-btn>
         </template>
-        <v-list >
+        <v-list>
           <v-list-item link @click="chartType = 'line'">
             <v-list-item-title>Line</v-list-item-title>
           </v-list-item>
-          <v-list-item link  @click="chartType = 'candlestick'">
+          <v-list-item link @click="chartType = 'candlestick'">
             <v-list-item-title>Candlestick</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-menu>
+
+      <v-btn text color="primary"  @click="xAxisInterval = 1" :outlined="xAxisInterval === 1">
+        1m
+      </v-btn>
+      <v-btn text color="primary" @click="xAxisInterval = 5" :outlined="xAxisInterval === 5">
+        5m
+      </v-btn>
+      <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
+        10m
+      </v-btn>
+      <!-- <v-menu offset-y left>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
+            <v-icon>mdi-sort-clock-ascending-outline</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item link @click="xAxisInterval = 1">
+            <v-list-item-title>1 Min</v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="xAxisInterval = 5">
+            <v-list-item-title>5 Min</v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="xAxisInterval = 10">
+            <v-list-item-title>10 Min</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu> -->
     </v-toolbar>
 
     <LineChart :data="lineChartData" v-if="chartType === 'line'" />
@@ -125,20 +155,25 @@ export default {
       messages: [],
       data: [],
       now: moment(),
-      xAxisInterval: 5
+      xAxisInterval: 10
     }
   },
   computed: {
     ...mapState('streams', ['stream']),
     lineChartData () {
-      // return this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
       const allData = this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
 
       return chunkedArray.map((chunk) => chunk[chunk.length - 1])
     },
     candlestickData () {
-      const allData = this.data.map((d) => [d.interval, d.open, d.high, d.low, d.close])
+      const allData = this.data.map((d) => [
+        d.interval,
+        d.open,
+        d.high,
+        d.low,
+        d.close
+      ])
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
       let open = 0
       let high = 0
@@ -147,8 +182,8 @@ export default {
 
       return chunkedArray.map((chunk, i) => {
         open = chunk[0][1]
-        high = chunk.map(c => c[2]).reduce((a, b) => Math.max(a, b))
-        low = chunk.map(c => c[3]).reduce((a, b) => Math.min(a, b))
+        high = chunk.map((c) => c[2]).reduce((a, b) => Math.max(a, b))
+        low = chunk.map((c) => c[3]).reduce((a, b) => Math.min(a, b))
         close = chunk[chunk.length - 1][4]
         return [i * this.xAxisInterval, open, high, low, close]
       })
