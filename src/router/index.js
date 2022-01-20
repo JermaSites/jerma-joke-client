@@ -23,6 +23,11 @@ export default new Router({
       name: 'stream',
       component: () => import(/* webpackChunkName: "stream" */ '@/views/StreamDetails'),
       props: true
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: () => import(/* webpackChunkName: "test" */ '@/views/Test')
     }
   ]
 })

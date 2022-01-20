@@ -7,9 +7,6 @@ import moment from 'moment'
 
 export default {
   name: 'LineChart',
-  components: {
-    ApexChart: () => import('vue-apexcharts')
-  },
   props: {
     data: {
       type: Array,

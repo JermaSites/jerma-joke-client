@@ -34,6 +34,7 @@
       <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
         10m
       </v-btn>
+
       <!-- <v-menu offset-y left>
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
@@ -54,8 +55,9 @@
       </v-menu> -->
     </v-toolbar>
 
-    <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-    <Candlestick :data="candlestickData" v-if="chartType === 'candlestick'" />
+    <ApexChart :type="chartType" :options="options" :series="series" />
+    <!-- <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+    <Candlestick :data="candlestickData" v-if="chartType === 'candlestick'" /> -->
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -143,8 +145,6 @@ import { setInterval } from 'timers'
 export default {
   name: 'StreamGraph',
   components: {
-    LineChart: () => import('@/components/LineChart'),
-    Candlestick: () => import('@/components/Candlestick'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
   data () {
@@ -160,11 +160,127 @@ export default {
   },
   computed: {
     ...mapState('streams', ['stream']),
+    options () {
+      switch (this.chartType) {
+        case 'line':
+          return this.lineChartOptions
+        case 'candlestick':
+          return this.candlestickOptions
+        default:
+          return this.lineChartOptions
+      }
+    },
+    series () {
+      switch (this.chartType) {
+        case 'line':
+          return this.lineChartSeries
+        case 'candlestick':
+          return this.candlestickSeries
+        default:
+          return this.lineChartSeries
+      }
+    },
+    lineChartSeries () {
+      return [{
+        name: 'Score',
+        data: this.lineChartData
+      }]
+    },
     lineChartData () {
       const allData = this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
 
-      return chunkedArray.map((chunk) => chunk[chunk.length - 1])
+      const data = chunkedArray.map((chunk) => chunk[chunk.length - 1])
+
+      return data
+    },
+    lineChartOptions () {
+      return {
+        chart: {
+          id: 'jokeLineChart',
+          background: '#1E1E1E',
+          fontFamily: 'Roboto, sans-serif',
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false,
+            type: 'x',
+            autoScaleYaxis: true,
+            zoomedArea: {
+              fill: {
+                color: this.$vuetify.theme.themes.dark.primary
+              },
+              stroke: {
+                color: this.$vuetify.theme.themes.dark.secondary
+              }
+            }
+          }
+        },
+        fill: {
+          type: 'gradient',
+          gradient: {
+            type: 'vertical',
+            colorStops: [
+              {
+                offset: 0,
+                color: '#1feaea',
+                opacity: 1
+              },
+              {
+                offset: 50,
+                color: '#ffd200',
+                opacity: 1
+              },
+              {
+                offset: 100,
+                color: '#f72047',
+                opacity: 1
+              }
+            ]
+          }
+        },
+        responsive: [{
+          breakpoint: this.$vuetify.breakpoint.thresholds.xs,
+          options: {
+            xaxis: {
+              tickAmount: this.lineChartData.length - 1 < 5 ? this.lineChartData.length - 1 : 5
+            }
+          }
+        }],
+        stroke: {
+          curve: 'straight',
+          lineCap: 'butt',
+          width: 3
+        },
+        theme: {
+          mode: 'dark'
+        },
+        xaxis: {
+          type: 'numeric',
+          labels: {
+            formatter (value) {
+              const duration = moment.duration(Math.floor(value), 'minutes')
+              return moment.utc(duration.asMilliseconds()).format('HH:mm')
+            }
+          },
+          tickAmount: this.lineChartData.length - 1 < 15 ? this.lineChartData.length - 1 : 15,
+          title: {
+            text: 'Time'
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Score'
+          }
+        }
+      }
+    },
+    candlestickSeries () {
+      return [{
+        name: 'Score',
+        data: this.candlestickData
+      }]
     },
     candlestickData () {
       const allData = this.data.map((d) => [
@@ -187,6 +303,60 @@ export default {
         close = chunk[chunk.length - 1][4]
         return [i * this.xAxisInterval, open, high, low, close]
       })
+    },
+    candlestickOptions () {
+      return {
+        chart: {
+          id: 'jokeLineChart',
+          background: '#1E1E1E',
+          fontFamily: 'Roboto, sans-serif',
+          toolbar: {
+            show: false
+          },
+          zoom: {
+            enabled: false,
+            type: 'x',
+            autoScaleYaxis: true,
+            zoomedArea: {
+              fill: {
+                color: this.$vuetify.theme.themes.dark.primary
+              },
+              stroke: {
+                color: this.$vuetify.theme.themes.dark.secondary
+              }
+            }
+          }
+        },
+        responsive: [{
+          breakpoint: this.$vuetify.breakpoint.thresholds.xs,
+          options: {
+            xaxis: {
+              tickAmount: this.candlestickData.length - 1 < 5 ? this.candlestickData.length - 1 : 5
+            }
+          }
+        }],
+        theme: {
+          mode: 'dark'
+        },
+        xaxis: {
+          type: 'numeric',
+          labels: {
+            formatter (value) {
+              const duration = moment.duration(Math.floor(value), 'minutes')
+              return moment.utc(duration.asMilliseconds()).format('HH:mm')
+            }
+          },
+          tickAmount: this.candlestickData.length - 1 < 15 ? this.candlestickData.length - 1 : 15,
+          title: {
+            text: 'Time'
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Score'
+          }
+        }
+      }
     },
     total () {
       return this.messages.reduce((sum, message) => {
