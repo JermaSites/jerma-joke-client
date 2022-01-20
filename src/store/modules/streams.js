@@ -8,7 +8,8 @@ export default {
     streams: [],
     cursor: null,
     stream: null,
-    streamStats: []
+    streamStats: [],
+    limit: 12
   },
   getters: {
     streamByID (state) {
@@ -49,7 +50,7 @@ export default {
           .where('type', '==', 'offline')
           .where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0])
           .orderBy('startedAt', 'desc')
-          .limit(6)
+          .limit(state.limit)
           .get()
         snapshot.forEach(doc => {
           streams.push(doc.data())
@@ -70,7 +71,7 @@ export default {
           .where('userID', '==', process.env.VUE_APP_CHANNEL_ID)
           .orderBy('startedAt', 'desc')
           .startAfter(state.cursor)
-          .limit(6)
+          .limit(state.limit)
           .get()
         snapshot.forEach(doc => {
           streams.push(doc.data())

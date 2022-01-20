@@ -155,7 +155,7 @@ export default {
       messages: [],
       data: [],
       now: moment(),
-      xAxisInterval: 10
+      xAxisInterval: 1
     }
   },
   computed: {
