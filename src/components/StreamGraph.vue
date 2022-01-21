@@ -34,24 +34,6 @@
       <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
         10m
       </v-btn>
-      <!-- <v-menu offset-y left>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
-            <v-icon>mdi-sort-clock-ascending-outline</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item link @click="xAxisInterval = 1">
-            <v-list-item-title>1 Min</v-list-item-title>
-          </v-list-item>
-          <v-list-item link @click="xAxisInterval = 5">
-            <v-list-item-title>5 Min</v-list-item-title>
-          </v-list-item>
-          <v-list-item link @click="xAxisInterval = 10">
-            <v-list-item-title>10 Min</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu> -->
     </v-toolbar>
 
     <LineChart :data="lineChartData" v-if="chartType === 'line'" />
