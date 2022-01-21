@@ -18,6 +18,9 @@ export default {
       options: {
         chart: {
           id: 'jokeLineChart',
+          animations: {
+            enabled: false
+          },
           background: '#1E1E1E',
           fontFamily: 'Roboto, sans-serif',
           toolbar: {
