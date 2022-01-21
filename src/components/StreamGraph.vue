@@ -34,30 +34,12 @@
       <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
         10m
       </v-btn>
-
-      <!-- <v-menu offset-y left>
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
-            <v-icon>mdi-sort-clock-ascending-outline</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item link @click="xAxisInterval = 1">
-            <v-list-item-title>1 Min</v-list-item-title>
-          </v-list-item>
-          <v-list-item link @click="xAxisInterval = 5">
-            <v-list-item-title>5 Min</v-list-item-title>
-          </v-list-item>
-          <v-list-item link @click="xAxisInterval = 10">
-            <v-list-item-title>10 Min</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu> -->
     </v-toolbar>
 
-    <ApexChart :type="chartType" :options="options" :series="series" />
-    <!-- <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-    <Candlestick :data="candlestickData" v-if="chartType === 'candlestick'" /> -->
+    <!-- <ApexChart v-if="chartType !== 'line'" type="candlestick" :options="candlestickOptions" :series="candlestickSeries" /> -->
+    <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+    <Candlestick :data="candlestickData" v-if="chartType !== 'line'" />
+    <VolumeChart :series="volumeSeries" />
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -145,6 +127,10 @@ import { setInterval } from 'timers'
 export default {
   name: 'StreamGraph',
   components: {
+    /* eslint-disable vue/no-unused-components */
+    LineChart: () => import('@/components/LineChart'),
+    Candlestick: () => import('@/components/Candlestick'),
+    VolumeChart: () => import('@/components/VolumeChart'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
   data () {
@@ -179,6 +165,18 @@ export default {
         default:
           return this.lineChartSeries
       }
+    },
+    volumeSeries () {
+      return [{
+        name: 'Volume',
+        data: this.volumeData
+      }]
+    },
+    volumeData () {
+      const allData = this.data.map(d => d.volume)
+      const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
+      const data = chunkedArray.map((chunk) => chunk.reduce((a, b) => a + b))
+      return data
     },
     lineChartSeries () {
       return [{
@@ -433,7 +431,8 @@ export default {
             low,
             open,
             close,
-            interval: i
+            interval: i,
+            volume: 0
           })
         }
       }
@@ -481,7 +480,8 @@ export default {
           low: this.total,
           open: this.total,
           close: this.total,
-          interval: this.streamUpTime
+          interval: this.streamUpTime,
+          volume: 0
         })
       }
     }
