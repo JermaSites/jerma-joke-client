@@ -1,5 +1,5 @@
 <template>
-  <ApexChart type="line" height="500" :options="options" :series="series" />
+  <ApexChart type="line" height="100%" :options="options" :series="series" />
 </template>
 
 <script>
@@ -84,7 +84,7 @@ export default {
             top: 0,
             right: 8,
             bottom: 0,
-            left: 8
+            left: 22
           }
         },
         legend: {

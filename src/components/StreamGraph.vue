@@ -37,8 +37,10 @@
     </v-toolbar>
 
     <!-- <ApexChart v-if="chartType !== 'line'" type="candlestick" :options="candlestickOptions" :series="candlestickSeries" /> -->
-    <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-    <CandlestickChart :data="candlestickData" v-if="chartType !== 'line'" />
+    <v-responsive :aspect-ratio="16/9" max-height="900">
+      <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+      <CandlestickChart :data="candlestickData" v-if="chartType !== 'line'" />
+    </v-responsive>
     <VolumeChart :series="volumeSeries" />
 
     <v-row>
