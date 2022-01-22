@@ -112,8 +112,9 @@ export default {
         },
         tooltip: {
           enabled: true,
-          shared: true,
+          shared: false,
           followCursor: true,
+          intersect: false,
           x: {
             show: false
           },

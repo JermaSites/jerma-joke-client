@@ -36,12 +36,14 @@
       </v-btn>
     </v-toolbar>
 
-    <!-- <ApexChart v-if="chartType !== 'line'" type="candlestick" :options="candlestickOptions" :series="candlestickSeries" /> -->
     <v-responsive :aspect-ratio="16/9" max-height="900">
       <LineChart :data="lineChartData" v-if="chartType === 'line'" />
       <CandlestickChart :data="candlestickData" v-if="chartType !== 'line'" />
     </v-responsive>
-    <VolumeChart :series="volumeSeries" />
+
+    <v-responsive :aspect-ratio="4/3" max-height="200">
+      <VolumeChart :data="volumeData" />
+    </v-responsive>
 
     <v-row>
       <v-col cols="12" sm="6">
@@ -174,10 +176,17 @@ export default {
       }]
     },
     volumeData () {
-      const allData = this.data.map(d => d.volume)
+      const allData = this.data.map(d => ({ x: d.interval, y: d.volume }))
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
-      const data = chunkedArray.map((chunk) => chunk.reduce((a, b) => a + b))
-      return data
+      return chunkedArray.map((chunk) => {
+        const volumeSum = chunk.reduce((a, b) => {
+          return a + b.y
+        }, 0)
+        return {
+          x: chunk[chunk.length - 1].x,
+          y: volumeSum
+        }
+      })
     },
     lineChartSeries () {
       return [{

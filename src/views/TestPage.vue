@@ -5,6 +5,8 @@
   <v-btn @click="type = 'bar'">Bar</v-btn>
   <ApexChart v-if="type === 'candlestick'" type="candlestick" height="500" :series="candlestickSeries" :options="options" />
   <ApexChart type="bar" height="250" :series="candlestickBarSeries" :options="options" />
+  <ApexChart type="line" height="250" :series="candlestickBarSeries" :options="options" />
+  <ApexChart type="line" height="250" :series="candlestickBarSeries" :options="options" />
 </div>
 </template>
 
@@ -60,9 +62,11 @@ export default {
       ],
       options: {
         chart: {
+          id: 'a',
           animations: {
             enabled: false
-          }
+          },
+          group: 'asdf'
         }
       }
     }
