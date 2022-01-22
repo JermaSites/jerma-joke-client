@@ -1,7 +1,7 @@
 <template>
   <v-container>
 
-    <Announcement />
+    <AnnouncementAlert />
 
     <v-row v-if="!loading">
       <v-col cols="12">
@@ -41,7 +41,7 @@ export default {
     }
   },
   components: {
-    Announcement: () => import('@/components/Announcement'),
+    AnnouncementAlert: () => import('@/components/AnnouncementAlert'),
     StreamGraph: () => import('@/components/StreamGraph'),
     GamesList: () => import('@/components/GamesList')
   },

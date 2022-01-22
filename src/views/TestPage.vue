@@ -13,7 +13,7 @@
 import SimpleLineChart from '@/components/SimpleLineChart'
 
 export default {
-  name: 'Test',
+  name: 'TestPage',
   components: {
     SimpleLineChart
   },

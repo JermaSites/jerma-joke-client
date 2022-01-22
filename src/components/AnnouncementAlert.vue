@@ -16,6 +16,7 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex'
 export default {
+  name: 'AnnouncementAlert',
   computed: {
     ...mapGetters('announcements', ['announcements'])
   },

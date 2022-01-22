@@ -36,7 +36,7 @@
 import { mapState, mapActions } from 'vuex'
 
 export default {
-  name: 'Stats',
+  name: 'StatsPage',
   data () {
     return {
       loading: false,

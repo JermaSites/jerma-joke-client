@@ -10,7 +10,7 @@
 <script>
 import moment from 'moment'
 export default {
-  name: 'Candlestick',
+  name: 'CandlestickChart',
   components: {
     ApexChart: () => import('vue-apexcharts')
   },

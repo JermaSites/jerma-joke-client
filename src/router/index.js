@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/Home'
+import HomePage from '@/views/HomePage'
 
 Vue.use(Router)
 
@@ -11,23 +11,23 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      component: HomePage
     },
     {
       path: '/stats',
       name: 'stats',
-      component: () => import(/* webpackChunkName: "stats" */ '@/views/Stats')
+      component: () => import(/* webpackChunkName: "StatsPage" */ '@/views/StatsPage')
     },
     {
       path: '/streams/:streamID',
       name: 'stream',
-      component: () => import(/* webpackChunkName: "stream" */ '@/views/StreamDetails'),
+      component: () => import(/* webpackChunkName: "StreamDetails" */ '@/views/StreamDetails'),
       props: true
     },
     {
       path: '/test',
       name: 'test',
-      component: () => import(/* webpackChunkName: "test" */ '@/views/Test')
+      component: () => import(/* webpackChunkName: "TestPage" */ '@/views/TestPage')
     }
   ]
 })

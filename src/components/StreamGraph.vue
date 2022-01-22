@@ -38,7 +38,7 @@
 
     <!-- <ApexChart v-if="chartType !== 'line'" type="candlestick" :options="candlestickOptions" :series="candlestickSeries" /> -->
     <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-    <Candlestick :data="candlestickData" v-if="chartType !== 'line'" />
+    <CandlestickChart :data="candlestickData" v-if="chartType !== 'line'" />
     <VolumeChart :series="volumeSeries" />
 
     <v-row>
@@ -129,7 +129,7 @@ export default {
   components: {
     /* eslint-disable vue/no-unused-components */
     LineChart: () => import('@/components/LineChart'),
-    Candlestick: () => import('@/components/Candlestick'),
+    CandlestickChart: () => import('@/components/CandlestickChart'),
     VolumeChart: () => import('@/components/VolumeChart'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
