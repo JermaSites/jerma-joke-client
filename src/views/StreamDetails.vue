@@ -15,15 +15,17 @@
       </v-col>
 
       <v-col lg="6" cols="12">
-        <iframe
-          class="twitch-embed"
-          :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL2}&parent=${baseURL}&autoplay=false`"
-          height="100%"
-          width="100%"
-          frameborder="0"
-          scrolling="no"
-          allowfullscreen="true">
-        </iframe>
+        <v-responsive :aspect-ratio="16/9" min-height="100%">
+          <iframe
+            class="twitch-embed"
+            :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL2}&parent=${baseURL}&autoplay=false`"
+            height="100%"
+            width="100%"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen="true">
+          </iframe>
+        </v-responsive>
       </v-col>
     </v-row>
   </v-container>

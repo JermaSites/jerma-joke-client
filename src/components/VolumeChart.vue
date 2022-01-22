@@ -59,9 +59,9 @@ export default {
           },
           padding: {
             top: 0,
-            right: 8,
+            right: 45,
             bottom: 0,
-            left: 22
+            left: 12
           }
         },
         legend: {
@@ -136,7 +136,7 @@ export default {
           }
         },
         yaxis: {
-          show: true,
+          show: false,
           opposite: true
         }
       }

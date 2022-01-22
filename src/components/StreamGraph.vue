@@ -36,14 +36,22 @@
       </v-btn>
     </v-toolbar>
 
-    <v-responsive :aspect-ratio="16/9" max-height="900">
-      <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-      <CandlestickChart :data="candlestickData" v-if="chartType !== 'line'" />
-    </v-responsive>
+    <v-row>
+      <v-col>
+        <v-responsive :aspect-ratio="16/9" max-height="900">
+          <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+          <CandlestickChart :data="candlestickData" v-else />
+        </v-responsive>
+      </v-col>
+    </v-row>
 
-    <v-responsive :aspect-ratio="4/3" max-height="200">
-      <VolumeChart :data="volumeData" />
-    </v-responsive>
+    <v-row dense>
+      <v-col>
+        <v-responsive :aspect-ratio="4/3" max-height="200">
+          <VolumeChart :data="volumeData" />
+        </v-responsive>
+      </v-col>
+    </v-row>
 
     <v-row>
       <v-col cols="12" sm="6">
