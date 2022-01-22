@@ -122,7 +122,6 @@ import { mapState } from 'vuex'
 
 import moment from 'moment'
 import client from '@/plugins/tmi'
-import { setInterval } from 'timers'
 
 export default {
   name: 'StreamGraph',

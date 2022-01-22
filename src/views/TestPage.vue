@@ -3,19 +3,17 @@
   <v-btn @click="type = 'line'">Line</v-btn>
   <v-btn @click="type = 'candlestick'">Candle</v-btn>
   <v-btn @click="type = 'bar'">Bar</v-btn>
-  <SimpleLineChart v-if="type === 'line'" :series="lineSeries" />
   <ApexChart v-if="type === 'candlestick'" type="candlestick" height="500" :series="candlestickSeries" :options="options" />
   <ApexChart type="bar" height="250" :series="candlestickBarSeries" :options="options" />
 </div>
 </template>
 
 <script>
-import SimpleLineChart from '@/components/SimpleLineChart'
 
 export default {
   name: 'TestPage',
   components: {
-    SimpleLineChart
+
   },
   data () {
     return {

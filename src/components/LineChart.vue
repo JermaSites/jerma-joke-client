@@ -13,32 +13,34 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      options: {
+  computed: {
+    series () {
+      return [{
+        name: 'Score',
+        data: this.data
+      }]
+    },
+    options () {
+      return {
         chart: {
-          id: 'jokeLineChart',
+          id: 'lineChart',
           animations: {
             enabled: false
           },
           background: '#1E1E1E',
           fontFamily: 'Roboto, sans-serif',
+          selection: {
+            enabled: false
+          },
           toolbar: {
             show: false
           },
           zoom: {
-            enabled: false,
-            type: 'x',
-            autoScaleYaxis: true,
-            zoomedArea: {
-              fill: {
-                color: this.$vuetify.theme.themes.dark.primary
-              },
-              stroke: {
-                color: this.$vuetify.theme.themes.dark.secondary
-              }
-            }
+            enabled: false
           }
+        },
+        dataLabels: {
+          enabled: false
         },
         fill: {
           type: 'gradient',
@@ -63,6 +65,34 @@ export default {
             ]
           }
         },
+        grid: {
+          show: true,
+          borderColor: '#90A4AE',
+          strokeDashArray: 3,
+          position: 'back',
+          xaxis: {
+            lines: {
+              show: true
+            }
+          },
+          yaxis: {
+            lines: {
+              show: true
+            }
+          },
+          padding: {
+            top: 0,
+            right: 8,
+            bottom: 0,
+            left: 8
+          }
+        },
+        legend: {
+          show: false
+        },
+        markers: {
+          size: 0
+        },
         responsive: [{
           breakpoint: this.$vuetify.breakpoint.thresholds.xs,
           options: {
@@ -72,6 +102,7 @@ export default {
           }
         }],
         stroke: {
+          show: true,
           curve: 'straight',
           lineCap: 'butt',
           width: 3
@@ -79,33 +110,49 @@ export default {
         theme: {
           mode: 'dark'
         },
+        tooltip: {
+          enabled: true,
+          shared: true,
+          followCursor: true,
+          x: {
+            show: false
+          },
+          marker: {
+            show: false
+          }
+        },
         xaxis: {
           type: 'numeric',
+          tickAmount: this.data.length - 1 < 15 ? this.data.length - 1 : 15,
+          tickPlacement: 'on',
           labels: {
             formatter (value) {
               const duration = moment.duration(Math.floor(value), 'minutes')
-              return moment.utc(duration.asMilliseconds()).format('HH:mm')
+              let hours = Math.floor(duration.asHours())
+              let minutes = duration.asMinutes() % 60
+
+              if (hours < 10) {
+                hours = `0${hours}`
+              }
+
+              if (minutes < 10) {
+                minutes = `0${minutes}`
+              }
+
+              return `${hours}:${minutes}`
             }
           },
-          tickAmount: this.data.length - 1 < 15 ? this.data.length - 1 : 15,
-          title: {
-            text: 'Time'
+          axisBorder: {
+            show: false
+          },
+          axisTicks: {
+            show: false
           }
         },
         yaxis: {
-          title: {
-            text: 'Score'
-          }
+          opposite: true
         }
       }
-    }
-  },
-  computed: {
-    series () {
-      return [{
-        name: 'Score',
-        data: this.data
-      }]
     }
   }
 }
