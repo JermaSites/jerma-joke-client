@@ -313,7 +313,9 @@ export default {
       userstate.msg = message
       this.messages.push(userstate)
       const dataPoint = this.data.find(data => data.interval === this.streamUpTime)
-      dataPoint.volume += 1
+      if (dataPoint) {
+        dataPoint.volume += 1
+      }
     },
     updateGraph () {
       this.now = moment()
