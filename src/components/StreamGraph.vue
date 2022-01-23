@@ -122,6 +122,17 @@
               </td>
               <td>{{ min }}</td>
             </tr>
+            <tr>
+              <td>
+                <v-tooltip left nudge-left="10">
+                  <template v-slot:activator="{ on, attrs }">
+                    <span v-bind="attrs" v-on="on">Total Volume</span>
+                  </template>
+                  <span>Total number of votes during the stream</span>
+                </v-tooltip>
+              </td>
+              <td>{{ totalVolume }}</td>
+            </tr>
           </tbody>
         </v-simple-table>
       </v-col>
@@ -213,6 +224,11 @@ export default {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum : sum - 2
       }, this.stream.jokeScoreMin)
+    },
+    totalVolume () {
+      return this.data.reduce((sum, data) => {
+        return sum + data.volume
+      }, 0)
     },
     streamUpTime () {
       if (this.stream.type === 'live') {
