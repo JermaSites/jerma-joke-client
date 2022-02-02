@@ -34,19 +34,24 @@
       <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
         10m
       </v-btn>
+      <v-btn icon title="fullscreen" @click="fullscreen = !fullscreen">
+        <v-icon>mdi-arrow-expand</v-icon>
+      </v-btn>
     </v-toolbar>
 
     <v-row>
       <v-col>
-        <v-responsive :aspect-ratio="16/9" max-height="900">
-          <LineChart :data="lineChartData" v-if="chartType === 'line'" />
-          <CandlestickChart :data="candlestickData" v-else />
-        </v-responsive>
+        <fullscreen v-model="fullscreen">
+          <v-responsive :aspect-ratio="16/9" style="height: 100%">
+            <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+            <CandlestickChart :data="candlestickData" v-else />
+          </v-responsive>
+        </fullscreen>
       </v-col>
     </v-row>
 
     <v-row dense>
-      <v-col>
+      <v-col >
         <v-responsive :aspect-ratio="4/3" max-height="200">
           <VolumeChart :data="volumeData" />
         </v-responsive>
@@ -156,6 +161,7 @@ export default {
   },
   data () {
     return {
+      fullscreen: false,
       chartType: 'line',
       high: 0,
       low: 0,
