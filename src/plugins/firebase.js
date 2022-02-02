@@ -9,10 +9,12 @@ const firebaseConfig = {
   projectId: 'jerma-joke',
   storageBucket: 'jerma-joke.appspot.com',
   messagingSenderId: '799027726679',
-  appId: '1:799027726679:web:807cf04ad8529c83'
+  appId: '1:799027726679:web:807cf04ad8529c83',
+  measurementId: 'G-9YWGPSZR1V'
 }
 
 firebase.initializeApp(firebaseConfig)
+firebase.analytics()
 
 // Enable cache
 firebase.firestore().enablePersistence()
