@@ -1,41 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <meta name="Description" content="Jerma +2 / -2 joke tracker">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <meta name="Description" content="Jerma +2 / -2 joke tracker" />
 
     <!-- COMMON TAGS -->
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Jerma Joke Tracker</title>
     <!-- Search Engine -->
-    <meta name="description" content="Jerma +2 / -2 joke tracker">
+    <meta name="description" content="Jerma +2 / -2 joke tracker" />
     <!-- Schema.org for Google -->
-    <meta itemprop="name" content="Jerma Joke Tracker">
-    <meta itemprop="description" content="Jerma +2 / -2 joke tracker">
+    <meta itemprop="name" content="Jerma Joke Tracker" />
+    <meta itemprop="description" content="Jerma +2 / -2 joke tracker" />
     <!-- Open Graph general (Facebook, Pinterest & Google+) -->
-    <meta name="og:title" content="Jerma Joke Tracker">
-    <meta name="og:description" content="Jerma +2 / -2 joke tracker">
-    <meta name="og:image" content="https://jerma-joke.web.app/fireman.png">
-    <meta name="og:url" content="https://jerma-joke.web.app">
-    <meta name="og:site_name" content="Jerma Joke Tracker">
-    <meta name="og:type" content="website">
-    <meta name="theme-color" content="#EC407A">
+    <meta name="og:title" content="Jerma Joke Tracker" />
+    <meta name="og:description" content="Jerma +2 / -2 joke tracker" />
+    <meta name="og:image" content="https://jerma-joke.web.app/fireman.png" />
+    <meta name="og:url" content="https://jerma-joke.web.app" />
+    <meta name="og:site_name" content="Jerma Joke Tracker" />
+    <meta name="og:type" content="website" />
+    <meta name="theme-color" content="#EC407A" />
 
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title>Jerma Joke</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+    />
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but Jerma Joke doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong
+        >We're sorry but Jerma Joke doesn't work properly without JavaScript
+        enabled. Please enable it to continue.</strong
+      >
     </noscript>
     <div id="app"></div>
     <!-- Cloudflare Web Analytics -->
-    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "8a624e372b2b42baa0649413c7246f5e"}'></script>
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon='{"token": "8a624e372b2b42baa0649413c7246f5e"}'
+    ></script>
     <!-- End Cloudflare Web Analytics -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-WZPFJCJTEW"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-WZPFJCJTEW");
+    </script>
     <!-- built files will be auto injected -->
   </body>
 </html>
