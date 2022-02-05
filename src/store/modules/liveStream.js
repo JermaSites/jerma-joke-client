@@ -1,6 +1,5 @@
-import firebase from '../../plugins/firebase'
-
-const db = firebase.firestore()
+import { db } from '../../plugins/firebase'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 
 export default {
   state: {
@@ -28,10 +27,8 @@ export default {
       try {
         commit('setLoading', true)
         let liveStream
-        const snapshot = await db.collection('streams')
-          .where('type', '==', 'live')
-          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0])
-          .get()
+        const q = query(collection(db, 'streams'), where('type', '==', 'live'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0]))
+        const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           liveStream = doc.data()
         })

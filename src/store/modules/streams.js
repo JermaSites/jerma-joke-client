@@ -1,6 +1,5 @@
-import firebase from '../../plugins/firebase'
-
-const db = firebase.firestore()
+import { db } from '../../plugins/firebase'
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, startAfter } from 'firebase/firestore'
 
 export default {
   state: {
@@ -46,12 +45,8 @@ export default {
       try {
         commit('setLoading', true)
         const streams = []
-        const snapshot = await db.collection('streams')
-          .where('type', '==', 'offline')
-          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0])
-          .orderBy('startedAt', 'desc')
-          .limit(state.limit)
-          .get()
+        const q = query(collection(db, 'streams'), where('type', '==', 'offline'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID.split(' ')[0]), orderBy('startedAt', 'desc'), limit(state.limit))
+        const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           streams.push(doc.data())
         })
@@ -66,13 +61,8 @@ export default {
     async fetchMoreStreams ({ state, commit }) {
       try {
         const streams = []
-        const snapshot = await db.collection('streams')
-          .where('type', '==', 'offline')
-          .where('userID', '==', process.env.VUE_APP_CHANNEL_ID)
-          .orderBy('startedAt', 'desc')
-          .startAfter(state.cursor)
-          .limit(state.limit)
-          .get()
+        const q = query(collection(db, 'streams'), where('type', '==', 'offline'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy('startedAt', 'desc'), startAfter(state.cursor), limit(state.limit))
+        const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           streams.push(doc.data())
         })
@@ -91,7 +81,7 @@ export default {
       }
 
       try {
-        const snapshot = await db.collection('streams').doc(`${streamID}`).get()
+        const snapshot = await getDoc(doc(db, 'streams', streamID))
         const stream = snapshot.data()
         commit('setStream', stream)
       } catch (error) {
@@ -102,7 +92,8 @@ export default {
       if (state.streamStats.length) return
       try {
         const streamData = []
-        const snapshot = await db.collection('streams').where('userID', '==', process.env.VUE_APP_CHANNEL_ID).orderBy('startedAt', 'desc').get()
+        const q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy('startedAt', 'desc'))
+        const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           streamData.push(doc.data())
         })

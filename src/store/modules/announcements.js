@@ -1,6 +1,5 @@
-import firebase from '../../plugins/firebase'
-
-const db = firebase.firestore()
+import { db } from '../../plugins/firebase'
+import { collection, getDocs } from 'firebase/firestore'
 
 export default {
   state: {
@@ -24,7 +23,7 @@ export default {
     async fetchAnnouncements ({ state, commit }) {
       try {
         const announcements = []
-        const snapshot = await db.collection('announcements').get()
+        const snapshot = await getDocs(collection(db, 'announcements'))
         snapshot.forEach(doc => {
           announcements.push({
             id: doc.id,
