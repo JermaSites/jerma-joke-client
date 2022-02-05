@@ -3,27 +3,17 @@
     <v-row>
       <v-col>
         <v-card tile>
-          <v-card-title>
-            Joke Stats
-            <v-spacer></v-spacer>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search by stream title or game title"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-card-title>
+          <v-card-title> Joke Stats </v-card-title>
 
           <v-card-text>
             <v-data-table
               @click:row="rowClicked"
               :loading="loading"
               :headers="headers"
+              :items-per-page="itemsPerPage"
               :items="streamStats"
-              :items-per-page="10"
-              :search="search"
-              :custom-filter="filterByGame"
+              :options.sync="options"
+              hide-default-footer
             ></v-data-table>
           </v-card-text>
         </v-card>
@@ -40,7 +30,8 @@ export default {
   data () {
     return {
       loading: false,
-      search: '',
+      options: {},
+      itemsPerPage: 24,
       headers: [
         {
           text: 'Title',
@@ -59,32 +50,40 @@ export default {
   computed: {
     ...mapState('streams', ['streamStats'])
   },
-  async created () {
+  async mounted () {
     try {
       this.loading = true
-      await this.fetchStreamStats()
+      await this.getStreamStats()
       this.loading = false
     } catch (error) {
       console.error('Failed to fetch current and recent streams:', error)
     }
   },
   methods: {
-    ...mapActions('streams', ['fetchStreamStats']),
+    ...mapActions('streams', ['fetchStreamStats', 'fetchMoreStreamStats']),
+    async getStreamStats () {
+      try {
+        this.loading = true
+        await this.fetchStreamStats(this.options)
+        this.loading = false
+      } catch (error) {
+        console.error('Failed to fetch current and recent streams:', error)
+      }
+    },
     rowClicked (payload) {
       const streamID = payload.id
       this.$router.push({ name: 'stream', params: { streamID } })
-    },
-    filterByGame (value, search, item) {
-      search = search.toString().toLowerCase()
-      const title = value != null && search != null && typeof value === 'string' && value.toString().toLowerCase().indexOf(search) !== -1
-      const game = item.games.some(game => game.name.toLowerCase().indexOf(search) !== -1)
-
-      return title || game
+    }
+  },
+  watch: {
+    options: {
+      handler () {
+        console.log('options changed')
+        this.getStreamStats()
+      }
     }
   }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

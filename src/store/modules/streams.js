@@ -66,7 +66,7 @@ export default {
         snapshot.forEach(doc => {
           streams.push(doc.data())
         })
-        const last = snapshot.docs.length < 6 ? null : snapshot.docs[snapshot.docs.length - 1]
+        const last = snapshot.docs.length < state.limit ? null : snapshot.docs[snapshot.docs.length - 1]
         commit('setCursor', last)
         commit('addStreams', streams)
       } catch (error) {
@@ -88,15 +88,26 @@ export default {
         console.error('Error fetching stream:', error)
       }
     },
-    async fetchStreamStats ({ state, commit }) {
-      if (state.streamStats.length) return
+    async fetchStreamStats ({ commit }, options) {
       try {
+        let { sortBy, sortDesc, itemsPerPage } = { ...options }
+
+        sortDesc[0] ? sortDesc = 'desc' : sortDesc = 'asc'
+
+        if (!sortBy.length) {
+          sortBy = 'startedAt'
+          sortDesc = 'desc'
+        } else {
+          sortBy = sortBy[0]
+        }
+
         const streamData = []
-        const q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy('startedAt', 'desc'))
+        const q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), limit(itemsPerPage))
         const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           streamData.push(doc.data())
         })
+
         commit('setStreamStats', streamData)
       } catch (error) {
         console.error('Error fetching stream by stats:', error)
