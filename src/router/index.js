@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HomePage from '@/views/HomePage'
+import StatsPage from '@/views/StatsPage'
+import StreamDetails from '@/views/StreamDetails'
+import TestPage from '@/views/TestPage'
 
 Vue.use(Router)
 
@@ -16,18 +19,18 @@ export default new Router({
     {
       path: '/stats',
       name: 'stats',
-      component: () => import(/* webpackChunkName: "StatsPage" */ '@/views/StatsPage')
+      component: StatsPage
     },
     {
       path: '/streams/:streamID',
       name: 'stream',
-      component: () => import(/* webpackChunkName: "StreamDetails" */ '@/views/StreamDetails'),
+      component: StreamDetails,
       props: true
     },
     {
       path: '/test',
       name: 'test',
-      component: () => import(/* webpackChunkName: "TestPage" */ '@/views/TestPage')
+      component: TestPage
     }
   ]
 })
