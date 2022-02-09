@@ -1,7 +1,8 @@
 import { initializeApp } from 'firebase/app'
 import { getFirestore, enableIndexedDbPersistence } from 'firebase/firestore'
+import { getAnalytics } from 'firebase/analytics'
 
-initializeApp({
+const app = initializeApp({
   apiKey: 'AIzaSyAz0iwy0SUEdgfEepd58a0DPZwxKoD8MQU',
   authDomain: 'jerma-joke.firebaseapp.com',
   databaseURL: 'https://jerma-joke.firebaseio.com',
@@ -9,6 +10,8 @@ initializeApp({
   projectId: 'jerma-joke',
   measurementId: 'G-9YWGPSZR1V'
 })
+
+getAnalytics(app)
 
 const db = getFirestore()
 
