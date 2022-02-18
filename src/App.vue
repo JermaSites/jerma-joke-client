@@ -27,6 +27,12 @@
             <v-list-item-title>Stats</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <v-list-item href="https://ko-fi.com/moduspwnens" target="_blank">
+          <v-list-item-content>
+            <v-list-item-title>Donate</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -43,6 +49,7 @@
       <v-toolbar-items v-if="!$vuetify.breakpoint.mobile">
         <v-btn :to="{ name: 'home' }" exact text>Home</v-btn>
         <v-btn :to="{ name: 'stats' }" exact text>Stats</v-btn>
+        <v-btn href="https://ko-fi.com/moduspwnens" target="_blank" text>Donate</v-btn>
       </v-toolbar-items>
     </v-app-bar>
 
