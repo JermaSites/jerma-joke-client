@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "apexcharts": "^3.33.1",
-    "axios": "^0.26.0",
     "core-js": "^3.21.1",
     "firebase": "^9.6.7",
     "moment": "^2.29.1",
