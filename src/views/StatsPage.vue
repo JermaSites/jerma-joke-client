@@ -13,9 +13,16 @@
               :items-per-page="itemsPerPage"
               :items="streamStats"
               :options.sync="options"
-              hide-default-footer
+              :footer-props="{
+                itemsPerPageOptions: [10, 25, 50, 100, 985, -1]
+              }"
             ></v-data-table>
           </v-card-text>
+
+          <v-card-actions class="d-flex justify-space-around">
+            <v-btn color="secondary" @click="getPrevStreamStats" :disabled="prevDisabled">Prev</v-btn>
+            <v-btn color="secondary" @click="getNextStreamStats" :disabled="nextDisabled">Next</v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -29,9 +36,10 @@ export default {
   name: 'StatsPage',
   data () {
     return {
+      page: 0,
       loading: false,
       options: {},
-      itemsPerPage: 24,
+      itemsPerPage: 15,
       headers: [
         {
           text: 'Title',
@@ -48,7 +56,13 @@ export default {
     }
   },
   computed: {
-    ...mapState('streams', ['streamStats'])
+    ...mapState('streams', ['streamStats', 'statsCursor']),
+    prevDisabled () {
+      return this.options.itemsPerPage === -1 || this.page === 0
+    },
+    nextDisabled () {
+      return !this.statsCursor || this.options.itemsPerPage === -1
+    }
   },
   async mounted () {
     try {
@@ -60,7 +74,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('streams', ['fetchStreamStats', 'fetchMoreStreamStats']),
+    ...mapActions('streams', ['fetchStreamStats', 'fetchNextStreamStats', 'fetchPrevStreamStats']),
     async getStreamStats () {
       try {
         this.loading = true
@@ -68,6 +82,26 @@ export default {
         this.loading = false
       } catch (error) {
         console.error('Failed to fetch current and recent streams:', error)
+      }
+    },
+    async getNextStreamStats () {
+      try {
+        this.loading = true
+        await this.fetchNextStreamStats(this.options)
+        this.page++
+        this.loading = false
+      } catch (error) {
+        console.error('Failed to fetch More streams:', error)
+      }
+    },
+    async getPrevStreamStats () {
+      try {
+        this.loading = true
+        await this.fetchPrevStreamStats(this.options)
+        this.page--
+        this.loading = false
+      } catch (error) {
+        console.error('Failed to fetch More streams:', error)
       }
     },
     rowClicked (payload) {

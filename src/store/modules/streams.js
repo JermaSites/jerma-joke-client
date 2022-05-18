@@ -1,5 +1,5 @@
 import { db } from '../../plugins/firebase'
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, startAfter } from 'firebase/firestore'
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, startAfter, endBefore } from 'firebase/firestore'
 
 export default {
   state: {
@@ -8,6 +8,7 @@ export default {
     cursor: null,
     stream: null,
     streamStats: [],
+    statsCursor: null,
     limit: 12
   },
   getters: {
@@ -36,6 +37,12 @@ export default {
     },
     setStreamStats (state, payload) {
       state.streamStats = payload
+    },
+    addStreamStats (state, payload) {
+      state.streamStats = state.streamStats.concat(payload)
+    },
+    setStatsCursor (state, payload) {
+      state.statsCursor = payload
     }
   },
   actions: {
@@ -102,11 +109,80 @@ export default {
         }
 
         const streamData = []
-        const q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), limit(itemsPerPage))
+
+        let q
+
+        if (itemsPerPage !== -1) {
+          q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), limit(itemsPerPage))
+        } else {
+          q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc))
+        }
         const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           streamData.push(doc.data())
         })
+
+        const lastVisible = snapshot.docs[snapshot.docs.length - 1]
+
+        commit('setStatsCursor', lastVisible)
+
+        commit('setStreamStats', streamData)
+      } catch (error) {
+        console.error('Error fetching stream by stats:', error)
+      }
+    },
+    async fetchNextStreamStats ({ state, commit }, options) {
+      try {
+        let { sortBy, sortDesc, itemsPerPage } = { ...options }
+
+        sortDesc[0] ? sortDesc = 'desc' : sortDesc = 'asc'
+
+        if (!sortBy.length) {
+          sortBy = 'startedAt'
+          sortDesc = 'desc'
+        } else {
+          sortBy = sortBy[0]
+        }
+
+        const streamData = []
+        const q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), startAfter(state.statsCursor), limit(itemsPerPage))
+        const snapshot = await getDocs(q)
+        snapshot.forEach(doc => {
+          streamData.push(doc.data())
+        })
+
+        const lastVisible = snapshot.docs.length < itemsPerPage ? null : snapshot.docs[snapshot.docs.length - 1]
+
+        commit('setStatsCursor', lastVisible)
+
+        commit('setStreamStats', streamData)
+      } catch (error) {
+        console.error('Error fetching stream by stats:', error)
+      }
+    },
+    async fetchPrevStreamStats ({ state, commit }, options) {
+      try {
+        let { sortBy, sortDesc, itemsPerPage } = { ...options }
+
+        sortDesc[0] ? sortDesc = 'desc' : sortDesc = 'asc'
+
+        if (!sortBy.length) {
+          sortBy = 'startedAt'
+          sortDesc = 'desc'
+        } else {
+          sortBy = sortBy[0]
+        }
+
+        const streamData = []
+        const q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), endBefore(state.statsCursor), limit(itemsPerPage))
+        const snapshot = await getDocs(q)
+        snapshot.forEach(doc => {
+          streamData.push(doc.data())
+        })
+
+        const lastVisible = snapshot.docs[snapshot.docs.length - 1]
+
+        commit('setStatsCursor', lastVisible)
 
         commit('setStreamStats', streamData)
       } catch (error) {
