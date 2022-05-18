@@ -14,7 +14,7 @@
               :items="streamStats"
               :options.sync="options"
               :footer-props="{
-                itemsPerPageOptions: [10, 25, 50, 100, 985, -1]
+                itemsPerPageOptions: [10, 25, 50, 100, -1]
               }"
             ></v-data-table>
           </v-card-text>
@@ -56,12 +56,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('streams', ['streamStats', 'statsCursor']),
+    ...mapState('streams', ['streamStats', 'statsCursor', 'onLastPage']),
     prevDisabled () {
       return this.options.itemsPerPage === -1 || this.page === 0
     },
     nextDisabled () {
-      return !this.statsCursor || this.options.itemsPerPage === -1
+      return this.onLastPage || this.options.itemsPerPage === -1
     }
   },
   async mounted () {
@@ -114,6 +114,7 @@ export default {
       handler () {
         console.log('options changed')
         this.getStreamStats()
+        this.page = 0
       }
     }
   }

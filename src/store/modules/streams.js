@@ -9,6 +9,7 @@ export default {
     stream: null,
     streamStats: [],
     statsCursor: null,
+    onLastPage: false,
     limit: 12
   },
   getters: {
@@ -43,6 +44,9 @@ export default {
     },
     setStatsCursor (state, payload) {
       state.statsCursor = payload
+    },
+    isLastPage (state, payload) {
+      state.onLastPage = payload
     }
   },
   actions: {
@@ -124,6 +128,8 @@ export default {
 
         const lastVisible = snapshot.docs[snapshot.docs.length - 1]
 
+        commit('isLastPage', snapshot.docs.length < itemsPerPage)
+
         commit('setStatsCursor', lastVisible)
 
         commit('setStreamStats', streamData)
@@ -151,9 +157,13 @@ export default {
           streamData.push(doc.data())
         })
 
-        const lastVisible = snapshot.docs.length < itemsPerPage ? null : snapshot.docs[snapshot.docs.length - 1]
+        const lastVisible = snapshot.docs[snapshot.docs.length - 1]
 
-        commit('setStatsCursor', lastVisible)
+        commit('isLastPage', snapshot.docs.length < itemsPerPage)
+
+        if (lastVisible) {
+          commit('setStatsCursor', lastVisible)
+        }
 
         commit('setStreamStats', streamData)
       } catch (error) {
@@ -182,7 +192,11 @@ export default {
 
         const lastVisible = snapshot.docs[snapshot.docs.length - 1]
 
-        commit('setStatsCursor', lastVisible)
+        commit('isLastPage', snapshot.docs.length < itemsPerPage)
+
+        if (lastVisible) {
+          commit('setStatsCursor', lastVisible)
+        }
 
         commit('setStreamStats', streamData)
       } catch (error) {
