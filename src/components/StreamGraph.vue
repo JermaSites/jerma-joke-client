@@ -305,17 +305,14 @@ export default {
       return data
     },
     onMessageHandler (channel, userstate, message, self) {
-      const plus2Emote = 'jermaPlus2'
-      const minus2Emote = 'jermaMinus2'
-
       const score =
         message.match(/(?<=^|\s)[+-]2(?=$|\s)/g) ||
-        message.includes(plus2Emote) ||
-        message.includes(minus2Emote)
+        message.match(/(?<=^|\s)jermaPlus2(?=$|\s)/g) ||
+        message.match(/(?<=^|\s)jermaMinus2(?=$|\s)/g)
 
       if (!score) return
 
-      userstate.joke = score.includes('+2') || score.includes(plus2Emote)
+      userstate.joke = score.includes('+2') || score.includes('jermaPlus2')
       userstate.msg = message
       this.messages.push(userstate)
       const dataPoint = this.data.find(data => data.interval === this.streamUpTime)
