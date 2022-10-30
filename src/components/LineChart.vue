@@ -17,6 +17,9 @@ export default {
     series () {
       return this.data
     },
+    seriesLength () {
+      return this.data[0].data.length
+    },
     options () {
       return {
         chart: {
@@ -95,7 +98,7 @@ export default {
           breakpoint: this.$vuetify.breakpoint.thresholds.xs,
           options: {
             xaxis: {
-              tickAmount: this.data.length - 1 < 5 ? this.data.length - 1 : 5
+              tickAmount: this.seriesLength - 1 < 5 ? this.seriesLength - 1 : 5
             }
           }
         }],
@@ -122,7 +125,7 @@ export default {
         },
         xaxis: {
           type: 'numeric',
-          tickAmount: this.data.length - 1 < 15 ? this.data.length - 1 : 15,
+          tickAmount: this.seriesLength - 1 < 15 ? this.seriesLength - 1 : 15,
           tickPlacement: 'on',
           labels: {
             formatter (value) {
