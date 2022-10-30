@@ -187,12 +187,28 @@ export default {
       })
     },
     lineChartData () {
-      const allData = this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
-      const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
+      const scoreData = this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
+      const chunkedScoreData = this.chunkArray(scoreData, this.xAxisInterval)
+      const finalChunkedScoreData = chunkedScoreData.map((chunk) => chunk[chunk.length - 1])
 
-      const data = chunkedArray.map((chunk) => chunk[chunk.length - 1])
+      const minusTwoData = this.data.map((d) => ({ x: d.interval, y: Math.abs(d.totalMinusTwo) }))
+      const chunkedMinusTwoData = this.chunkArray(minusTwoData, this.xAxisInterval)
+      const finalChunkedMinusTwoData = chunkedMinusTwoData.map((chunk) => chunk[chunk.length - 1])
 
-      return data
+      const PlusTwoData = this.data.map((d) => ({ x: d.interval, y: d.totalPlusTwo }))
+      const chunkedPlusTwoData = this.chunkArray(PlusTwoData, this.xAxisInterval)
+      const finalChunkedPlusTwoData = chunkedPlusTwoData.map((chunk) => chunk[chunk.length - 1])
+
+      return [{
+        name: 'Score',
+        data: finalChunkedScoreData
+      }, {
+        name: 'Minus Two',
+        data: finalChunkedMinusTwoData
+      }, {
+        name: 'Plus Two',
+        data: finalChunkedPlusTwoData
+      }]
     },
     candlestickData () {
       const allData = this.data.map((d) => [
@@ -279,6 +295,8 @@ export default {
       let low = 0
       let open = 0
       let close = 0
+      let totalMinusTwo = 0
+      let totalPlusTwo = 0
       for (let i = 0; i <= this.streamUpTime; i++) {
         const dataPoint = this.stream.data.find((data) => data.interval === i)
 
@@ -288,6 +306,8 @@ export default {
           low = dataPoint.low
           open = dataPoint.open
           close = dataPoint.close
+          totalMinusTwo = dataPoint.totalMinusTwo
+          totalPlusTwo = dataPoint.totalPlusTwo
           data.push(dataPoint)
         } else {
           data.push({
@@ -296,6 +316,8 @@ export default {
             low,
             open,
             close,
+            totalMinusTwo,
+            totalPlusTwo,
             interval: i,
             volume: 0
           })
@@ -339,6 +361,12 @@ export default {
             : dataPoint.low
 
         dataPoint.close = dataPoint.jokeScore
+
+        dataPoint.totalMinusTwo += dataPoint.joke ? 0 : -2
+
+        dataPoint.totalPlusTwo += dataPoint.joke ? 2 : 0
+
+        dataPoint.volume += 1
       } else {
         this.data.push({
           jokeScore: this.total,
@@ -346,6 +374,8 @@ export default {
           low: this.total,
           open: this.total,
           close: this.total,
+          totalMinusTwo: this.min,
+          totalPlusTwo: this.max,
           interval: this.streamUpTime,
           volume: 0
         })

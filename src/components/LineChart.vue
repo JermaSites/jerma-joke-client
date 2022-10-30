@@ -15,10 +15,7 @@ export default {
   },
   computed: {
     series () {
-      return [{
-        name: 'Score',
-        data: this.data
-      }]
+      return this.data
     },
     options () {
       return {
@@ -39,11 +36,12 @@ export default {
             enabled: false
           }
         },
+        colors: ['#00FF00', '#FF0000'],
         dataLabels: {
           enabled: false
         },
         fill: {
-          type: 'gradient',
+          type: ['gradient', 'solid', 'solid'],
           gradient: {
             type: 'vertical',
             colorStops: [
@@ -88,7 +86,7 @@ export default {
           }
         },
         legend: {
-          show: false
+          show: true
         },
         markers: {
           size: 0

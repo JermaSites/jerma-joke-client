@@ -10,7 +10,7 @@
   "dependencies": {
     "apexcharts": "^3.36.0",
     "core-js": "^3.26.0",
-    "firebase": "^9.12.1",
+    "firebase": "^9.13.0",
     "moment": "^2.29.4",
     "tmi.js": "^1.8.5",
     "vue": "^2.7.13",
