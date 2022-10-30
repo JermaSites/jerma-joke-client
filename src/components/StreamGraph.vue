@@ -191,11 +191,11 @@ export default {
       const chunkedScoreData = this.chunkArray(scoreData, this.xAxisInterval)
       const finalChunkedScoreData = chunkedScoreData.map((chunk) => chunk[chunk.length - 1])
 
-      const minusTwoData = this.data.map((d) => ({ x: d.interval, y: Math.abs(d.totalMinusTwo) }))
+      const minusTwoData = this.data.map((d) => ({ x: d.interval, y: Math.abs(d.totalMinusTwo / 2) }))
       const chunkedMinusTwoData = this.chunkArray(minusTwoData, this.xAxisInterval)
       const finalChunkedMinusTwoData = chunkedMinusTwoData.map((chunk) => chunk[chunk.length - 1])
 
-      const PlusTwoData = this.data.map((d) => ({ x: d.interval, y: d.totalPlusTwo }))
+      const PlusTwoData = this.data.map((d) => ({ x: d.interval, y: d.totalPlusTwo / 2 }))
       const chunkedPlusTwoData = this.chunkArray(PlusTwoData, this.xAxisInterval)
       const finalChunkedPlusTwoData = chunkedPlusTwoData.map((chunk) => chunk[chunk.length - 1])
 
@@ -362,11 +362,9 @@ export default {
 
         dataPoint.close = dataPoint.jokeScore
 
-        dataPoint.totalMinusTwo += dataPoint.joke ? 0 : -2
+        dataPoint.totalMinusTwo = this.min
 
-        dataPoint.totalPlusTwo += dataPoint.joke ? 2 : 0
-
-        dataPoint.volume += 1
+        dataPoint.totalPlusTwo = this.max
       } else {
         this.data.push({
           jokeScore: this.total,
