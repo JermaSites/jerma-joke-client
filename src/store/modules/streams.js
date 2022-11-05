@@ -1,5 +1,5 @@
 import { db } from '../../plugins/firebase'
-import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, startAfter, endBefore } from 'firebase/firestore'
+import { collection, getDocs, getDoc, doc, query, where, orderBy, limit, startAfter, endBefore, getCountFromServer } from 'firebase/firestore'
 
 export default {
   state: {
@@ -10,7 +10,8 @@ export default {
     streamStats: [],
     statsCursor: null,
     onLastPage: false,
-    limit: 12
+    limit: 12,
+    streamStatsCount: 0
   },
   getters: {
     streamByID (state) {
@@ -47,6 +48,9 @@ export default {
     },
     isLastPage (state, payload) {
       state.onLastPage = payload
+    },
+    setStreamStatsCount (state, payload) {
+      state.streamStatsCount = payload
     }
   },
   actions: {
@@ -99,9 +103,15 @@ export default {
         console.error('Error fetching stream:', error)
       }
     },
-    async fetchStreamStats ({ commit }, options) {
+    async fetchStreamCount ({ commit }) {
+      const snap = await getCountFromServer(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID))
+      const count = snap.data().count
+      console.log('Count', count)
+      commit('setStreamStatsCount', count)
+    },
+    async fetchStreamStats ({ state, commit }, options) {
       try {
-        let { sortBy, sortDesc, itemsPerPage } = { ...options }
+        let { sortBy, sortDesc, page, itemsPerPage } = { ...options }
 
         sortDesc[0] ? sortDesc = 'desc' : sortDesc = 'asc'
 
@@ -117,10 +127,15 @@ export default {
         let q
 
         if (itemsPerPage !== -1) {
-          q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), limit(itemsPerPage))
+          if (state.statsCursor && page !== 1) {
+            q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), startAfter(state.statsCursor), limit(itemsPerPage))
+          } else {
+            q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc), limit(itemsPerPage))
+          }
         } else {
           q = query(collection(db, 'streams'), where('userID', '==', process.env.VUE_APP_CHANNEL_ID), orderBy(sortBy, sortDesc))
         }
+
         const snapshot = await getDocs(q)
         snapshot.forEach(doc => {
           streamData.push(doc.data())

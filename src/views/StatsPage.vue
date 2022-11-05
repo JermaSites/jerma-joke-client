@@ -7,22 +7,14 @@
 
           <v-card-text>
             <v-data-table
-              @click:row="rowClicked"
-              :loading="loading"
-              :headers="headers"
-              :items-per-page="itemsPerPage"
-              :items="streamStats"
-              :options.sync="options"
-              :footer-props="{
-                itemsPerPageOptions: [10, 25, 50, 100, -1]
-              }"
+            :headers="headers"
+            :items="streamStats"
+            :options.sync="options"
+            :server-items-length="streamStatsCount"
+            :loading="loading"
+            @click:row="rowClicked"
             ></v-data-table>
           </v-card-text>
-
-          <v-card-actions class="d-flex justify-space-around">
-            <v-btn color="secondary" @click="getPrevStreamStats" :disabled="prevDisabled">Prev</v-btn>
-            <v-btn color="secondary" @click="getNextStreamStats" :disabled="nextDisabled">Next</v-btn>
-          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -36,10 +28,8 @@ export default {
   name: 'StatsPage',
   data () {
     return {
-      page: 0,
       loading: false,
       options: {},
-      itemsPerPage: 15,
       headers: [
         {
           text: 'Title',
@@ -56,25 +46,19 @@ export default {
     }
   },
   computed: {
-    ...mapState('streams', ['streamStats', 'statsCursor', 'onLastPage']),
-    prevDisabled () {
-      return this.options.itemsPerPage === -1 || this.page === 0
-    },
-    nextDisabled () {
-      return this.onLastPage || this.options.itemsPerPage === -1
-    }
+    ...mapState('streams', ['streamStats', 'statsCursor', 'onLastPage', 'streamStatsCount'])
   },
   async mounted () {
     try {
       this.loading = true
-      await this.getStreamStats()
+      await this.fetchStreamCount()
       this.loading = false
     } catch (error) {
       console.error('Failed to fetch current and recent streams:', error)
     }
   },
   methods: {
-    ...mapActions('streams', ['fetchStreamStats', 'fetchNextStreamStats', 'fetchPrevStreamStats']),
+    ...mapActions('streams', ['fetchStreamStats', 'fetchNextStreamStats', 'fetchPrevStreamStats', 'fetchStreamCount']),
     async getStreamStats () {
       try {
         this.loading = true
@@ -84,38 +68,15 @@ export default {
         console.error('Failed to fetch current and recent streams:', error)
       }
     },
-    async getNextStreamStats () {
-      try {
-        this.loading = true
-        await this.fetchNextStreamStats(this.options)
-        this.page++
-        this.loading = false
-      } catch (error) {
-        console.error('Failed to fetch More streams:', error)
-      }
-    },
-    async getPrevStreamStats () {
-      try {
-        this.loading = true
-        await this.fetchPrevStreamStats(this.options)
-        this.page--
-        this.loading = false
-      } catch (error) {
-        console.error('Failed to fetch More streams:', error)
-      }
-    },
     rowClicked (payload) {
       const streamID = payload.id
       this.$router.push({ name: 'stream', params: { streamID } })
     }
   },
   watch: {
-    options: {
-      handler () {
-        console.log('options changed')
-        this.getStreamStats()
-        this.page = 0
-      }
+    options (newOptions, oldOptions) {
+      console.log('options changed')
+      this.getStreamStats()
     }
   }
 }
