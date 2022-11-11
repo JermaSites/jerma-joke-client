@@ -39,7 +39,7 @@ export default {
             enabled: false
           }
         },
-        colors: ['#ffd200', '#00FF00', '#FF0000'],
+        colors: ['#ffd200', '#FF0000', '#00FF00'],
         dataLabels: {
           enabled: false
         },
