@@ -7,12 +7,13 @@
 
           <v-card-text>
             <v-data-table
-            :headers="headers"
-            :items="streamStats"
-            :options.sync="options"
-            :server-items-length="streamStatsCount"
-            :loading="loading"
-            @click:row="rowClicked"
+              :headers="headers"
+              :items="streamStats"
+              :options.sync="options"
+              :server-items-length="streamStatsCount"
+              :loading="loading"
+              @click:row="rowClicked"
+              class="row-pointer"
             ></v-data-table>
           </v-card-text>
         </v-card>
@@ -82,4 +83,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+.row-pointer >>> tbody tr :hover {
+  cursor: pointer;
+}
+</style>

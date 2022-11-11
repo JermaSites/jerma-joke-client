@@ -39,12 +39,12 @@ export default {
             enabled: false
           }
         },
-        colors: ['#00FF00', '#FF0000'],
+        colors: ['#ffd200', '#00FF00', '#FF0000'],
         dataLabels: {
           enabled: false
         },
         fill: {
-          type: ['gradient', 'solid', 'solid'],
+          type: ['soild', 'solid', 'solid'],
           gradient: {
             type: 'vertical',
             colorStops: [
