@@ -8,12 +8,12 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "apexcharts": "^3.36.1",
+    "apexcharts": "^3.36.3",
     "core-js": "^3.26.0",
-    "firebase": "^9.13.0",
+    "firebase": "^9.14.0",
     "moment": "^2.29.4",
     "tmi.js": "^1.8.5",
-    "vue": "^2.7.13",
+    "vue": "^2.7.14",
     "vue-apexcharts": "^1.6.2",
     "vue-fullscreen": "^2.6.1",
     "vue-meta": "^2.4.0",
@@ -38,7 +38,7 @@
     "sass": "~1.32.6",
     "sass-loader": "^10.3.1",
     "vue-cli-plugin-vuetify": "^2.5.8",
-    "vue-template-compiler": "^2.7.13",
+    "vue-template-compiler": "^2.7.14",
     "vuetify-loader": "^1.9.2"
   }
 }
