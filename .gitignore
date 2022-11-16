@@ -20,3 +20,6 @@ yarn-error.log*
 *.sln
 *.sw?
 .firebase
+/test-results/
+/playwright-report/
+/playwright/.cache/
