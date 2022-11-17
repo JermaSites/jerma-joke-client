@@ -51,6 +51,13 @@
         <v-icon dark>mdi-chevron-down</v-icon>
       </v-btn>
     </v-row>
+    <v-row>
+      <v-col>
+        <div class="text-center mt-5">
+          Message me on Discord for any issues (<a href="https://discordapp.com/users/Modus%20Pwnens#9109">Modus Pwnens#9109</a>)
+        </div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
