@@ -25,13 +25,28 @@
         </v-list>
       </v-menu>
 
-      <v-btn text color="primary"  @click="xAxisInterval = 1" :outlined="xAxisInterval === 1">
+      <v-btn
+        text
+        color="primary"
+        @click="xAxisInterval = 1"
+        :outlined="xAxisInterval === 1"
+      >
         1m
       </v-btn>
-      <v-btn text color="primary" @click="xAxisInterval = 5" :outlined="xAxisInterval === 5">
+      <v-btn
+        text
+        color="primary"
+        @click="xAxisInterval = 5"
+        :outlined="xAxisInterval === 5"
+      >
         5m
       </v-btn>
-      <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
+      <v-btn
+        text
+        color="primary"
+        @click="xAxisInterval = 10"
+        :outlined="xAxisInterval === 10"
+      >
         10m
       </v-btn>
       <v-btn icon title="fullscreen" @click="fullscreen = !fullscreen">
@@ -42,7 +57,7 @@
     <v-row>
       <v-col>
         <fullscreen v-model="fullscreen">
-          <v-responsive :aspect-ratio="16/9" style="height: 100%">
+          <v-responsive :aspect-ratio="16 / 9" style="height: 100%">
             <LineChart :data="lineChartData" v-if="chartType === 'line'" />
             <CandlestickChart :data="candlestickData" v-else />
           </v-responsive>
@@ -51,8 +66,8 @@
     </v-row>
 
     <v-row dense>
-      <v-col >
-        <v-responsive :aspect-ratio="4/3" max-height="200">
+      <v-col>
+        <v-responsive :aspect-ratio="4 / 3" max-height="200">
           <VolumeChart :data="volumeData" />
         </v-responsive>
       </v-col>
@@ -174,7 +189,7 @@ export default {
   computed: {
     ...mapState('streams', ['stream']),
     volumeData () {
-      const allData = this.data.map(d => ({ x: d.interval, y: d.volume }))
+      const allData = this.data.map((d) => ({ x: d.interval, y: d.volume }))
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
       return chunkedArray.map((chunk) => {
         const volumeSum = chunk.reduce((a, b) => {
@@ -187,28 +202,53 @@ export default {
       })
     },
     lineChartData () {
-      const scoreData = this.data.map((d) => ({ x: d.interval, y: d.jokeScore }))
+      const scoreData = this.data.map((d) => ({
+        x: d.interval,
+        y: d.jokeScore
+      }))
       const chunkedScoreData = this.chunkArray(scoreData, this.xAxisInterval)
-      const finalChunkedScoreData = chunkedScoreData.map((chunk) => chunk[chunk.length - 1])
+      const finalChunkedScoreData = chunkedScoreData.map(
+        (chunk) => chunk[chunk.length - 1]
+      )
 
-      const minusTwoData = this.data.map((d) => ({ x: d.interval, y: Math.abs(d.totalMinusTwo / 2) }))
-      const chunkedMinusTwoData = this.chunkArray(minusTwoData, this.xAxisInterval)
-      const finalChunkedMinusTwoData = chunkedMinusTwoData.map((chunk) => chunk[chunk.length - 1])
+      const minusTwoData = this.data.map((d) => ({
+        x: d.interval,
+        y: Math.abs(d.totalMinusTwo / 2)
+      }))
+      const chunkedMinusTwoData = this.chunkArray(
+        minusTwoData,
+        this.xAxisInterval
+      )
+      const finalChunkedMinusTwoData = chunkedMinusTwoData.map(
+        (chunk) => chunk[chunk.length - 1]
+      )
 
-      const PlusTwoData = this.data.map((d) => ({ x: d.interval, y: d.totalPlusTwo / 2 }))
-      const chunkedPlusTwoData = this.chunkArray(PlusTwoData, this.xAxisInterval)
-      const finalChunkedPlusTwoData = chunkedPlusTwoData.map((chunk) => chunk[chunk.length - 1])
+      const PlusTwoData = this.data.map((d) => ({
+        x: d.interval,
+        y: d.totalPlusTwo / 2
+      }))
+      const chunkedPlusTwoData = this.chunkArray(
+        PlusTwoData,
+        this.xAxisInterval
+      )
+      const finalChunkedPlusTwoData = chunkedPlusTwoData.map(
+        (chunk) => chunk[chunk.length - 1]
+      )
 
-      return [{
-        name: 'Score',
-        data: finalChunkedScoreData
-      }, {
-        name: 'Minus Two',
-        data: finalChunkedMinusTwoData
-      }, {
-        name: 'Plus Two',
-        data: finalChunkedPlusTwoData
-      }]
+      return [
+        {
+          name: 'Score',
+          data: finalChunkedScoreData
+        },
+        {
+          name: 'Minus Two',
+          data: finalChunkedMinusTwoData
+        },
+        {
+          name: 'Plus Two',
+          data: finalChunkedPlusTwoData
+        }
+      ]
     },
     candlestickData () {
       const allData = this.data.map((d) => [
@@ -328,16 +368,18 @@ export default {
     },
     onMessageHandler (channel, userstate, message, self) {
       const score =
-        message.match(/(?<=^|\s)[+-]2(?=$|\s)/g) ||
-        message.match(/(?<=^|\s)jermaPlus2(?=$|\s)/g) ||
-        message.match(/(?<=^|\s)jermaMinus2(?=$|\s)/g)
+        message.match(/(^|\s)([+-]2)($|\s)/g) ||
+        message.match(/(^|\s)(jermaPlus2)($|\s)/g) ||
+        message.match(/(^|\s)(jermaMinus2)($|\s)/g)
 
       if (!score) return
 
       userstate.joke = score.includes('+2') || score.includes('jermaPlus2')
       userstate.msg = message
       this.messages.push(userstate)
-      const dataPoint = this.data.find(data => data.interval === this.streamUpTime)
+      const dataPoint = this.data.find(
+        (data) => data.interval === this.streamUpTime
+      )
       if (dataPoint) {
         dataPoint.volume += 1
       }
