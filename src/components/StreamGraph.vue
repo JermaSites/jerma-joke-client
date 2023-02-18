@@ -58,7 +58,7 @@
       <v-col>
         <fullscreen v-model="fullscreen">
           <v-responsive :aspect-ratio="16 / 9" style="height: 100%">
-            <LineChart :data="lineChartData" v-if="chartType === 'line'" />
+            <LineChart :data="lineChartData" @markerClicked="e => $emit('markerClick', e)" v-if="chartType === 'line'" />
             <CandlestickChart :data="candlestickData" v-else />
           </v-responsive>
         </fullscreen>
@@ -320,6 +320,9 @@ export default {
     }
   },
   methods: {
+    test (e) {
+      console.log(e)
+    },
     chunkArray (arr, chunkSize) {
       const chunkedArray = []
       for (let i = 0; i < arr.length; i += chunkSize) {

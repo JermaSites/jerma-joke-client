@@ -5,7 +5,7 @@
 
     <v-row v-if="!loading">
       <v-col cols="12">
-        <StreamGraph />
+        <StreamGraph @markerClick="openVodToTimestamp" />
       </v-col>
     </v-row>
 
@@ -18,7 +18,7 @@
         <v-responsive :aspect-ratio="16/9" min-height="100%">
           <iframe
             class="twitch-embed"
-            :src="`https://player.twitch.tv/?video=${stream.video.id}&parent=${baseURL2}&parent=${baseURL}&autoplay=false`"
+            :src="vodURL"
             height="100%"
             width="100%"
             frameborder="0"
@@ -56,6 +56,9 @@ export default {
   },
   computed: {
     ...mapState('streams', ['stream']),
+    vodURL () {
+      return `https://player.twitch.tv/?video=${this.stream.video.id}&parent=${this.baseURL2}&parent=${this.baseURL}&autoplay=false`
+    },
     metaTitle () {
       return this.loading ? 'Jerma Joke' : this.stream.video.title
     },
@@ -73,7 +76,11 @@ export default {
     }
   },
   methods: {
-    ...mapActions('streams', ['fetchStream'])
+    ...mapActions('streams', ['fetchStream']),
+    openVodToTimestamp (point) {
+      const url = `https://www.twitch.tv/videos/${this.stream.video.id}?t=${point.x}m`
+      window.open(url, '_blank', 'noreferrer')
+    }
   },
   metaInfo () {
     return {

@@ -37,6 +37,12 @@ export default {
           },
           zoom: {
             enabled: false
+          },
+          events: {
+            click: (event, chartContext, config) => {
+              const marker = config.config.series[config.seriesIndex].data[config.dataPointIndex]
+              this.$emit('markerClicked', marker)
+            }
           }
         },
         colors: ['#ffd200', '#FF0000', '#00FF00'],
