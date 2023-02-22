@@ -120,8 +120,11 @@ export default {
         tooltip: {
           enabled: true,
           shared: false,
-          followCursor: true,
+          followCursor: false,
           intersect: false,
+          onDatasetHover: {
+            highlightDataSeries: true
+          },
           x: {
             show: false
           },
@@ -158,7 +161,10 @@ export default {
           }
         },
         yaxis: {
-          opposite: true
+          opposite: true,
+          tooltip: {
+            enabled: true
+          }
         }
       }
     }

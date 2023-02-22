@@ -223,12 +223,12 @@ export default {
         (chunk) => chunk[chunk.length - 1]
       )
 
-      const PlusTwoData = this.data.map((d) => ({
+      const plusTwoData = this.data.map((d) => ({
         x: d.interval,
         y: d.totalPlusTwo / 2
       }))
       const chunkedPlusTwoData = this.chunkArray(
-        PlusTwoData,
+        plusTwoData,
         this.xAxisInterval
       )
       const finalChunkedPlusTwoData = chunkedPlusTwoData.map(
