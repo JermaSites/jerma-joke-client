@@ -112,7 +112,8 @@ export default {
           show: true,
           curve: 'straight',
           lineCap: 'butt',
-          width: 3
+          width: 3,
+          dashArray: [0, 5, 5]
         },
         theme: {
           mode: 'dark'
@@ -172,6 +173,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
