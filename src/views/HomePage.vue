@@ -32,7 +32,7 @@
         <StreamCard
           :streamID="stream.id"
           :gameID="stream.gameID"
-          :title="stream.video.title"
+          :title="stream.title"
           :startedAt="stream.startedAt"
           :imgURL="stream.video.thumbnailURL"
           :type="stream.type"
