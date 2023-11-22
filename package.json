@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "apexcharts": "^3.44.0",
-    "core-js": "^3.33.2",
+    "core-js": "^3.33.3",
     "firebase": "^9.23.0",
     "moment": "^2.29.4",
     "tmi.js": "^1.8.5",
@@ -23,7 +23,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.39.0",
+    "@playwright/test": "^1.40.0",
     "@vue/cli-plugin-babel": "^4.5.19",
     "@vue/cli-plugin-eslint": "^4.5.19",
     "@vue/cli-service": "^4.5.19",
