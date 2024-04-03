@@ -32,65 +32,65 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from 'vuex'
 
 export default {
-  name: "StreamDetails",
+  name: 'StreamDetails',
   props: {
     streamID: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
   components: {
-    AnnouncementAlert: () => import("@/components/AnnouncementAlert"),
-    StreamGraph: () => import("@/components/StreamGraph"),
-    GamesList: () => import("@/components/GamesList"),
+    AnnouncementAlert: () => import('@/components/AnnouncementAlert'),
+    StreamGraph: () => import('@/components/StreamGraph'),
+    GamesList: () => import('@/components/GamesList')
   },
-  data() {
+  data () {
     return {
       loading: true,
       baseURL: process.env.VUE_APP_BASE_URL,
-      baseURL2: process.env.VUE_APP_BASE_URL_2,
-    };
+      baseURL2: process.env.VUE_APP_BASE_URL_2
+    }
   },
   computed: {
-    ...mapState("streams", ["stream"]),
-    vodURL() {
-      return `https://player.twitch.tv/?video=${this.stream.video.id}&parent=${this.baseURL2}&parent=${this.baseURL}&autoplay=false`;
+    ...mapState('streams', ['stream']),
+    vodURL () {
+      return `https://player.twitch.tv/?video=${this.stream.video.id}&parent=${this.baseURL2}&parent=${this.baseURL}&autoplay=false`
     },
-    metaTitle() {
-      return this.loading ? "Jerma Joke" : this.stream.video.title;
+    metaTitle () {
+      return this.loading ? 'Jerma Joke' : this.stream.video.title
     },
-    metaDescription() {
+    metaDescription () {
       return this.loading
-        ? "Stream details"
-        : `Jerma plays ${this.stream.games[0]?.name}`;
-    },
+        ? 'Stream details'
+        : `Jerma plays ${this.stream.games[0]?.name}`
+    }
   },
-  async created() {
+  async created () {
     try {
-      this.loading = true;
-      await this.fetchStream(this.streamID);
-      this.loading = false;
+      this.loading = true
+      await this.fetchStream(this.streamID)
+      this.loading = false
     } catch (error) {
-      console.error("Failed to fetch stream:", error);
+      console.error('Failed to fetch stream:', error)
     }
   },
   methods: {
-    ...mapActions("streams", ["fetchStream"]),
-    openVodToTimestamp(point) {
-      const url = `https://www.twitch.tv/videos/${this.stream.video.id}?t=${point.x}m`;
-      window.open(url, "_blank", "noreferrer");
-    },
+    ...mapActions('streams', ['fetchStream']),
+    openVodToTimestamp (point) {
+      const url = `https://www.twitch.tv/videos/${this.stream.video.id}?t=${point.x}m`
+      window.open(url, '_blank', 'noreferrer')
+    }
   },
-  metaInfo() {
+  metaInfo () {
     return {
       title: `${this.metaTitle} | Jerma Joke Tracker`,
-      meta: [{ name: "Description", content: this.metaDescription }],
-    };
-  },
-};
+      meta: [{ name: 'Description', content: this.metaDescription }]
+    }
+  }
+}
 </script>
 
 <style>
