@@ -2,12 +2,25 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
-    '@nuxtjs/tailwindcss',
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
+    "@nuxtjs/tailwindcss",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "nuxt-vuefire",
   ],
+  vuefire: {
+    config: {
+      apiKey: "AIzaSyAz0iwy0SUEdgfEepd58a0DPZwxKoD8MQU",
+      authDomain: "jerma-joke.firebaseapp.com",
+      databaseURL: "https://jerma-joke.firebaseio.com",
+      projectId: "jerma-joke",
+      storageBucket: "jerma-joke.appspot.com",
+      messagingSenderId: "799027726679",
+      appId: "1:799027726679:web:807cf04ad8529c83",
+      measurementId: "G-9YWGPSZR1V",
+    },
+  },
   build: {
     // https://github.com/prazdevs/pinia-plugin-persistedstate/issues/236
-    transpile: ['pinia-plugin-persistedstate'],
+    transpile: ["pinia-plugin-persistedstate"],
   },
-})
+});
