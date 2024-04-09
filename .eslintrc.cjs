@@ -1,4 +1,9 @@
 module.exports = {
   root: true,
-  extends: ['@nuxt/eslint-config'],
-}
+  plugins: ["nuxt"],
+  extends: ["@nuxt", "plugin:prettier/recommended", "prettier"],
+  env: {
+    browser: true,
+    node: true,
+  },
+};
