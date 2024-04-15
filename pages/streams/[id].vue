@@ -1,10 +1,10 @@
 <script setup>
-import { doc } from "firebase/firestore";
+import { doc } from 'firebase/firestore'
 
-const route = useRoute();
-const db = useFirestore();
+const route = useRoute()
+const db = useFirestore()
 
-const stream = useDocument(doc(db, "streams", route.params.id));
+const stream = useDocument(doc(db, 'streams', route.params.id))
 </script>
 
 <template>

@@ -1,7 +1,7 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
 export const useMyStreamsStore = defineStore({
-  id: "myStreamsStore",
+  id: 'myStreamsStore',
   state: () => ({}),
   actions: {},
-});
+})
