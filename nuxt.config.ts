@@ -3,11 +3,17 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/eslint-module",
-    "@nuxtjs/tailwindcss",
+    "dayjs-nuxt",
+    "@nuxt/ui",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "nuxt-vuefire",
   ],
+  dayjs: {
+    plugins: ["relativeTime", "utc", "timezone"],
+    defaultLocale: "en",
+    defaultTimezone: "America/New_York",
+  },
   vuefire: {
     config: {
       apiKey: "AIzaSyAz0iwy0SUEdgfEepd58a0DPZwxKoD8MQU",
