@@ -25,8 +25,8 @@ export default defineNuxtConfig({
       measurementId: 'G-9YWGPSZR1V',
     },
   },
-  build: {
-    // https://github.com/prazdevs/pinia-plugin-persistedstate/issues/236
-    transpile: ['pinia-plugin-persistedstate'],
-  },
+  // build: {
+  //   // https://github.com/prazdevs/pinia-plugin-persistedstate/issues/236
+  //   transpile: ['pinia-plugin-persistedstate'],
+  // },
 })

@@ -21,6 +21,10 @@ function streamThumbnailUrl(urlTemplate) {
   return urlTemplate.replace('%{width}x%{height}', '1920x1080')
 }
 
+function imageUrlPlacholder(e) {
+  e.target.src = 'https://placehold.co/600x400'
+}
+
 function formatDate(date) {
   return dayjs(date).fromNow()
 }
@@ -28,8 +32,10 @@ function formatDate(date) {
 
 <template>
   <main class="container mx-auto p-4">
+    <button @click="checkImage">
+      TEST IMAGE LINK
+    </button>
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div />
       <NuxtLink
         v-for="stream in streams"
         :key="stream.id"
@@ -46,6 +52,7 @@ function formatDate(date) {
               width="1920"
               height="1080"
               class="bg-cover border-0"
+              @error="imageUrlPlacholder"
             >
           </template>
           <template #footer>
