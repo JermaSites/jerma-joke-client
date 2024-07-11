@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint --fix"
   },
   "dependencies": {
-    "apexcharts": "^3.50.0",
+    "apexcharts": "^3.22.3",
     "core-js": "^3.37.1",
     "firebase": "^9.23.0",
     "moment": "^2.30.1",

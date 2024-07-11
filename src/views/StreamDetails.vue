@@ -15,15 +15,8 @@
 
       <v-col lg="6" cols="12">
         <v-responsive :aspect-ratio="16 / 9" min-height="100%">
-          <iframe
-            class="twitch-embed"
-            :src="vodURL"
-            height="100%"
-            width="100%"
-            frameborder="0"
-            scrolling="no"
-            allowfullscreen="true"
-          >
+          <iframe class="twitch-embed" :src="vodURL" height="100%" width="100%" frameborder="0" scrolling="no"
+            allowfullscreen="true">
           </iframe>
         </v-responsive>
       </v-col>
