@@ -10,9 +10,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon color="primary" dark v-bind="attrs" v-on="on">
             <v-icon v-if="chartType === 'line'">mdi-chart-line</v-icon>
-            <v-icon v-if="chartType === 'candlestick'"
-              >mdi-chart-waterfall</v-icon
-            >
+            <v-icon v-if="chartType === 'candlestick'">mdi-chart-waterfall</v-icon>
           </v-btn>
         </template>
         <v-list>
@@ -25,28 +23,13 @@
         </v-list>
       </v-menu>
 
-      <v-btn
-        text
-        color="primary"
-        @click="xAxisInterval = 1"
-        :outlined="xAxisInterval === 1"
-      >
+      <v-btn text color="primary" @click="xAxisInterval = 1" :outlined="xAxisInterval === 1">
         1m
       </v-btn>
-      <v-btn
-        text
-        color="primary"
-        @click="xAxisInterval = 5"
-        :outlined="xAxisInterval === 5"
-      >
+      <v-btn text color="primary" @click="xAxisInterval = 5" :outlined="xAxisInterval === 5">
         5m
       </v-btn>
-      <v-btn
-        text
-        color="primary"
-        @click="xAxisInterval = 10"
-        :outlined="xAxisInterval === 10"
-      >
+      <v-btn text color="primary" @click="xAxisInterval = 10" :outlined="xAxisInterval === 10">
         10m
       </v-btn>
       <v-btn icon title="fullscreen" @click="fullscreen = !fullscreen">
@@ -58,7 +41,8 @@
       <v-col>
         <fullscreen v-model="fullscreen">
           <v-responsive :aspect-ratio="16 / 9" style="height: 100%">
-            <LineChart :data="lineChartData" @markerClicked="e => $emit('markerClick', e)" v-if="chartType === 'line'" />
+            <LineChart :data="lineChartData" @markerClicked="e => $emit('markerClick', e)"
+              v-if="chartType === 'line'" />
             <CandlestickChart :data="candlestickData" v-else />
           </v-responsive>
         </fullscreen>
@@ -174,7 +158,7 @@ export default {
     VolumeChart: () => import('@/components/VolumeChart'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
-  data () {
+  data() {
     return {
       fullscreen: false,
       chartType: 'line',
@@ -188,7 +172,7 @@ export default {
   },
   computed: {
     ...mapState('streams', ['stream']),
-    volumeData () {
+    volumeData() {
       const allData = this.data.map((d) => ({ x: d.interval, y: d.volume }))
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
       return chunkedArray.map((chunk) => {
@@ -201,7 +185,7 @@ export default {
         }
       })
     },
-    lineChartData () {
+    lineChartData() {
       const scoreData = this.data.map((d) => ({
         x: d.interval,
         y: d.jokeScore
@@ -250,7 +234,7 @@ export default {
         }
       ]
     },
-    candlestickData () {
+    candlestickData() {
       const allData = this.data.map((d) => [
         d.interval,
         d.open,
@@ -272,27 +256,27 @@ export default {
         return [i * this.xAxisInterval, open, high, low, close]
       })
     },
-    total () {
+    total() {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum - 2
       }, this.stream.jokeScoreTotal)
     },
-    max () {
+    max() {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum
       }, this.stream.jokeScoreMax)
     },
-    min () {
+    min() {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum : sum - 2
       }, this.stream.jokeScoreMin)
     },
-    totalVolume () {
+    totalVolume() {
       return this.data.reduce((sum, data) => {
         return sum + data.volume
       }, 0)
     },
-    streamUpTime () {
+    streamUpTime() {
       if (this.stream.type === 'live') {
         return this.now.diff(moment(this.stream.startedAt), 'minutes')
       }
@@ -303,13 +287,13 @@ export default {
     }
   },
   watch: {
-    total (total) {
+    total(total) {
       if (total > this.high) this.high = total
 
       if (total < this.low) this.low = total
     }
   },
-  created () {
+  created() {
     this.data = this.createData()
     this.high = this.stream.jokeScoreHigh
     this.low = this.stream.jokeScoreLow
@@ -320,10 +304,10 @@ export default {
     }
   },
   methods: {
-    test (e) {
+    test(e) {
       console.log(e)
     },
-    chunkArray (arr, chunkSize) {
+    chunkArray(arr, chunkSize) {
       const chunkedArray = []
       for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize)
@@ -331,7 +315,7 @@ export default {
       }
       return chunkedArray
     },
-    createData () {
+    createData() {
       const data = []
       let jokeScore = 0
       let high = 0
@@ -369,11 +353,11 @@ export default {
 
       return data
     },
-    onMessageHandler (channel, userstate, message, self) {
+    onMessageHandler(channel, userstate, message, self) {
       const score =
-        message.match(/(^|\s)([+-]2)($|\s)/g) ||
-        message.match(/(^|\s)(jermaPlus2)($|\s)/g) ||
-        message.match(/(^|\s)(jermaMinus2)($|\s)/g)
+        message.match(/(?<!\S)[+-]2(?!\S)/g) ||
+        message.match(/(?<!\S)jermaPlus2(?!\S)/g) ||
+        message.match(/(?<!\S)jermaMinus2(?!\S)/g)
 
       if (!score) return
 
@@ -387,7 +371,7 @@ export default {
         dataPoint.volume += 1
       }
     },
-    updateGraph () {
+    updateGraph() {
       this.now = moment()
       const dataPoint = this.data.find(
         (data) => data.interval === this.streamUpTime
