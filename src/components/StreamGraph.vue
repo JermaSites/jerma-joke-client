@@ -158,7 +158,7 @@ export default {
     VolumeChart: () => import('@/components/VolumeChart'),
     MinMaxPieChart: () => import('@/components/MinMaxPieChart')
   },
-  data() {
+  data () {
     return {
       fullscreen: false,
       chartType: 'line',
@@ -172,7 +172,7 @@ export default {
   },
   computed: {
     ...mapState('streams', ['stream']),
-    volumeData() {
+    volumeData () {
       const allData = this.data.map((d) => ({ x: d.interval, y: d.volume }))
       const chunkedArray = this.chunkArray(allData, this.xAxisInterval)
       return chunkedArray.map((chunk) => {
@@ -185,7 +185,7 @@ export default {
         }
       })
     },
-    lineChartData() {
+    lineChartData () {
       const scoreData = this.data.map((d) => ({
         x: d.interval,
         y: d.jokeScore
@@ -234,7 +234,7 @@ export default {
         }
       ]
     },
-    candlestickData() {
+    candlestickData () {
       const allData = this.data.map((d) => [
         d.interval,
         d.open,
@@ -256,27 +256,27 @@ export default {
         return [i * this.xAxisInterval, open, high, low, close]
       })
     },
-    total() {
+    total () {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum - 2
       }, this.stream.jokeScoreTotal)
     },
-    max() {
+    max () {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum + 2 : sum
       }, this.stream.jokeScoreMax)
     },
-    min() {
+    min () {
       return this.messages.reduce((sum, message) => {
         return message.joke ? sum : sum - 2
       }, this.stream.jokeScoreMin)
     },
-    totalVolume() {
+    totalVolume () {
       return this.data.reduce((sum, data) => {
         return sum + data.volume
       }, 0)
     },
-    streamUpTime() {
+    streamUpTime () {
       if (this.stream.type === 'live') {
         return this.now.diff(moment(this.stream.startedAt), 'minutes')
       }
@@ -287,13 +287,13 @@ export default {
     }
   },
   watch: {
-    total(total) {
+    total (total) {
       if (total > this.high) this.high = total
 
       if (total < this.low) this.low = total
     }
   },
-  created() {
+  created () {
     this.data = this.createData()
     this.high = this.stream.jokeScoreHigh
     this.low = this.stream.jokeScoreLow
@@ -304,10 +304,10 @@ export default {
     }
   },
   methods: {
-    test(e) {
+    test (e) {
       console.log(e)
     },
-    chunkArray(arr, chunkSize) {
+    chunkArray (arr, chunkSize) {
       const chunkedArray = []
       for (let i = 0; i < arr.length; i += chunkSize) {
         const chunk = arr.slice(i, i + chunkSize)
@@ -315,7 +315,7 @@ export default {
       }
       return chunkedArray
     },
-    createData() {
+    createData () {
       const data = []
       let jokeScore = 0
       let high = 0
@@ -353,7 +353,7 @@ export default {
 
       return data
     },
-    onMessageHandler(channel, userstate, message, self) {
+    onMessageHandler (channel, userstate, message, self) {
       const score =
         message.match(/(?<!\S)[+-]2(?!\S)/g) ||
         message.match(/(?<!\S)jermaPlus2(?!\S)/g) ||
@@ -371,7 +371,7 @@ export default {
         dataPoint.volume += 1
       }
     },
-    updateGraph() {
+    updateGraph () {
       this.now = moment()
       const dataPoint = this.data.find(
         (data) => data.interval === this.streamUpTime
