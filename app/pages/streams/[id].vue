@@ -25,11 +25,9 @@ const stream = streamStore.getStreamById(streamId.value)
 </script>
 
 <template>
-  <div>
-    <pre>
-      {{ stream }}
-    </pre>
-  </div>
+  <UContainer class="py-4 sm:py-6 lg:py-8">
+    <LineChart :stream="stream" />
+  </UContainer>
 </template>
 
 <style scoped>
