@@ -1,17 +1,44 @@
 <script setup lang="ts">
+const props = defineProps<{
+  id: string
+  title: string
+  score: number
+  date: string
+  thumbnailUrl: string
+}>()
 
+const transformThumbnailUrl = computed(() => {
+  return props.thumbnailUrl.replace('%{width}x%{height}', '320x180')
+})
 </script>
 
 <template>
-  <UCard>
+  <UCard :ui="{ body: 'p-0 sm:p-0' }" class=" dark:bg-stone-800 dark:ring-stone-700">
     <template #header>
-      header
+      <div class="truncate">
+        <h2 class="text-lg">
+          {{ props.title }}
+        </h2>
+      </div>
     </template>
 
-    body
+    <div>
+      <img :src="transformThumbnailUrl" alt="" srcset="" class="w-full">
+    </div>
 
     <template #footer>
-      footer
+      <div class="flex justify-between">
+        <div>
+          <p>
+            Score: {{ props.score }}
+          </p>
+        </div>
+        <div>
+          <p>
+            {{ $dayjs(props.date).fromNow() }}
+          </p>
+        </div>
+      </div>
     </template>
   </UCard>
 </template>

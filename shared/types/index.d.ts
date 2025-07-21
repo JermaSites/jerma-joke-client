@@ -3,7 +3,7 @@ export interface Stream {
   jokeScoreTotal: number
   userID: string
   jokeScoreMax: number
-  streamUpTime: 443
+  streamUpTime: number
   userName: string
   startedAt: string
   id: string
