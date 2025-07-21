@@ -1,4 +1,4 @@
-export function useFirebase() {
+export function useDayjs() {
   const { $dayjs } = useNuxtApp()
 
   return {
