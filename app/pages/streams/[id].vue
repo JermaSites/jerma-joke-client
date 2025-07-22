@@ -22,11 +22,48 @@ const streamId = computed(() => {
 await callOnce('stream', () => streamStore.fetchStream(streamId.value))
 
 const stream = streamStore.getStreamById(streamId.value)
+
+const interpolatedStreamData = computed(() => {
+  return interpolateStreamData(stream.value)
+})
+
+const scoreData = computed(() => {
+  return interpolatedStreamData.value.map((data) => {
+    return { x: data.interval, y: data.jokeScore }
+  })
+})
+
+const plusTwoData = computed(() => {
+  return interpolatedStreamData.value.map((data) => {
+    return { x: data.interval, y: data.totalPlusTwo / 2 }
+  })
+})
+
+const minusTwoData = computed(() => {
+  return interpolatedStreamData.value.map((data) => {
+    return { x: data.interval, y: Math.abs(data.totalMinusTwo / 2) }
+  })
+})
+
+const series = ref<ApexAxisChartSeries>([
+  {
+    name: 'Score',
+    data: scoreData.value,
+  },
+  {
+    name: '+2',
+    data: plusTwoData.value,
+  },
+  {
+    name: '-2',
+    data: minusTwoData.value,
+  },
+])
 </script>
 
 <template>
   <UContainer class="py-4 sm:py-6 lg:py-8">
-    <LineChart :stream="stream" />
+    <LineChart :series="series" />
   </UContainer>
 </template>
 

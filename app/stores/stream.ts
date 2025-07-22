@@ -21,7 +21,7 @@ export const useStreamStore = defineStore('stream', () => {
   }
 
   function getStreamById(id: string) {
-    return streams.value.find(stream => stream.id === id)
+    return computed(() => streams.value.find(stream => stream.id === id))
   }
 
   return {
