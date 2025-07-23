@@ -1,6 +1,17 @@
 <script setup lang="ts">
+import tmi from 'tmi.js'
+
+const config = useRuntimeConfig()
+const client = new tmi.Client({
+  channels: [config.public.twitchChannelName],
+})
+
+client.connect()
+client.on('connected', () => console.log('Connected'))
+
 const route = useRoute()
 const streamStore = useStreamStore()
+const { currentStream } = storeToRefs(streamStore)
 
 const streamId = computed(() => {
   const id = route.params.id
@@ -21,10 +32,8 @@ const streamId = computed(() => {
 
 await callOnce('stream', () => streamStore.fetchStream(streamId.value))
 
-const stream = streamStore.getStreamById(streamId.value)
-
 const interpolatedStreamData = computed(() => {
-  return interpolateStreamData(stream.value)
+  return interpolateStreamData(currentStream.value)
 })
 
 const scoreData = computed(() => {
@@ -45,24 +54,69 @@ const minusTwoData = computed(() => {
   })
 })
 
-const series = ref<ApexAxisChartSeries>([
-  {
-    name: 'Score',
-    data: scoreData.value,
-  },
-  {
-    name: '+2',
-    data: plusTwoData.value,
-  },
-  {
-    name: '-2',
-    data: minusTwoData.value,
-  },
-])
+const series = computed<ApexAxisChartSeries>(() => {
+  return [
+    {
+      name: 'Score',
+      data: scoreData.value,
+    },
+    {
+      name: '+2',
+      data: plusTwoData.value,
+    },
+    {
+      name: '-2',
+      data: minusTwoData.value,
+    },
+  ]
+})
+
+function updateChart() {
+  if (!currentStream.value)
+    return
+
+  const dataPoint = currentStream.value.data.find(p => p.interval === interpolatedStreamData.value.length)
+
+  if (dataPoint) {
+    //
+  }
+}
+
+function updateIntervalData(dataPoint: StreamData) {
+  dataPoint.jokeScore = total
+
+  dataPoint.high
+          = dataPoint.jokeScore > dataPoint.high
+      ? dataPoint.jokeScore
+      : dataPoint.high
+
+  dataPoint.low
+          = dataPoint.jokeScore < dataPoint.low
+      ? dataPoint.jokeScore
+      : dataPoint.low
+
+  dataPoint.close = dataPoint.jokeScore
+
+  dataPoint.totalMinusTwo = min
+
+  dataPoint.totalPlusTwo = max
+}
+
+// onMounted(() => {
+//   const intervalId = setInterval(() => {
+//     currentStream.value.data.at(-1).jokeScore += 2
+//     currentStream.value = { ...currentStream.value }
+//   }, 1000)
+
+//   onUnmounted(() => {
+//     clearInterval(intervalId)
+//   })
+// })
 </script>
 
 <template>
   <UContainer class="py-4 sm:py-6 lg:py-8">
+    {{ streamStore.currentStream?.title }}
     <LineChart :series="series" />
   </UContainer>
 </template>

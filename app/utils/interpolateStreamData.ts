@@ -11,6 +11,8 @@ export default function (stream: Stream | undefined) {
   let totalMinusTwo = 0
   let totalPlusTwo = 0
 
+  // TODO
+  // fix streamUptime when stream is live
   const streamUptime = stream.data.at(-1)?.interval || 0
 
   for (let i = 0; i <= streamUptime; i++) {

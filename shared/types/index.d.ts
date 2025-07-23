@@ -17,7 +17,7 @@ export interface Stream {
   jokeScoreMin: number
 }
 
-interface StreamData {
+export interface StreamData {
   close: number
   high: number
   interval: number
@@ -29,13 +29,13 @@ interface StreamData {
   volume: number
 }
 
-interface StreamGame {
+export interface StreamGame {
   boxArtURL: string
   id: string
   name: string
 }
 
-interface StreamVideo {
+export interface StreamVideo {
   URL: string
   createdAt: string
   duration: string
