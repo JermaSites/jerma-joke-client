@@ -9,10 +9,10 @@ export const useStreamStore = defineStore('stream', () => {
   }
 
   async function fetchStream(id: string) {
-    let stream = streams.value.find(stream => stream.id === id)
-    if (stream) {
-      return stream
-    }
+    let stream = getStreamById(id).value
+
+    if (stream)
+      return currentStream.value = stream
 
     stream = await getStream(id)
 

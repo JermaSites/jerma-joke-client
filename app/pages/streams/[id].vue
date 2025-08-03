@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import tmi from 'tmi.js'
+// import tmi from 'tmi.js'
 
-const config = useRuntimeConfig()
-const client = new tmi.Client({
-  channels: [config.public.twitchChannelName],
-})
+// const config = useRuntimeConfig()
+// const client = new tmi.Client({
+//   channels: [config.public.twitchChannelName],
+// })
 
-client.connect()
-client.on('connected', () => console.log('Connected'))
+// client.connect()
+import type { BreadcrumbItem } from '@nuxt/ui'
 
 const route = useRoute()
 const streamStore = useStreamStore()
@@ -30,7 +30,7 @@ const streamId = computed(() => {
   return id
 })
 
-await callOnce('stream', () => streamStore.fetchStream(streamId.value))
+await streamStore.fetchStream(streamId.value)
 
 const interpolatedStreamData = computed(() => {
   return interpolateStreamData(currentStream.value)
@@ -112,11 +112,25 @@ function updateIntervalData(dataPoint: StreamData) {
 //     clearInterval(intervalId)
 //   })
 // })
+
+const items: BreadcrumbItem[] = [
+  {
+    label: 'Home',
+    to: '/',
+  },
+  {
+    label: streamStore.currentStream?.title,
+    to: `/streams/${streamId.value}`,
+  },
+]
 </script>
 
 <template>
   <UContainer class="py-4 sm:py-6 lg:py-8">
-    {{ streamStore.currentStream?.title }}
+    <UBreadcrumb :items="items" />
+    <div class="py-4 text-5xl">
+      {{ streamStore.currentStream?.title }}
+    </div>
     <LineChart :series="series" />
   </UContainer>
 </template>
