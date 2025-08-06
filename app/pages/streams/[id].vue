@@ -33,6 +33,9 @@ const streamId = computed(() => {
 await streamStore.fetchStream(streamId.value)
 
 const interpolatedStreamData = computed(() => {
+  if (!currentStream.value)
+    return []
+
   return interpolateStreamData(currentStream.value)
 })
 

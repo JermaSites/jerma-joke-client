@@ -12,7 +12,7 @@ const seriesLength = computed(() => {
   return props.series.at(0)?.data.length || 0
 })
 
-const options = ref<ApexOptions>({
+const options = reactive<ApexOptions>({
   chart: {
     type: 'line',
     animations: {

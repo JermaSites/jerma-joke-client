@@ -1,7 +1,4 @@
-export default function (stream: Stream | undefined) {
-  if (!stream)
-    return []
-
+export default function (stream: Stream) {
   const data = []
   let jokeScore = 0
   let high = 0
