@@ -8,9 +8,7 @@ export default function (stream: Stream) {
   let totalMinusTwo = 0
   let totalPlusTwo = 0
 
-  // TODO
-  // fix streamUptime when stream is live
-  const streamUptime = stream.data.at(-1)?.interval || 0
+  const streamUptime = getStreamUptime(stream)
 
   for (let i = 0; i <= streamUptime; i++) {
     const dataPoint = stream.data.find(data => data.interval === i)

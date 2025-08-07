@@ -7,6 +7,7 @@
 // })
 
 // client.connect()
+
 import type { BreadcrumbItem } from '@nuxt/ui'
 
 const route = useRoute()
@@ -39,11 +40,26 @@ const interpolatedStreamData = computed(() => {
   return interpolateStreamData(currentStream.value)
 })
 
+const totalScore = ref(currentStream.value?.jokeScoreTotal || 0)
+
+const lowScore = computed(() => {
+  const low = currentStream.value?.jokeScoreLow || 0
+  return totalScore.value > low ? totalScore.value : low
+})
+
+const highScore = computed(() => {
+  const high = currentStream.value?.jokeScoreHigh || 0
+  return totalScore.value < high ? totalScore.value : high
+})
+
 const scoreData = computed(() => {
   return interpolatedStreamData.value.map((data) => {
     return { x: data.interval, y: data.jokeScore }
   })
 })
+
+const minScore = ref(currentStream.value?.jokeScoreMin || 0)
+const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
 
 const plusTwoData = computed(() => {
   return interpolatedStreamData.value.map((data) => {
@@ -78,43 +94,58 @@ function updateChart() {
   if (!currentStream.value)
     return
 
-  const dataPoint = currentStream.value.data.find(p => p.interval === interpolatedStreamData.value.length)
+  const streamUptime = getStreamUptime(currentStream.value)
+
+  const dataPoint = currentStream.value.data.find(p => p.interval === streamUptime)
 
   if (dataPoint) {
-    //
+    dataPoint.jokeScore = totalScore.value
+    dataPoint.high = highScore.value
+    dataPoint.low = lowScore.value
+    dataPoint.close = totalScore.value
+    dataPoint.totalMinusTwo = minScore.value
+    dataPoint.totalPlusTwo = maxScore.value
+  }
+  else {
+    currentStream.value.data.push({
+      jokeScore: totalScore.value,
+      high: totalScore.value,
+      low: totalScore.value,
+      open: totalScore.value,
+      close: totalScore.value,
+      totalMinusTwo: minScore.value,
+      totalPlusTwo: maxScore.value,
+      interval: streamUptime,
+      volume: 0,
+    })
   }
 }
 
-function updateIntervalData(dataPoint: StreamData) {
-  dataPoint.jokeScore = total
+onMounted(() => {
+  const id = setInterval(() => {
+    const random = getRandomInt(0, 1)
+    const score = 100
 
-  dataPoint.high
-          = dataPoint.jokeScore > dataPoint.high
-      ? dataPoint.jokeScore
-      : dataPoint.high
+    if (random) {
+      totalScore.value += score
+      maxScore.value += score
+    }
+    else {
+      totalScore.value -= score
+      minScore.value -= score
+    }
+  }, 500)
 
-  dataPoint.low
-          = dataPoint.jokeScore < dataPoint.low
-      ? dataPoint.jokeScore
-      : dataPoint.low
+  onBeforeUnmount(() => clearInterval(id))
+})
 
-  dataPoint.close = dataPoint.jokeScore
+onMounted(() => {
+  const id = setInterval(() => {
+    updateChart()
+  }, 1000)
 
-  dataPoint.totalMinusTwo = min
-
-  dataPoint.totalPlusTwo = max
-}
-
-// onMounted(() => {
-//   const intervalId = setInterval(() => {
-//     currentStream.value.data.at(-1).jokeScore += 2
-//     currentStream.value = { ...currentStream.value }
-//   }, 1000)
-
-//   onUnmounted(() => {
-//     clearInterval(intervalId)
-//   })
-// })
+  onBeforeUnmount(() => clearInterval(id))
+})
 
 const items: BreadcrumbItem[] = [
   {
@@ -135,6 +166,21 @@ const items: BreadcrumbItem[] = [
       {{ streamStore.currentStream?.title }}
     </div>
     <LineChart :series="series" />
+
+    <section>
+      <div>
+        {{ totalScore }}
+      </div>
+      <div>
+        {{ minScore }}
+      </div>
+      <div>
+        {{ maxScore }}
+      </div>
+      <div>
+        sum: {{ maxScore + minScore }}
+      </div>
+    </section>
   </UContainer>
 </template>
 
