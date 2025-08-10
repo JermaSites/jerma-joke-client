@@ -9,7 +9,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      twitchChannelName: process.env.TWITCH_CHANNEL_NAME,
+      twitchChannelName: process.env.NUXT_TWITCH_CHANNEL_NAME,
     },
   },
 })

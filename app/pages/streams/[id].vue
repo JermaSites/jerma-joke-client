@@ -1,14 +1,9 @@
 <script setup lang="ts">
-// import tmi from 'tmi.js'
-
-// const config = useRuntimeConfig()
-// const client = new tmi.Client({
-//   channels: [config.public.twitchChannelName],
-// })
-
-// client.connect()
-
 import type { BreadcrumbItem } from '@nuxt/ui'
+
+import tmi from 'tmi.js'
+
+const { twitchChannelName } = useRuntimeConfig().public
 
 const route = useRoute()
 const streamStore = useStreamStore()
@@ -41,6 +36,8 @@ const interpolatedStreamData = computed(() => {
 })
 
 const totalScore = ref(currentStream.value?.jokeScoreTotal || 0)
+const minScore = ref(currentStream.value?.jokeScoreMin || 0)
+const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
 
 const lowScore = computed(() => {
   const low = currentStream.value?.jokeScoreLow || 0
@@ -57,9 +54,6 @@ const scoreData = computed(() => {
     return { x: data.interval, y: data.jokeScore }
   })
 })
-
-const minScore = ref(currentStream.value?.jokeScoreMin || 0)
-const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
 
 const plusTwoData = computed(() => {
   return interpolatedStreamData.value.map((data) => {
@@ -94,7 +88,7 @@ function updateChart() {
   if (!currentStream.value)
     return
 
-  const streamUptime = getStreamUptime(currentStream.value)
+  const streamUptime = getStreamUptime(currentStream.value) + 1
 
   const dataPoint = currentStream.value.data.find(p => p.interval === streamUptime)
 
@@ -122,27 +116,42 @@ function updateChart() {
 }
 
 onMounted(() => {
-  const id = setInterval(() => {
-    const random = getRandomInt(0, 1)
-    const score = 100
+  const client = new tmi.Client({
+    channels: [twitchChannelName],
+  })
 
-    if (random) {
-      totalScore.value += score
-      maxScore.value += score
-    }
-    else {
-      totalScore.value -= score
-      minScore.value -= score
-    }
-  }, 500)
+  client.connect()
 
-  onBeforeUnmount(() => clearInterval(id))
+  client.on('message', (_channel, _usersate, message, _self) => {
+    const messageContainsScore = /(?<!\S)(?:[+-]2|jerma(?:Plus|Minus)2)(?!\S)/.test(message)
+
+    if (!messageContainsScore)
+      return
+
+    if (message.includes('+2')) {
+      totalScore.value += 2
+      maxScore.value += 2
+    }
+    else if (message.includes('-2')) {
+      totalScore.value -= 2
+      minScore.value -= 2
+    }
+
+    const lastData = currentStream.value?.data.at(-1)
+    if (lastData && lastData.volume != null) {
+      lastData.volume += 1
+    }
+  })
+
+  onBeforeUnmount(() => {
+    client.disconnect()
+  })
 })
 
 onMounted(() => {
   const id = setInterval(() => {
     updateChart()
-  }, 1000)
+  }, 10000)
 
   onBeforeUnmount(() => clearInterval(id))
 })
@@ -179,6 +188,9 @@ const items: BreadcrumbItem[] = [
       </div>
       <div>
         sum: {{ maxScore + minScore }}
+      </div>
+      <div>
+        volume: {{ currentStream?.data.at(-1)?.volume }}
       </div>
     </section>
   </UContainer>
