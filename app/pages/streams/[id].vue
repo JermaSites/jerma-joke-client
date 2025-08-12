@@ -28,25 +28,21 @@ const streamId = computed(() => {
 
 await streamStore.fetchStream(streamId.value)
 
-const interpolatedStreamData = computed(() => {
-  if (!currentStream.value)
-    return []
+const interpolatedStreamData = ref(interpolateStreamData(currentStream.value))
 
-  return interpolateStreamData(currentStream.value)
-})
-
-const totalScore = ref(currentStream.value?.jokeScoreTotal || 0)
-const minScore = ref(currentStream.value?.jokeScoreMin || 0)
-const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
+let totalScore = interpolatedStreamData.value.at(-1)?.jokeScore || 0
+let minScore = interpolatedStreamData.value.at(-1)?.totalMinusTwo || 0
+let maxScore = interpolatedStreamData.value.at(-1)?.totalPlusTwo || 0
+let volume = interpolatedStreamData.value.at(-1)?.volume || 0
 
 const lowScore = computed(() => {
   const low = currentStream.value?.jokeScoreLow || 0
-  return totalScore.value > low ? totalScore.value : low
+  return totalScore < low ? totalScore : low
 })
 
 const highScore = computed(() => {
   const high = currentStream.value?.jokeScoreHigh || 0
-  return totalScore.value < high ? totalScore.value : high
+  return totalScore > high ? totalScore : high
 })
 
 const scoreData = computed(() => {
@@ -67,7 +63,19 @@ const minusTwoData = computed(() => {
   })
 })
 
-const series = computed<ApexAxisChartSeries>(() => {
+const volumeData = computed(() => {
+  return interpolatedStreamData.value.map((data) => {
+    return { x: data.interval, y: data.volume }
+  })
+})
+
+const donutChartSeries = computed(() => {
+  const high = Math.abs(maxScore)
+  const low = Math.abs(minScore)
+  return [high, low]
+})
+
+const lineChartSeries = computed<ApexAxisChartSeries>(() => {
   return [
     {
       name: 'Score',
@@ -84,31 +92,40 @@ const series = computed<ApexAxisChartSeries>(() => {
   ]
 })
 
+const volumeChartSeries = computed<ApexAxisChartSeries>(() => {
+  return [{
+    name: 'Volume',
+    data: volumeData.value,
+  }]
+})
+
 function updateChart() {
   if (!currentStream.value)
     return
 
-  const streamUptime = getStreamUptime(currentStream.value) + 1
+  const streamUptime = getStreamUptime(currentStream.value)
 
-  const dataPoint = currentStream.value.data.find(p => p.interval === streamUptime)
+  const dataPoint = interpolatedStreamData.value.find(p => p.interval === streamUptime)
 
   if (dataPoint) {
-    dataPoint.jokeScore = totalScore.value
+    dataPoint.jokeScore = totalScore
     dataPoint.high = highScore.value
     dataPoint.low = lowScore.value
-    dataPoint.close = totalScore.value
-    dataPoint.totalMinusTwo = minScore.value
-    dataPoint.totalPlusTwo = maxScore.value
+    dataPoint.close = totalScore
+    dataPoint.totalMinusTwo = minScore
+    dataPoint.totalPlusTwo = maxScore
+    dataPoint.volume = volume
   }
   else {
-    currentStream.value.data.push({
-      jokeScore: totalScore.value,
-      high: totalScore.value,
-      low: totalScore.value,
-      open: totalScore.value,
-      close: totalScore.value,
-      totalMinusTwo: minScore.value,
-      totalPlusTwo: maxScore.value,
+    volume = 0
+    interpolatedStreamData.value.push({
+      jokeScore: totalScore,
+      high: totalScore,
+      low: totalScore,
+      open: totalScore,
+      close: totalScore,
+      totalMinusTwo: minScore,
+      totalPlusTwo: maxScore,
       interval: streamUptime,
       volume: 0,
     })
@@ -128,18 +145,15 @@ onMounted(() => {
     if (!messageContainsScore)
       return
 
+    volume += 1
+
     if (message.includes('+2')) {
-      totalScore.value += 2
-      maxScore.value += 2
+      totalScore += 2
+      maxScore += 2
     }
     else if (message.includes('-2')) {
-      totalScore.value -= 2
-      minScore.value -= 2
-    }
-
-    const lastData = currentStream.value?.data.at(-1)
-    if (lastData && lastData.volume != null) {
-      lastData.volume += 1
+      totalScore -= 2
+      minScore -= 2
     }
   })
 
@@ -151,7 +165,7 @@ onMounted(() => {
 onMounted(() => {
   const id = setInterval(() => {
     updateChart()
-  }, 10000)
+  }, 1000)
 
   onBeforeUnmount(() => clearInterval(id))
 })
@@ -174,23 +188,40 @@ const items: BreadcrumbItem[] = [
     <div class="py-4 text-5xl">
       {{ streamStore.currentStream?.title }}
     </div>
-    <LineChart :series="series" />
+
+    <div>
+      <LineChart :series="lineChartSeries" />
+    </div>
+
+    <div>
+      <VolumeChart :series="volumeChartSeries" />
+    </div>
+
+    <div>
+      <DonutChart :series="donutChartSeries" />
+    </div>
 
     <section>
       <div>
-        {{ totalScore }}
+        Total: {{ totalScore }}
       </div>
       <div>
-        {{ minScore }}
+        Min: {{ minScore }}
       </div>
       <div>
-        {{ maxScore }}
+        Low: {{ lowScore }}
       </div>
       <div>
-        sum: {{ maxScore + minScore }}
+        High: {{ highScore }}
       </div>
       <div>
-        volume: {{ currentStream?.data.at(-1)?.volume }}
+        Max: {{ maxScore }}
+      </div>
+      <div>
+        Sum: {{ maxScore + minScore }}
+      </div>
+      <div>
+        Volume: {{ interpolatedStreamData.at(-1)?.volume }}
       </div>
     </section>
   </UContainer>

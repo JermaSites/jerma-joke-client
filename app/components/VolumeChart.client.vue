@@ -14,7 +14,7 @@ const seriesLength = computed(() => {
 
 const options = reactive<ApexOptions>({
   chart: {
-    type: 'line',
+    id: 'volumeChart',
     animations: {
       enabled: false,
     },
@@ -29,12 +29,8 @@ const options = reactive<ApexOptions>({
       enabled: false,
     },
   },
-  colors: [colors.amber[400], colors.green[500], colors.red[500]],
   dataLabels: {
     enabled: false,
-  },
-  fill: {
-    type: ['soild', 'solid', 'solid'],
   },
   grid: {
     show: true,
@@ -53,9 +49,9 @@ const options = reactive<ApexOptions>({
     },
     // padding: {
     //   top: 0,
-    //   right: 8,
+    //   right: 45,
     //   bottom: 0,
-    //   left: 22,
+    //   left: 12,
     // },
   },
   legend: {
@@ -64,12 +60,27 @@ const options = reactive<ApexOptions>({
   markers: {
     size: 0,
   },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+      borderRadius: 0,
+      columnWidth: '100%',
+      barHeight: '100%',
+    },
+  },
+  // responsive: [{
+  //   breakpoint: this.$vuetify.breakpoint.thresholds.xs,
+  //   options: {
+  //     xaxis: {
+  //       tickAmount: this.data.length - 1 < 5 ? this.data.length - 1 : 5,
+  //     },
+  //   },
+  // }],
   stroke: {
     show: true,
     curve: 'straight',
     lineCap: 'butt',
     width: 3,
-    dashArray: [0, 5, 5],
   },
   theme: {
     mode: 'dark',
@@ -79,11 +90,8 @@ const options = reactive<ApexOptions>({
     shared: false,
     followCursor: false,
     intersect: false,
-    onDatasetHover: {
-      highlightDataSeries: true,
-    },
     x: {
-      show: false,
+      show: true,
     },
     marker: {
       show: false,
@@ -106,18 +114,16 @@ const options = reactive<ApexOptions>({
     },
   },
   yaxis: {
+    show: false,
     opposite: true,
-    tooltip: {
-      enabled: true,
-    },
   },
 })
 </script>
 
 <template>
-  <apexchart
-    type="line"
-    :options="options"
-    :series="series"
-  />
+  <apexchart type="bar" height="100%" :series="series" :options="options" />
 </template>
+
+<style scoped>
+
+</style>
