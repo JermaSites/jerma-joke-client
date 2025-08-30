@@ -37,19 +37,19 @@ const high = ref(currentStream.value?.jokeScoreHigh || 0)
 const low = ref(currentStream.value?.jokeScoreLow || 0)
 const volume = ref(interpolatedStreamData.value.at(-1)?.volume || 0)
 
-const lowScore = computed(() => {
-  return totalScore.value < low.value ? totalScore.value : low.value
+watch(totalScore, (newTotal) => {
+  if (newTotal > high.value) {
+    high.value = newTotal
+  }
+
+  if (newTotal < low.value) {
+    low.value = newTotal
+  }
 })
 
-const highScore = computed(() => {
-  return totalScore.value > high.value ? totalScore.value : high.value
-})
-
-const totalVolume = computed(() => {
-  return interpolatedStreamData.value.reduce((sum, data) => {
-    return sum + data.volume
-  }, 0)
-})
+const totalVolume = ref(interpolatedStreamData.value.reduce((sum, data) => {
+  return sum + data.volume
+}, 0))
 
 const scoreData = computed(() => {
   return interpolatedStreamData.value.map((data) => {
@@ -115,8 +115,8 @@ function updateChart() {
 
   if (dataPoint) {
     dataPoint.jokeScore = totalScore.value
-    dataPoint.high = highScore.value
-    dataPoint.low = lowScore.value
+    dataPoint.high = high.value
+    dataPoint.low = low.value
     dataPoint.close = totalScore.value
     dataPoint.totalMinusTwo = minScore.value
     dataPoint.totalPlusTwo = maxScore.value
@@ -146,17 +146,15 @@ onMounted(() => {
   client.connect()
 
   client.on('message', (_channel, _usersate, message, _self) => {
-    const score
-        = message.match(/(?<!\S)[+-]2(?!\S)/g)
-          || message.match(/(?<!\S)jermaPlus2(?!\S)/g)
-          || message.match(/(?<!\S)jermaMinus2(?!\S)/g)
+    const messageContainsScore = /(?<!\S)(?:[+-]2|jerma(?:Plus|Minus)2)(?!\S)/.test(message)
 
-    if (!score)
+    if (!messageContainsScore)
       return
 
     volume.value += 1
+    totalVolume.value += 1
 
-    if (score.includes('+2') || score.includes('jermaPlus2')) {
+    if (message.includes('+2') || message.includes('jermaPlus2')) {
       totalScore.value += 2
       maxScore.value += 2
     }
@@ -171,12 +169,21 @@ onMounted(() => {
   })
 })
 
-onMounted(() => {
-  const id = setInterval(() => {
+function scheduleUpdate() {
+  return requestAnimationFrame(() => {
     updateChart()
-  }, 1000)
+    setTimeout(scheduleUpdate, 1000)
+  })
+}
 
-  onBeforeUnmount(() => clearInterval(id))
+onMounted(() => {
+  // const id = setInterval(() => {
+  //   updateChart()
+  // }, 1000)
+
+  const id = scheduleUpdate()
+
+  onBeforeUnmount(() => cancelAnimationFrame(id))
 })
 
 const items: BreadcrumbItem[] = [
@@ -197,11 +204,11 @@ const tableData = computed(() => ([
   },
   {
     score: 'Highest',
-    value: highScore.value,
+    value: high.value,
   },
   {
     score: 'Lowest',
-    value: lowScore.value,
+    value: low.value,
   },
   {
     score: 'Total +2',
