@@ -16,7 +16,7 @@ export const useStreamStore = defineStore('stream', () => {
   async function fetchStream(id: string) {
     let stream = getStreamById(id).value
 
-    if (stream)
+    if (stream && stream.type !== 'live')
       return currentStream.value = stream
 
     stream = await getStream(id)

@@ -2,24 +2,26 @@
 const streamStore = useStreamStore()
 
 await callOnce('streams', () => streamStore.fetchStreams())
-// await callOnce('liveStream', () => streamStore.fetchLiveStream())
+await callOnce('liveStream', () => streamStore.fetchLiveStream())
 </script>
 
 <template>
   <UContainer>
-    <!-- <section v-if="streamStore.liveStream" class="grid grid-cols-1 sm:grid-cols-3 gap-4 py-4 sm:py-6 lg:py-8">
+    <section v-if="streamStore.liveStream" class="grid grid-cols-1 sm:grid-cols-6 grid- gap-4 py-4 sm:py-6 lg:py-8">
       <NuxtLink
         :to="{ name: 'streams-id', params: { id: streamStore.liveStream.id } }"
+        class="sm:col-span-4 sm:col-start-2"
       >
         <StreamCard
           :id="streamStore.liveStream.id"
           :title="streamStore.liveStream.title"
-          :thumbnail-url="streamStore.liveStream.video.thumbnailURL"
+          :thumbnail-url="streamStore.liveStream.thumbnailURL"
           :score="streamStore.liveStream.jokeScoreTotal"
           :date="streamStore.liveStream.startedAt"
+          :live="true"
         />
       </NuxtLink>
-    </section> -->
+    </section>
     <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 py-4 sm:py-6 lg:py-8">
       <NuxtLink
         v-for="stream in streamStore.streams"

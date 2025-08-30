@@ -5,9 +5,14 @@ const props = defineProps<{
   score: number
   date: string
   thumbnailUrl: string
+  live?: boolean
 }>()
 
 const transformThumbnailUrl = computed(() => {
+  if (props.live) {
+    return props.thumbnailUrl.replace('{width}x{height}', '640x360')
+  }
+
   return props.thumbnailUrl.replace('%{width}x%{height}', '320x180')
 })
 </script>

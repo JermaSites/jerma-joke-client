@@ -222,7 +222,7 @@ const tableData = computed(() => ([
   <UContainer class="py-4 sm:py-6 lg:py-8 ">
     <UBreadcrumb :items="items" />
 
-    <div class="py-4 text-5xl">
+    <div class="py-4 text-4xl">
       {{ streamStore.currentStream?.title }}
     </div>
 
