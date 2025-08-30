@@ -33,9 +33,9 @@ const options = reactive<ApexOptions>({
   plotOptions: {
     pie: {
       expandOnClick: false,
-      startAngle: -90,
-      endAngle: 90,
-      offsetY: 10,
+      // startAngle: -90,
+      // endAngle: 90,
+      // offsetY: 10,
       donut: {
         labels: {
           show: true,

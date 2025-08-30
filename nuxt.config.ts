@@ -8,8 +8,11 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
 
   runtimeConfig: {
+    twitchClientId: process.env.NUXT_TWITCH_CLIENT_ID,
     public: {
-      twitchChannelName: process.env.NUXT_TWITCH_CHANNEL_NAME,
+      twitchApiUrl: process.env.NUXT_PUBLIC_TWITCH_API_URL,
+      twitchChannelName: process.env.NUXT_PUBLIC_TWITCH_CHANNEL_NAME,
+      twitchChannelId: process.env.NUXT_PUBLIC_TWITCH_CHANNEL_ID,
     },
   },
 })

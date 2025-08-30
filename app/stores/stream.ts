@@ -1,11 +1,16 @@
 export const useStreamStore = defineStore('stream', () => {
-  const { getStreams, getStream } = useStream()
+  const { getStreams, getStream, getLiveStream } = useStream()
 
   const streams = ref<Stream[]>([])
   const currentStream = ref<Stream | null>(null)
+  const liveStream = ref<Stream | undefined | null>(null)
 
   async function fetchStreams() {
     streams.value = await getStreams()
+  }
+
+  async function fetchLiveStream() {
+    liveStream.value = await getLiveStream()
   }
 
   async function fetchStream(id: string) {
@@ -27,8 +32,10 @@ export const useStreamStore = defineStore('stream', () => {
   return {
     streams,
     currentStream,
+    liveStream,
     fetchStream,
     fetchStreams,
+    fetchLiveStream,
     getStreamById,
   }
 })

@@ -30,19 +30,25 @@ await streamStore.fetchStream(streamId.value)
 
 const interpolatedStreamData = ref(interpolateStreamData(currentStream.value))
 
-let totalScore = interpolatedStreamData.value.at(-1)?.jokeScore || 0
-let minScore = interpolatedStreamData.value.at(-1)?.totalMinusTwo || 0
-let maxScore = interpolatedStreamData.value.at(-1)?.totalPlusTwo || 0
-let volume = interpolatedStreamData.value.at(-1)?.volume || 0
+const totalScore = ref(currentStream.value?.jokeScoreTotal || 0)
+const minScore = ref(currentStream.value?.jokeScoreMin || 0)
+const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
+const high = ref(currentStream.value?.jokeScoreHigh || 0)
+const low = ref(currentStream.value?.jokeScoreLow || 0)
+const volume = ref(interpolatedStreamData.value.at(-1)?.volume || 0)
 
 const lowScore = computed(() => {
-  const low = currentStream.value?.jokeScoreLow || 0
-  return totalScore < low ? totalScore : low
+  return totalScore.value < low.value ? totalScore.value : low.value
 })
 
 const highScore = computed(() => {
-  const high = currentStream.value?.jokeScoreHigh || 0
-  return totalScore > high ? totalScore : high
+  return totalScore.value > high.value ? totalScore.value : high.value
+})
+
+const totalVolume = computed(() => {
+  return interpolatedStreamData.value.reduce((sum, data) => {
+    return sum + data.volume
+  }, 0)
 })
 
 const scoreData = computed(() => {
@@ -70,8 +76,8 @@ const volumeData = computed(() => {
 })
 
 const donutChartSeries = computed(() => {
-  const high = Math.abs(maxScore)
-  const low = Math.abs(minScore)
+  const high = Math.abs(maxScore.value)
+  const low = Math.abs(minScore.value)
   return [high, low]
 })
 
@@ -108,24 +114,24 @@ function updateChart() {
   const dataPoint = interpolatedStreamData.value.find(p => p.interval === streamUptime)
 
   if (dataPoint) {
-    dataPoint.jokeScore = totalScore
+    dataPoint.jokeScore = totalScore.value
     dataPoint.high = highScore.value
     dataPoint.low = lowScore.value
-    dataPoint.close = totalScore
-    dataPoint.totalMinusTwo = minScore
-    dataPoint.totalPlusTwo = maxScore
-    dataPoint.volume = volume
+    dataPoint.close = totalScore.value
+    dataPoint.totalMinusTwo = minScore.value
+    dataPoint.totalPlusTwo = maxScore.value
+    dataPoint.volume = volume.value
   }
   else {
-    volume = 0
+    volume.value = 0
     interpolatedStreamData.value.push({
-      jokeScore: totalScore,
-      high: totalScore,
-      low: totalScore,
-      open: totalScore,
-      close: totalScore,
-      totalMinusTwo: minScore,
-      totalPlusTwo: maxScore,
+      jokeScore: totalScore.value,
+      high: totalScore.value,
+      low: totalScore.value,
+      open: totalScore.value,
+      close: totalScore.value,
+      totalMinusTwo: minScore.value,
+      totalPlusTwo: maxScore.value,
       interval: streamUptime,
       volume: 0,
     })
@@ -140,20 +146,23 @@ onMounted(() => {
   client.connect()
 
   client.on('message', (_channel, _usersate, message, _self) => {
-    const messageContainsScore = /(?<!\S)(?:[+-]2|jerma(?:Plus|Minus)2)(?!\S)/.test(message)
+    const score
+        = message.match(/(?<!\S)[+-]2(?!\S)/g)
+          || message.match(/(?<!\S)jermaPlus2(?!\S)/g)
+          || message.match(/(?<!\S)jermaMinus2(?!\S)/g)
 
-    if (!messageContainsScore)
+    if (!score)
       return
 
-    volume += 1
+    volume.value += 1
 
-    if (message.includes('+2')) {
-      totalScore += 2
-      maxScore += 2
+    if (score.includes('+2') || score.includes('jermaPlus2')) {
+      totalScore.value += 2
+      maxScore.value += 2
     }
-    else if (message.includes('-2')) {
-      totalScore -= 2
-      minScore -= 2
+    else {
+      totalScore.value -= 2
+      minScore.value -= 2
     }
   })
 
@@ -180,48 +189,58 @@ const items: BreadcrumbItem[] = [
     to: `/streams/${streamId.value}`,
   },
 ]
+
+const tableData = computed(() => ([
+  {
+    score: 'Total',
+    value: totalScore.value,
+  },
+  {
+    score: 'Highest',
+    value: highScore.value,
+  },
+  {
+    score: 'Lowest',
+    value: lowScore.value,
+  },
+  {
+    score: 'Total +2',
+    value: maxScore.value,
+  },
+  {
+    score: 'Total -2',
+    value: minScore.value,
+  },
+  {
+    score: 'Total Volume',
+    value: totalVolume.value,
+  },
+]))
 </script>
 
 <template>
-  <UContainer class="py-4 sm:py-6 lg:py-8">
+  <UContainer class="py-4 sm:py-6 lg:py-8 ">
     <UBreadcrumb :items="items" />
+
     <div class="py-4 text-5xl">
       {{ streamStore.currentStream?.title }}
     </div>
 
-    <div>
+    <div class="px-4 bg-stone-950">
       <LineChart :series="lineChartSeries" />
     </div>
 
-    <div>
+    <div class="px-4 bg-stone-950">
       <VolumeChart :series="volumeChartSeries" />
     </div>
 
-    <div>
-      <DonutChart :series="donutChartSeries" />
-    </div>
+    <section class="grid grid-cols-2 p-4 bg-stone-950">
+      <div class="flex justify-center items-center">
+        <DonutChart :series="donutChartSeries" />
+      </div>
 
-    <section>
       <div>
-        Total: {{ totalScore }}
-      </div>
-      <div>
-        Min: {{ minScore }}
-      </div>
-      <div>
-        Low: {{ lowScore }}
-      </div>
-      <div>
-        High: {{ highScore }}
-      </div>
-      <div>
-        Max: {{ maxScore }}
-      </div>
-      <div>
-        Sum: {{ maxScore + minScore }}
-      </div>
-      <div>
-        Volume: {{ interpolatedStreamData.at(-1)?.volume }}
+        <UTable :data="tableData" />
       </div>
     </section>
   </UContainer>
