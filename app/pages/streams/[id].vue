@@ -139,6 +139,9 @@ function updateChart() {
 }
 
 onMounted(() => {
+  if (currentStream.value?.type !== 'live')
+    return
+
   const client = new tmi.Client({
     channels: [twitchChannelName],
   })
@@ -177,10 +180,6 @@ function scheduleUpdate() {
 }
 
 onMounted(() => {
-  // const id = setInterval(() => {
-  //   updateChart()
-  // }, 1000)
-
   const id = scheduleUpdate()
 
   onBeforeUnmount(() => cancelAnimationFrame(id))
