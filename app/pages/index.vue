@@ -1,8 +1,14 @@
 <script setup lang="ts">
 const streamStore = useStreamStore()
 
-await callOnce('streams', () => streamStore.fetchStreams())
-await callOnce('liveStream', () => streamStore.fetchLiveStream())
+try {
+  await callOnce('streams', () => streamStore.fetchStreams())
+  await callOnce('liveStream', () => streamStore.fetchLiveStream())
+}
+catch (error) {
+  console.error('Error fetching streams')
+  console.error(error)
+}
 </script>
 
 <template>

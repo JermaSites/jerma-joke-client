@@ -26,7 +26,13 @@ const streamId = computed(() => {
   return id
 })
 
-await streamStore.fetchStream(streamId.value)
+try {
+  await streamStore.fetchStream(streamId.value)
+}
+catch (error) {
+  console.error('Error fetching stream')
+  console.error(error)
+}
 
 const interpolatedStreamData = ref(interpolateStreamData(currentStream.value))
 
