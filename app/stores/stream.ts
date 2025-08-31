@@ -6,24 +6,42 @@ export const useStreamStore = defineStore('stream', () => {
   const liveStream = ref<Stream | undefined | null>(null)
 
   async function fetchStreams() {
-    streams.value = await getStreams()
+    try {
+      streams.value = await getStreams()
+    }
+    catch (error) {
+      console.error('Error getting streams')
+      console.error(error)
+    }
   }
 
   async function fetchLiveStream() {
-    liveStream.value = await getLiveStream()
+    try {
+      liveStream.value = await getLiveStream()
+    }
+    catch (error) {
+      console.error('Error getting live stream')
+      console.error(error)
+    }
   }
 
   async function fetchStream(id: string) {
-    let stream = getStreamById(id).value
+    try {
+      let stream = getStreamById(id).value
 
-    if (stream && stream.type !== 'live')
-      return currentStream.value = stream
+      if (stream && stream.type !== 'live')
+        return currentStream.value = stream
 
-    stream = await getStream(id)
+      stream = await getStream(id)
 
-    if (stream && streams.value) {
-      streams.value.push(stream)
-      currentStream.value = stream
+      if (stream && streams.value) {
+        streams.value.push(stream)
+        currentStream.value = stream
+      }
+    }
+    catch (error) {
+      console.error('Error getting stream')
+      console.error(error)
     }
   }
 
