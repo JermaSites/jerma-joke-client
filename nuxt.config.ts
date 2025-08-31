@@ -7,6 +7,8 @@ export default defineNuxtConfig({
   modules: ['@nuxt/ui', '@pinia/nuxt'],
   css: ['~/assets/css/main.css'],
 
+  ssr: false,
+
   runtimeConfig: {
     twitchClientId: process.env.NUXT_TWITCH_CLIENT_ID,
     public: {
