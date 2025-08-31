@@ -1,7 +1,7 @@
 export const useStreamStore = defineStore('stream', () => {
   const { getStreams, getStream, getLiveStream } = useStream()
 
-  const streams = ref<Stream[]>([])
+  const streams = ref<Stream[] | undefined>([])
   const currentStream = ref<Stream | null>(null)
   const liveStream = ref<Stream | undefined | null>(null)
 
@@ -21,12 +21,14 @@ export const useStreamStore = defineStore('stream', () => {
 
     stream = await getStream(id)
 
-    streams.value.push(stream)
-    currentStream.value = stream
+    if (stream && streams.value) {
+      streams.value.push(stream)
+      currentStream.value = stream
+    }
   }
 
   function getStreamById(id: string) {
-    return computed(() => streams.value.find(stream => stream.id === id))
+    return computed(() => streams.value?.find(stream => stream.id === id))
   }
 
   return {
