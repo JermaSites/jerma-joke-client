@@ -29,7 +29,7 @@ const options = reactive<ApexOptions>({
   stroke: {
     colors: [colors.green[400], colors.red[400]],
   },
-  labels: ['Total -2', 'Total +2'],
+  labels: ['Total +2', 'Total -2'],
   plotOptions: {
     pie: {
       expandOnClick: false,
@@ -44,11 +44,6 @@ const options = reactive<ApexOptions>({
           },
           value: {
             show: true,
-            formatter(value, w) {
-              return +value === w.config.series[0]
-                ? w.config.series[0]
-                : w.config.series[1] * -1
-            },
           },
           total: {
             show: true,
