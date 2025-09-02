@@ -42,20 +42,20 @@ const options = reactive<ApexOptions>({
           name: {
             color: 'white',
           },
-          // value: {
-          //   show: true,
-          //   formatter(value, w) {
-          //     return +value === w.config.series[0]
-          //       ? w.config.series[0] * -1
-          //       : w.config.series[1]
-          //   },
-          // },
-          // total: {
-          //   show: true,
-          //   formatter(w) {
-          //     return w.config.series[1] - w.config.series[0]
-          //   },
-          // },
+          value: {
+            show: true,
+            formatter(value, w) {
+              return +value === w.config.series[0]
+                ? w.config.series[0]
+                : w.config.series[1] * -1
+            },
+          },
+          total: {
+            show: true,
+            formatter(w) {
+              return (w.config.series[0] - w.config.series[1]).toString()
+            },
+          },
         },
       },
     },
