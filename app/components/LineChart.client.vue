@@ -76,8 +76,8 @@ const options = reactive<ApexOptions>({
   },
   tooltip: {
     enabled: true,
-    shared: false,
-    followCursor: false,
+    shared: true,
+    followCursor: true,
     intersect: false,
     onDatasetHover: {
       highlightDataSeries: true,
@@ -86,7 +86,7 @@ const options = reactive<ApexOptions>({
       show: false,
     },
     marker: {
-      show: false,
+      show: true,
     },
   },
   xaxis: {
@@ -112,6 +112,8 @@ const options = reactive<ApexOptions>({
     },
   },
 })
+
+console.log(props.series)
 </script>
 
 <template>
