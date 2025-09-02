@@ -47,12 +47,6 @@ const options = reactive<ApexOptions>({
         show: true,
       },
     },
-    // padding: {
-    //   top: 0,
-    //   right: 45,
-    //   bottom: 0,
-    //   left: 12,
-    // },
   },
   legend: {
     show: true,
@@ -68,14 +62,6 @@ const options = reactive<ApexOptions>({
       barHeight: '100%',
     },
   },
-  // responsive: [{
-  //   breakpoint: this.$vuetify.breakpoint.thresholds.xs,
-  //   options: {
-  //     xaxis: {
-  //       tickAmount: this.data.length - 1 < 5 ? this.data.length - 1 : 5,
-  //     },
-  //   },
-  // }],
   stroke: {
     show: true,
     curve: 'straight',
@@ -121,7 +107,7 @@ const options = reactive<ApexOptions>({
 </script>
 
 <template>
-  <apexchart type="bar" height="100%" :series="series" :options="options" />
+  <apexchart type="bar" height="200px" :series="series" :options="options" />
 </template>
 
 <style scoped>

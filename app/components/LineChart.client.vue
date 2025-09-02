@@ -51,12 +51,6 @@ const options = reactive<ApexOptions>({
         show: true,
       },
     },
-    // padding: {
-    //   top: 0,
-    //   right: 8,
-    //   bottom: 0,
-    //   left: 22,
-    // },
   },
   legend: {
     show: true,
@@ -112,8 +106,6 @@ const options = reactive<ApexOptions>({
     },
   },
 })
-
-console.log(props.series)
 </script>
 
 <template>

@@ -234,7 +234,7 @@ const tableData = computed(() => ([
   <UContainer class="py-4 sm:py-6 lg:py-8 ">
     <UBreadcrumb :items="items" />
 
-    <div class="py-4 text-4xl">
+    <div class="py-4 sm:text-4xl">
       {{ streamStore.currentStream?.title }}
     </div>
 
@@ -246,7 +246,7 @@ const tableData = computed(() => ([
       <VolumeChart :series="volumeChartSeries" />
     </div>
 
-    <section class="grid grid-cols-2 p-4 bg-stone-950">
+    <section class="grid sm:grid-cols-2 p-4 bg-stone-950">
       <div class="flex justify-center items-center">
         <DonutChart :series="donutChartSeries" />
       </div>
