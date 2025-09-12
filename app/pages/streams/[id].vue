@@ -34,22 +34,33 @@ catch (error) {
   console.error(error)
 }
 
+const items: BreadcrumbItem[] = [
+  {
+    label: 'Home',
+    to: '/',
+  },
+  {
+    label: streamStore.currentStream?.title,
+    to: `/streams/${streamId.value}`,
+  },
+]
+
 const interpolatedStreamData = ref(interpolateStreamData(currentStream.value))
 
 const totalScore = ref(currentStream.value?.jokeScoreTotal || 0)
 const minScore = ref(currentStream.value?.jokeScoreMin || 0)
 const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
-const high = ref(currentStream.value?.jokeScoreHigh || 0)
-const low = ref(currentStream.value?.jokeScoreLow || 0)
+const highScore = ref(currentStream.value?.jokeScoreHigh || 0)
+const lowScore = ref(currentStream.value?.jokeScoreLow || 0)
 const volume = ref(interpolatedStreamData.value.at(-1)?.volume || 0)
 
 watch(totalScore, (newTotal) => {
-  if (newTotal > high.value) {
-    high.value = newTotal
+  if (newTotal > highScore.value) {
+    highScore.value = newTotal
   }
 
-  if (newTotal < low.value) {
-    low.value = newTotal
+  if (newTotal < lowScore.value) {
+    lowScore.value = newTotal
   }
 })
 
@@ -57,9 +68,15 @@ const totalVolume = ref(interpolatedStreamData.value.reduce((sum, data) => {
   return sum + data.volume
 }, 0))
 
-const scoreData = computed(() => {
+const scoreLineChartData = computed(() => {
   return interpolatedStreamData.value.map((data) => {
     return { x: data.interval, y: data.jokeScore }
+  })
+})
+
+const scoreCandlestickChartData = computed(() => {
+  return interpolatedStreamData.value.map((data) => {
+    return { x: data.interval, y: [data.open, data.high, data.low, data.close] }
   })
 })
 
@@ -91,7 +108,7 @@ const lineChartSeries = computed<ApexAxisChartSeries>(() => {
   return [
     {
       name: 'Score',
-      data: scoreData.value,
+      data: scoreLineChartData.value,
     },
     {
       name: '+2',
@@ -104,45 +121,21 @@ const lineChartSeries = computed<ApexAxisChartSeries>(() => {
   ]
 })
 
+const candlestickChartSeries = computed<ApexAxisChartSeries>(() => {
+  return [
+    {
+      name: 'Score',
+      data: scoreCandlestickChartData.value,
+    },
+  ]
+})
+
 const volumeChartSeries = computed<ApexAxisChartSeries>(() => {
   return [{
     name: 'Volume',
     data: volumeData.value,
   }]
 })
-
-function updateChart() {
-  if (!currentStream.value)
-    return
-
-  const streamUptime = getStreamUptime(currentStream.value)
-
-  const dataPoint = interpolatedStreamData.value.find(p => p.interval === streamUptime)
-
-  if (dataPoint) {
-    dataPoint.jokeScore = totalScore.value
-    dataPoint.high = high.value
-    dataPoint.low = low.value
-    dataPoint.close = totalScore.value
-    dataPoint.totalMinusTwo = minScore.value
-    dataPoint.totalPlusTwo = maxScore.value
-    dataPoint.volume = volume.value
-  }
-  else {
-    volume.value = 0
-    interpolatedStreamData.value.push({
-      jokeScore: totalScore.value,
-      high: totalScore.value,
-      low: totalScore.value,
-      open: totalScore.value,
-      close: totalScore.value,
-      totalMinusTwo: minScore.value,
-      totalPlusTwo: maxScore.value,
-      interval: streamUptime,
-      volume: 0,
-    })
-  }
-}
 
 onMounted(() => {
   if (currentStream.value?.type !== 'live')
@@ -178,9 +171,42 @@ onMounted(() => {
   })
 })
 
+function updateChartData() {
+  if (!currentStream.value)
+    return
+
+  const streamUptime = getStreamUptime(currentStream.value)
+
+  const dataPoint = interpolatedStreamData.value.find(p => p.interval === streamUptime)
+
+  if (dataPoint) {
+    dataPoint.jokeScore = totalScore.value
+    dataPoint.high = totalScore.value > dataPoint.high ? totalScore.value : dataPoint.high
+    dataPoint.low = totalScore.value < dataPoint.low ? totalScore.value : dataPoint.low
+    dataPoint.close = totalScore.value
+    dataPoint.totalMinusTwo = minScore.value
+    dataPoint.totalPlusTwo = maxScore.value
+    dataPoint.volume = volume.value
+  }
+  else {
+    volume.value = 1
+    interpolatedStreamData.value.push({
+      jokeScore: totalScore.value,
+      high: totalScore.value,
+      low: totalScore.value,
+      open: totalScore.value,
+      close: totalScore.value,
+      totalMinusTwo: minScore.value,
+      totalPlusTwo: maxScore.value,
+      interval: streamUptime,
+      volume: volume.value,
+    })
+  }
+}
+
 function scheduleUpdate() {
   return requestAnimationFrame(() => {
-    updateChart()
+    updateChartData()
     setTimeout(scheduleUpdate, 1000)
   })
 }
@@ -191,17 +217,6 @@ onMounted(() => {
   onBeforeUnmount(() => cancelAnimationFrame(id))
 })
 
-const items: BreadcrumbItem[] = [
-  {
-    label: 'Home',
-    to: '/',
-  },
-  {
-    label: streamStore.currentStream?.title,
-    to: `/streams/${streamId.value}`,
-  },
-]
-
 const tableData = computed(() => ([
   {
     score: 'Total',
@@ -209,11 +224,11 @@ const tableData = computed(() => ([
   },
   {
     score: 'Highest',
-    value: high.value,
+    value: highScore.value,
   },
   {
     score: 'Lowest',
-    value: low.value,
+    value: lowScore.value,
   },
   {
     score: 'Total +2',
@@ -244,6 +259,10 @@ const tableData = computed(() => ([
 
     <div class="px-4 bg-stone-950">
       <VolumeChart :series="volumeChartSeries" />
+    </div>
+
+    <div class="px-4 bg-stone-950">
+      <CandlestickChart :series="candlestickChartSeries" />
     </div>
 
     <section class="grid sm:grid-cols-2 p-4 bg-stone-950">
