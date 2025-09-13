@@ -18,10 +18,10 @@ const transformThumbnailUrl = computed(() => {
 </script>
 
 <template>
-  <UCard :ui="{ body: 'p-0 sm:p-0' }" class=" dark:bg-stone-800 dark:ring-stone-700">
+  <UCard :ui="{ body: 'p-0 sm:p-0' }" class=" dark:bg-stone-900 dark:ring-stone-800">
     <template #header>
       <div class="truncate">
-        <h2 class="text-lg">
+        <h2 class="text-lg font-semibold">
           {{ props.title }}
         </h2>
       </div>
