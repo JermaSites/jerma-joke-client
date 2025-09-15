@@ -18,7 +18,7 @@ const transformThumbnailUrl = computed(() => {
 </script>
 
 <template>
-  <UCard :ui="{ body: 'p-0 sm:p-0' }" class=" dark:bg-stone-900 dark:ring-stone-800">
+  <UCard :ui="{ body: 'p-0 sm:p-0' }" class=" dark:bg-stone-800 dark:ring-stone-700">
     <template #header>
       <div class="truncate">
         <h2 class="text-lg font-semibold">
