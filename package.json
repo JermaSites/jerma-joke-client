@@ -12,7 +12,7 @@
     "lint:fix": "eslint --fix"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.1.0",
+    "@nuxt/ui": "^4.2.1",
     "@pinia/nuxt": "^0.11.3",
     "apexcharts": "^5.3.6",
     "dayjs": "^1.11.19",
@@ -20,7 +20,7 @@
     "nuxt": "^4.2.1",
     "pinia": "^3.0.4",
     "tmi.js": "^1.8.5",
-    "vue": "^3.5.24",
+    "vue": "^3.5.25",
     "vue-router": "^4.6.3",
     "vue3-apexcharts": "^1.10.0"
   },
