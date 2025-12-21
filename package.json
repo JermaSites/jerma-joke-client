@@ -12,21 +12,21 @@
     "lint:fix": "eslint --fix"
   },
   "dependencies": {
-    "@nuxt/ui": "^4.2.1",
+    "@nuxt/ui": "^4.3.0",
     "@pinia/nuxt": "^0.11.3",
     "apexcharts": "^5.3.6",
     "dayjs": "^1.11.19",
-    "firebase": "^12.6.0",
+    "firebase": "^12.7.0",
     "nuxt": "^4.2.2",
     "pinia": "^3.0.4",
     "tmi.js": "^1.8.5",
-    "vue": "^3.5.25",
+    "vue": "^3.5.26",
     "vue-router": "^4.6.4",
     "vue3-apexcharts": "^1.10.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.6.1",
+    "@antfu/eslint-config": "^6.7.1",
     "@types/tmi.js": "^1.8.6",
-    "eslint": "^9.39.1"
+    "eslint": "^9.39.2"
   }
 }
