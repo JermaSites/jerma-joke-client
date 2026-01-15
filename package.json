@@ -16,7 +16,7 @@
     "@pinia/nuxt": "^0.11.3",
     "apexcharts": "^5.3.6",
     "dayjs": "^1.11.19",
-    "firebase": "^12.7.0",
+    "firebase": "^12.8.0",
     "nuxt": "^4.2.2",
     "pinia": "^3.0.4",
     "tmi.js": "^1.8.5",
@@ -25,7 +25,7 @@
     "vue3-apexcharts": "^1.10.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^6.7.3",
+    "@antfu/eslint-config": "^7.0.0",
     "@types/tmi.js": "^1.8.6",
     "eslint": "^9.39.2"
   }

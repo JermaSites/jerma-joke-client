@@ -239,16 +239,16 @@ const tableData = computed(() => ([
     </div>
 
     <div class="px-4 bg-stone-950">
-      <LineChart :series="lineChartSeries" />
+      <LazyLineChart :series="lineChartSeries" />
     </div>
 
     <div class="px-4 bg-stone-950">
-      <VolumeChart :series="volumeChartSeries" />
+      <LazyVolumeChart :series="volumeChartSeries" />
     </div>
 
     <section class="grid sm:grid-cols-2 p-4 bg-stone-950">
       <div class="flex justify-center items-center">
-        <DonutChart :series="donutChartSeries" />
+        <LazyDonutChart :series="donutChartSeries" />
       </div>
 
       <div>

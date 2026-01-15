@@ -59,5 +59,9 @@ const options = reactive<ApexOptions>({
 </script>
 
 <template>
-  <apexchart type="donut" height="300" :options="options" :series="series" />
+  <div>
+    <ClientOnly>
+      <apexchart type="donut" height="300" :options="options" :series="series" />
+    </ClientOnly>
+  </div>
 </template>

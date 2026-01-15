@@ -89,7 +89,8 @@ const options = reactive<ApexOptions>({
     tickPlacement: 'on',
     labels: {
       formatter(value) {
-        return dayjs.duration(Number.parseInt(value), 'm').format('HH:mm')
+        const durationValue = typeof value === 'string' ? Number.parseInt(value) : value
+        return dayjs.duration(durationValue, 'm').format('HH:mm')
       },
     },
     axisBorder: {
@@ -109,9 +110,13 @@ const options = reactive<ApexOptions>({
 </script>
 
 <template>
-  <apexchart
-    type="line"
-    :options="options"
-    :series="series"
-  />
+  <div>
+    <ClientOnly>
+      <apexchart
+        type="line"
+        :options="options"
+        :series="series"
+      />
+    </ClientOnly>
+  </div>
 </template>
