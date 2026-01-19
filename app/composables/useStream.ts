@@ -1,11 +1,10 @@
 import { collection, doc, getDoc, getDocs, limit, orderBy, query, where } from 'firebase/firestore'
 
 export function useStream() {
-  const { firestore } = useFirebase()
-  const { twitchChannelId } = useRuntimeConfig().public
-
   async function getStreams() {
     try {
+      const { firestore } = useFirebase()
+      const { twitchChannelId } = useRuntimeConfig().public
       const streamsRef = collection(firestore, 'streams')
       const q = query(streamsRef, where('userID', '==', twitchChannelId.toString()), where('type', '==', 'offline'), orderBy('startedAt', 'desc'), limit(12))
       const querySnapshot = await getDocs(q)
@@ -22,6 +21,8 @@ export function useStream() {
 
   async function getLiveStream() {
     try {
+      const { firestore } = useFirebase()
+      const { twitchChannelId } = useRuntimeConfig().public
       const streamsRef = collection(firestore, 'streams')
       const q = query(streamsRef, where('userID', '==', twitchChannelId.toString()), where('type', '==', 'live'), orderBy('startedAt', 'desc'), limit(1))
       const querySnapshot = await getDocs(q)
@@ -38,6 +39,7 @@ export function useStream() {
 
   async function getStream(id: string) {
     try {
+      const { firestore } = useFirebase()
       const docRef = doc(firestore, 'streams', id)
       const docSnap = await getDoc(docRef)
 
