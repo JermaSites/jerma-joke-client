@@ -9,20 +9,20 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  vite: {
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            'firebase-core': ['firebase/app'],
-            'firebase-firestore': ['firebase/firestore'],
-            'apexcharts': ['apexcharts', 'vue3-apexcharts'],
-            'twitch': ['tmi.js'],
-          },
-        },
-      },
-    },
-  },
+  // vite: {
+  //   build: {
+  //     rollupOptions: {
+  //       output: {
+  //         manualChunks: {
+  //           'firebase-core': ['firebase/app'],
+  //           'firebase-firestore': ['firebase/firestore'],
+  //           'apexcharts': ['apexcharts', 'vue3-apexcharts'],
+  //           'twitch': ['tmi.js'],
+  //         },
+  //       },
+  //     },
+  //   },
+  // },
 
   runtimeConfig: {
     twitchClientId: process.env.NUXT_TWITCH_CLIENT_ID,
