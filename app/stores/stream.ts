@@ -29,15 +29,13 @@ export const useStreamStore = defineStore('stream', () => {
     try {
       let stream = getStreamById(id).value
 
-      if (stream && stream.type !== 'live')
-        return currentStream.value = stream
+      if (stream)
+        currentStream.value = stream
 
       stream = await getStream(id)
 
-      if (stream && streams.value) {
-        streams.value.push(stream)
+      if (stream)
         currentStream.value = stream
-      }
     }
     catch (error) {
       console.error('Error getting stream')
