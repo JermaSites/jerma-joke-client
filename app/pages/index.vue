@@ -9,10 +9,17 @@ catch (error) {
   console.error('Error fetching streams')
   console.error(error)
 }
+
+const { result, search } = useAlgoliaSearch('streams')
+
+onMounted(async () => {
+  await search({ query: '' })
+})
 </script>
 
 <template>
   <UContainer>
+    {{ result.hits.length }}
     <section v-if="streamStore.liveStream" class="grid grid-cols-1 sm:grid-cols-6 grid- gap-4 py-4 sm:py-6 lg:py-8">
       <NuxtLink
         :to="{ name: 'streams-id', params: { id: streamStore.liveStream.id } }"
