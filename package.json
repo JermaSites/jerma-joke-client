@@ -25,6 +25,9 @@
     "vue-router": "^5.1.0",
     "vue3-apexcharts": "^1.11.1"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.62.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^9.0.0",
     "@types/tmi.js": "^1.8.6",
