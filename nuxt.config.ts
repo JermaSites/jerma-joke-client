@@ -27,9 +27,9 @@ export default defineNuxtConfig({
   runtimeConfig: {
     twitchClientId: process.env.NUXT_TWITCH_CLIENT_ID,
     public: {
-      twitchApiUrl: process.env.NUXT_PUBLIC_TWITCH_API_URL,
-      twitchChannelName: process.env.NUXT_PUBLIC_TWITCH_CHANNEL_NAME,
-      twitchChannelId: process.env.NUXT_PUBLIC_TWITCH_CHANNEL_ID,
+      twitchApiUrl: 'https://api.twitch.tv/helix/video',
+      twitchChannelName: 'jerma985',
+      twitchChannelId: '23936415',
     },
   },
 })

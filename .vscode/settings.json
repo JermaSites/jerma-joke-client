@@ -92,6 +92,7 @@
     "strings": "on"
   },
   "tailwindCSS.classAttributes": ["class", "ui"],
+  "tailwindCSS.classFunctions": ["defineAppConfig"],
   "tailwindCSS.experimental.classRegex": [
     ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
   ]

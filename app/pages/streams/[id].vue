@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
+import type { ApexAxisChartSeries } from 'apexcharts'
 
 import tmi from 'tmi.js'
 
