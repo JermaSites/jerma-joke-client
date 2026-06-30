@@ -34,7 +34,7 @@ const options = reactive<ApexOptions>({
     enabled: false,
   },
   fill: {
-    type: ['soild', 'solid', 'solid'],
+    type: ['solid', 'solid', 'solid'],
   },
   grid: {
     show: true,
@@ -110,13 +110,9 @@ const options = reactive<ApexOptions>({
 </script>
 
 <template>
-  <div>
-    <ClientOnly>
-      <apexchart
-        type="line"
-        :options="options"
-        :series="series"
-      />
-    </ClientOnly>
-  </div>
+  <apexchart
+    type="line"
+    :options="options"
+    :series="series"
+  />
 </template>

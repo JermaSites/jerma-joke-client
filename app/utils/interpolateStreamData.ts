@@ -1,8 +1,11 @@
-export default function (stream: Stream | null) {
+export default function interpolateStreamData(stream: Stream | null): StreamData[] {
   if (!stream)
     return []
 
-  const data = []
+  const streamUptime = getStreamUptime(stream)
+  const dataMap = new Map(stream.data.map(d => [d.interval, d]))
+  const result: StreamData[] = []
+
   let jokeScore = 0
   let high = 0
   let low = 0
@@ -11,10 +14,8 @@ export default function (stream: Stream | null) {
   let totalMinusTwo = 0
   let totalPlusTwo = 0
 
-  const streamUptime = getStreamUptime(stream)
-
   for (let i = 0; i <= streamUptime; i++) {
-    const dataPoint = stream.data.find(data => data.interval === i)
+    const dataPoint = dataMap.get(i)
 
     if (dataPoint) {
       jokeScore = dataPoint.jokeScore
@@ -24,22 +25,12 @@ export default function (stream: Stream | null) {
       close = dataPoint.close
       totalMinusTwo = dataPoint.totalMinusTwo
       totalPlusTwo = dataPoint.totalPlusTwo
-      data.push(dataPoint)
+      result.push(dataPoint)
     }
     else {
-      data.push({
-        jokeScore,
-        high,
-        low,
-        open,
-        close,
-        totalMinusTwo,
-        totalPlusTwo,
-        interval: i,
-        volume: 0,
-      })
+      result.push({ jokeScore, high, low, open, close, totalMinusTwo, totalPlusTwo, interval: i, volume: 0 })
     }
   }
 
-  return data
+  return result
 }

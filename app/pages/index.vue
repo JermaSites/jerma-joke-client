@@ -13,7 +13,7 @@ catch (error) {
 
 <template>
   <UContainer>
-    <section v-if="streamStore.liveStream" class="grid grid-cols-1 sm:grid-cols-6 grid- gap-4 py-4 sm:py-6 lg:py-8">
+    <section v-if="streamStore.liveStream" class="grid grid-cols-1 sm:grid-cols-6 gap-4 py-4 sm:py-6 lg:py-8">
       <NuxtLink
         :to="{ name: 'streams-id', params: { id: streamStore.liveStream.id } }"
         class="sm:col-span-4 sm:col-start-2"

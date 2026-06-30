@@ -8,7 +8,7 @@ export interface Stream {
   startedAt: string
   id: string
   jokeScoreLow: number
-  type: string
+  type: 'live' | 'offline'
   jokeScoreHigh: number
   games: StreamGame[]
   title: string

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { BreadcrumbItem } from '@nuxt/ui'
 import type { ApexAxisChartSeries } from 'apexcharts'
-
 import tmi from 'tmi.js'
 
 const { twitchChannelName } = useRuntimeConfig().public
@@ -11,16 +10,12 @@ const streamStore = useStreamStore()
 const { currentStream } = storeToRefs(streamStore)
 
 const streamId = computed(() => {
-  const id = route.params.id
-
-  if (Array.isArray(id)) {
-    return id[0] || ''
-  }
+  const id = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id
 
   if (!id) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'User ID is required',
+      statusMessage: 'Stream ID is required',
     })
   }
 
@@ -31,93 +26,61 @@ try {
   await streamStore.fetchStream(streamId.value)
 }
 catch (error) {
-  console.error('Error fetching stream')
-  console.error(error)
+  console.error('Error fetching stream', error)
 }
 
 const interpolatedStreamData = ref(interpolateStreamData(currentStream.value))
 
-const totalScore = ref(currentStream.value?.jokeScoreTotal || 0)
-const minScore = ref(currentStream.value?.jokeScoreMin || 0)
-const maxScore = ref(currentStream.value?.jokeScoreMax || 0)
-const high = ref(currentStream.value?.jokeScoreHigh || 0)
-const low = ref(currentStream.value?.jokeScoreLow || 0)
-const volume = ref(interpolatedStreamData.value.at(-1)?.volume || 0)
+const totalScore = ref(currentStream.value?.jokeScoreTotal ?? 0)
+const minScore = ref(currentStream.value?.jokeScoreMin ?? 0)
+const maxScore = ref(currentStream.value?.jokeScoreMax ?? 0)
+const high = ref(currentStream.value?.jokeScoreHigh ?? 0)
+const low = ref(currentStream.value?.jokeScoreLow ?? 0)
+const volume = ref(interpolatedStreamData.value.at(-1)?.volume ?? 0)
 
 watch(totalScore, (newTotal) => {
-  if (newTotal > high.value) {
+  if (newTotal > high.value)
     high.value = newTotal
-  }
 
-  if (newTotal < low.value) {
+  if (newTotal < low.value)
     low.value = newTotal
-  }
 })
 
-const totalVolume = ref(interpolatedStreamData.value.reduce((sum, data) => {
-  return sum + data.volume
-}, 0))
+const totalVolume = ref(interpolatedStreamData.value.reduce((sum, data) => sum + data.volume, 0))
 
-const scoreData = computed(() => {
-  return interpolatedStreamData.value.map((data) => {
-    return { x: data.interval, y: data.jokeScore }
-  })
-})
+const scoreData = computed(() =>
+  interpolatedStreamData.value.map(data => ({ x: data.interval, y: data.jokeScore })),
+)
 
-const plusTwoData = computed(() => {
-  return interpolatedStreamData.value.map((data) => {
-    return { x: data.interval, y: data.totalPlusTwo / 2 }
-  })
-})
+const plusTwoData = computed(() =>
+  interpolatedStreamData.value.map(data => ({ x: data.interval, y: data.totalPlusTwo / 2 })),
+)
 
-const minusTwoData = computed(() => {
-  return interpolatedStreamData.value.map((data) => {
-    return { x: data.interval, y: Math.abs(data.totalMinusTwo / 2) }
-  })
-})
+const minusTwoData = computed(() =>
+  interpolatedStreamData.value.map(data => ({ x: data.interval, y: Math.abs(data.totalMinusTwo / 2) })),
+)
 
-const volumeData = computed(() => {
-  return interpolatedStreamData.value.map((data) => {
-    return { x: data.interval, y: data.volume }
-  })
-})
+const volumeData = computed(() =>
+  interpolatedStreamData.value.map(data => ({ x: data.interval, y: data.volume })),
+)
 
-const donutChartSeries = computed(() => {
-  const high = Math.abs(maxScore.value)
-  const low = Math.abs(minScore.value)
-  return [high, low]
-})
+const donutChartSeries = computed(() => [Math.abs(maxScore.value), Math.abs(minScore.value)])
 
-const lineChartSeries = computed<ApexAxisChartSeries>(() => {
-  return [
-    {
-      name: 'Score',
-      data: scoreData.value,
-    },
-    {
-      name: '+2',
-      data: plusTwoData.value,
-    },
-    {
-      name: '-2',
-      data: minusTwoData.value,
-    },
-  ]
-})
+const lineChartSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'Score', data: scoreData.value },
+  { name: '+2', data: plusTwoData.value },
+  { name: '-2', data: minusTwoData.value },
+])
 
-const volumeChartSeries = computed<ApexAxisChartSeries>(() => {
-  return [{
-    name: 'Volume',
-    data: volumeData.value,
-  }]
-})
+const volumeChartSeries = computed<ApexAxisChartSeries>(() => [
+  { name: 'Volume', data: volumeData.value },
+])
 
 function updateChart() {
   if (!currentStream.value)
     return
 
   const streamUptime = getStreamUptime(currentStream.value)
-
   const dataPoint = interpolatedStreamData.value.find(p => p.interval === streamUptime)
 
   if (dataPoint) {
@@ -145,17 +108,17 @@ function updateChart() {
   }
 }
 
+let tmiClient: tmi.Client | null = null
+let updateInterval: ReturnType<typeof setInterval> | null = null
+
 onMounted(() => {
   if (currentStream.value?.type !== 'live')
     return
 
-  const client = new tmi.Client({
-    channels: [twitchChannelName],
-  })
+  tmiClient = new tmi.Client({ channels: [twitchChannelName] })
+  tmiClient.connect()
 
-  client.connect()
-
-  client.on('message', (_channel, _usersate, message, _self) => {
+  tmiClient.on('message', (_channel, _userstate, message, _self) => {
     const messageContainsScore = /(?<!\S)(?:[+-]2|jerma(?:Plus|Minus)2)(?!\S)/.test(message)
 
     if (!messageContainsScore)
@@ -174,69 +137,36 @@ onMounted(() => {
     }
   })
 
-  onBeforeUnmount(() => {
-    client.disconnect()
-  })
+  updateInterval = setInterval(updateChart, 1000)
 })
 
-function scheduleUpdate() {
-  return requestAnimationFrame(() => {
-    updateChart()
-    setTimeout(scheduleUpdate, 1000)
-  })
-}
-
-onMounted(() => {
-  const id = scheduleUpdate()
-
-  onBeforeUnmount(() => cancelAnimationFrame(id))
+onBeforeUnmount(() => {
+  tmiClient?.disconnect()
+  if (updateInterval !== null)
+    clearInterval(updateInterval)
 })
 
-const items: BreadcrumbItem[] = [
-  {
-    label: 'Home',
-    to: '/',
-  },
-  {
-    label: streamStore.currentStream?.title,
-    to: `/streams/${streamId.value}`,
-  },
-]
+const items = computed<BreadcrumbItem[]>(() => [
+  { label: 'Home', to: '/' },
+  { label: currentStream.value?.title ?? '', to: `/streams/${streamId.value}` },
+])
 
 const tableData = computed(() => ([
-  {
-    score: 'Total',
-    value: totalScore.value,
-  },
-  {
-    score: 'Highest',
-    value: high.value,
-  },
-  {
-    score: 'Lowest',
-    value: low.value,
-  },
-  {
-    score: 'Total +2',
-    value: maxScore.value,
-  },
-  {
-    score: 'Total -2',
-    value: minScore.value,
-  },
-  {
-    score: 'Total Volume',
-    value: totalVolume.value,
-  },
+  { score: 'Total', value: totalScore.value },
+  { score: 'Highest', value: high.value },
+  { score: 'Lowest', value: low.value },
+  { score: 'Total +2', value: maxScore.value },
+  { score: 'Total -2', value: minScore.value },
+  { score: 'Total Volume', value: totalVolume.value },
 ]))
 </script>
 
 <template>
-  <UContainer class="py-4 sm:py-6 lg:py-8 ">
+  <UContainer class="py-4 sm:py-6 lg:py-8">
     <UBreadcrumb :items="items" />
 
     <div class="py-4 sm:text-4xl">
-      {{ streamStore.currentStream?.title }}
+      {{ currentStream?.title }}
     </div>
 
     <div class="px-4 bg-stone-950">
@@ -258,7 +188,3 @@ const tableData = computed(() => ([
     </section>
   </UContainer>
 </template>
-
-<style scoped>
-
-</style>

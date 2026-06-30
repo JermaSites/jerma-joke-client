@@ -28,7 +28,7 @@ const transformThumbnailUrl = computed(() => {
     </template>
 
     <div>
-      <img :src="transformThumbnailUrl" alt="" srcset="" class="w-full">
+      <img :src="transformThumbnailUrl" :alt="props.title" class="w-full">
     </div>
 
     <template #footer>
