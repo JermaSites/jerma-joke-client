@@ -4,6 +4,7 @@ export const useStreamStore = defineStore('stream', () => {
   const streams = ref<Stream[]>([])
   const currentStream = ref<Stream | null>(null)
   const liveStream = ref<Stream | null>(null)
+  const streamCache = new Map<string, Stream>()
 
   async function fetchStreams() {
     streams.value = await getStreams()
@@ -14,13 +15,19 @@ export const useStreamStore = defineStore('stream', () => {
   }
 
   async function fetchStream(id: string) {
-    const cached = getStreamById(id).value
-    if (cached)
+    const cached = streamCache.get(id)
+
+    if (cached) {
       currentStream.value = cached
+      if (cached.type === 'offline')
+        return
+    }
 
     const fresh = await getStream(id)
-    if (fresh)
+    if (fresh) {
       currentStream.value = fresh
+      streamCache.set(id, fresh)
+    }
   }
 
   function getStreamById(id: string) {
